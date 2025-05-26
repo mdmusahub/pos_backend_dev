@@ -15,7 +15,7 @@ public class ProductResponse {
     private String productName;
     private Double productPrice;
     private String sku;
-    private String discription;
+    private String description;
     private LocalDateTime createdAt;
     private Category category;
     private LocalDateTime updatedAt;
@@ -25,7 +25,7 @@ public class ProductResponse {
          this.productName = product.getProductName();
          this.productPrice = product.getProductPrice();
          this.sku = product.getSku();
-         this.discription = product.getDiscription();
+         this.description = product.getDescription();
          this.createdAt = product.getCreatedAt();
          this.category = product.getCategory();
          this.updatedAt =product.getUpdatedAt() ;

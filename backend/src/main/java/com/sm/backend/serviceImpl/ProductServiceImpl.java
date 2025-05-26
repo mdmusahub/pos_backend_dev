@@ -27,11 +27,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void register(ProductRequest request) {
-        Product product = new Product();
+        Product product =  new Product();
         product.setProductName(request.getProductName());
         product.setSku(request.getSku());
         product.setProductPrice(request.getProductPrice());
-        product.setDiscription(request.getDiscription());
+        product.setDescription(request.getDescription());
         product.setCreatedAt(request.getCreatedAt());
         product.setUpdatedAt(request.getUpdatedAt());
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("404 error"));
@@ -58,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
         return all.stream().map(ProductResponse::new).toList();
 
 
+
     }
 
     @Override
@@ -70,8 +71,8 @@ product.setProductPrice(request.getProductPrice());
         if (request.getProductName()!=null){
             product.setProductName(request.getProductName());
         }
-    if (request.getDiscription()!=null){
-        product.setDiscription(request.getDiscription());
+    if (request.getDescription()!=null){
+        product.setDescription(request.getDescription());
     }
     if(request.getSku()!=null){
         product.setSku(request.getSku());
