@@ -1,6 +1,6 @@
 package com.sm.backend.controller;
 
-import com.sm.backend.reasponseHandler.ResponseHandler;
+import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.request.ProductRequest;
 import com.sm.backend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ProductController {
 
     public ResponseEntity<?> findById(Long productId) {
         try {
-            return ResponseHandler.responseHandler("id retrive successfully", HttpStatus.OK, service.findById(productId));
+            return ResponseHandler.responseBuilder("id retrive successfully", HttpStatus.OK, service.findById(productId));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -40,7 +40,7 @@ public class ProductController {
                                      @RequestParam(required = false, defaultValue = "productName") String sortby,
                                      @RequestParam(required = false, defaultValue = "asc") String sortDir) {
         try {
-            return ResponseHandler.responseHandler("there is list", HttpStatus.OK, service.findall(pageNumber, pageSize, sortby, sortDir));
+            return ResponseHandler.responseBuilder("there is list", HttpStatus.OK, service.findall(pageNumber, pageSize, sortby, sortDir));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -50,7 +50,7 @@ public class ProductController {
     @PutMapping("updateDetails/{productId}")
     public ResponseEntity<?>updateDetails(@RequestBody ProductRequest request,@PathVariable Long productId ){
         try {
-            return ResponseHandler.responseHandler("update",
+            return ResponseHandler.responseBuilder("update",
                     HttpStatus.OK,service.updateDetails(request,productId));
         }
         catch (Exception e){
