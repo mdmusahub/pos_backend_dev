@@ -9,4 +9,5 @@ public class ProductInventoryRequest {
     private String location;
     private LocalDateTime lastUpdated;
     private Long productId;
+    private Long variantId;
 }

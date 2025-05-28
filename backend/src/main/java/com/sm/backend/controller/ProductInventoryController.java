@@ -1,5 +1,6 @@
 package com.sm.backend.controller;
 
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.reasponseHandler.ResponseHandler;
 import com.sm.backend.request.ProductInventoryRequest;
 import com.sm.backend.service.ProductInventoryService;
@@ -35,7 +36,7 @@ private ResponseEntity<?>getAll(@RequestParam(required = false, defaultValue = "
          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-    @PutMapping("/update{inventoryId}")
+    @PutMapping("/update/{inventoryId}")
     public ResponseEntity<?>update(@RequestBody ProductInventoryRequest request,@PathVariable Long inventoryId){
         try {
             return ResponseHandler.responseHandler("updated",HttpStatus.OK,service.update(request,inventoryId));
@@ -44,18 +45,18 @@ private ResponseEntity<?>getAll(@RequestParam(required = false, defaultValue = "
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-@GetMapping("/findById{inventoryId}")
+@GetMapping("/findById/{inventoryId}")
     public ResponseEntity<?>findById(@PathVariable Long inventoryId){
         try {
             return ResponseHandler.responseHandler("id found",HttpStatus.OK,service.findById(inventoryId));
 
         } catch (Exception e) {
-       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       throw  new ResourceNotFoundException(e.getMessage());
         }
     }
 
     @DeleteMapping("/delete/{inventoryId}")
-    public void delete(Long inventoryId){
+    public void delete(@PathVariable Long inventoryId){
         service.delete(inventoryId);
     }
 

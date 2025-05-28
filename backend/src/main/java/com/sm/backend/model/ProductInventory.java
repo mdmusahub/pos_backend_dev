@@ -15,10 +15,10 @@ public class ProductInventory {
 private Integer quantity;
 private String location;
 private LocalDateTime lastUpdated;
- @ManyToOne
+@ManyToOne
  private Product product;
-@ManyToMany
- private List<ProductVariant> productVariants ;
+@ManyToOne
+ private ProductVariant productVariant ;
 
 
 }

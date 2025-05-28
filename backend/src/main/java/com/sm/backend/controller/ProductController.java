@@ -1,5 +1,6 @@
 package com.sm.backend.controller;
 
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.reasponseHandler.ResponseHandler;
 import com.sm.backend.request.ProductRequest;
 import com.sm.backend.service.ProductService;
@@ -24,13 +25,13 @@ public class ProductController {
         service.register(request);
     }
 
-    @GetMapping("getById/{productId}")
+    @GetMapping("/getById/{productId}")
 
-    public ResponseEntity<?> findById(Long productId) {
+    public ResponseEntity<?> findById(@PathVariable Long productId) {
         try {
             return ResponseHandler.responseHandler("id retrive successfully", HttpStatus.OK, service.findById(productId));
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw  new ResourceNotFoundException(e.getMessage());
         }
     }
 
@@ -47,7 +48,7 @@ public class ProductController {
 
     }
 
-    @PutMapping("updateDetails/{productId}")
+    @PutMapping("/updateDetails/{productId}")
     public ResponseEntity<?>updateDetails(@RequestBody ProductRequest request,@PathVariable Long productId ){
         try {
             return ResponseHandler.responseHandler("update",
@@ -57,7 +58,7 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-@DeleteMapping("delete/{productId}")
+@DeleteMapping("/delete/{productId}")
 public String delete(@PathVariable Long productId){
         service.delete(productId);
 return "deleted";

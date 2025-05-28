@@ -1,5 +1,7 @@
 package com.sm.backend.serviceImpl;
 
+import com.sm.backend.exceptionalHandling.CategoryAlreadyExistsException;
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Category;
 import com.sm.backend.repository.CategoryRepository;
 import com.sm.backend.request.CategoryRequest;
@@ -9,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -21,21 +25,26 @@ private final CategoryRepository repository;
 
     @Override
     public void register(CategoryRequest request) {
-
-        Category category = new Category();
-        category.setName(request.getName());
-        category.setDiscription(request.getDiscription());
-        if (request.getParentId()!=null) {
-            Category category1 = repository.findById(request.getParentId()).orElseThrow(() -> new RuntimeException("id not found"));
-            category.setParentId(category1);
+        Optional<Category> byName = repository.findCategoryByName(request.getName());
+        if (byName.isPresent()){
+         throw new CategoryAlreadyExistsException("the Category " +request.getName()+" already exists");
         }
-        repository.save(category);
+      else {
+            Category category = new Category();
+            category.setName(request.getName());
+            category.setDiscription(request.getDiscription());
+            if (request.getParentId()!=null) {
+                Category category1 = repository.findById(request.getParentId()).orElseThrow(() -> new RuntimeException("id not found"));
+                category.setParentId(category1);
+            }
+            repository.save(category);
+        }
     }
 
     @Override
     public Object getbyId(Long categoryId) {
   Category category = repository.findById(categoryId)
- .orElseThrow(() -> new RuntimeException("id not found"));
+ .orElseThrow(() -> new ResourceNotFoundException("invalid category Id" ));
 return new CategoryResponse(category);
 }
 
@@ -69,6 +78,7 @@ Sort sort = null;
         Pageable pageable = PageRequest.of(pageNumber,pageSize,sort);
         return repository.findAll(pageable);
     }
+
 
 
 }

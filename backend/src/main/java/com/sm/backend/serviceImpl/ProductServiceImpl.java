@@ -1,5 +1,6 @@
 package com.sm.backend.serviceImpl;
 
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Category;
 import com.sm.backend.model.Product;
 import com.sm.backend.repository.CategoryRepository;
@@ -41,7 +42,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Object findById(Long productId) {
-        return repository.findById(productId).orElseThrow(() -> new RuntimeException("id not found"));
+        return repository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("invalid Product ID"));
     }
 
     @Override
