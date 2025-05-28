@@ -63,6 +63,10 @@ return new CategoryResponse(category);
 if (request.getName()!=null){
     category.setName(request.getName());
 }
+
+if (request.getParentId()!=null){
+    category.setParentId(repository.findById(request.getParentId()).orElseThrow(()->new ResourceNotFoundException("id not found")));
+}
     return repository.save(category);
 }
 
