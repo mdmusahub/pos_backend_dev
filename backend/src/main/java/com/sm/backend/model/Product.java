@@ -3,6 +3,7 @@ package com.sm.backend.model;
 import jakarta.persistence.*;
 //import lombok.AllArgsConstructor;
 //import lombok.Builder;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,8 +13,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-//@Builder
-//@AllArgsConstructor(access = lombok.AccessLevel.PUBLIC)
+
 public class Product {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)

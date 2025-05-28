@@ -1,5 +1,6 @@
 package com.sm.backend.serviceImpl;
 
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Product;
 import com.sm.backend.model.ProductVariant;
 import com.sm.backend.repository.ProductRepository;
@@ -53,7 +54,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     @Override
     public Object findById(Long variantId) {
         return repository.findById(variantId)
-                .orElseThrow(()->new RuntimeException("id not found"));    }
+                .orElseThrow(()->new ResourceNotFoundException("invalid variant Id"));    }
 
     @Override
     public Object updateVariant(ProductVariantRequest request, Long variantId) {

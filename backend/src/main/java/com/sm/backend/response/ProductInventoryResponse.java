@@ -17,14 +17,14 @@ public class ProductInventoryResponse {
     private String location;
     private LocalDateTime lastUpdated;
     private Product product;
-    private List<ProductVariant> productVariants ;
+    private ProductVariant productVariant ;
     public ProductInventoryResponse(ProductInventory inventory) {
         this.inventoryId = inventory.getInventoryId();
         this.quantity = inventory.getQuantity();
         this.location = inventory.getLocation();
         this.lastUpdated = inventory.getLastUpdated();
         this.product = inventory.getProduct();
-        this.productVariants = inventory.getProductVariants();
+        this.productVariant = inventory.getProductVariant();
     }
 
 

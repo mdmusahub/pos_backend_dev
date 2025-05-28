@@ -1,5 +1,6 @@
 package com.sm.backend.serviceImpl;
 
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Product;
 import com.sm.backend.model.ProductInventory;
 import com.sm.backend.model.ProductVariant;
@@ -8,7 +9,7 @@ import com.sm.backend.repository.ProductRepository;
 import com.sm.backend.repository.ProductVariantRepository;
 import com.sm.backend.request.ProductInventoryRequest;
 import com.sm.backend.response.ProductInventoryResponse;
-import com.sm.backend.response.ProductVariantResponse;
+
 import com.sm.backend.service.ProductInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 @Service
 public class ProductInventoryServiceImpl implements ProductInventoryService {
    private final ProductRepository productRepository;
@@ -38,9 +39,9 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
         inventory.setProduct(product);
         inventory.setLocation(request.getLocation());
         inventory.setQuantity(request.getQuantity());
-    inventory.setLastUpdated(request.getLastUpdated());
-        List<ProductVariant> allVariantsByProductId = variantRepository.getAllVariantsByProductId(request.getProductId());
-    inventory.setProductVariants(allVariantsByProductId);
+        inventory.setLastUpdated(request.getLastUpdated());
+        inventory.setProductVariant(variantRepository.findById(request.getVariantId())
+                .orElseThrow(()->new ResourceNotFoundException("invalid variant id")));
     inventoryRepository.save(inventory);
     }
 
@@ -60,7 +61,8 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 
     @Override
     public Object findById(Long inventoryId) {
-        return inventoryRepository.findById(inventoryId).orElseThrow(()->new RuntimeException("id not found"));
+        return inventoryRepository.findById(inventoryId)
+                .orElseThrow(()->new RuntimeException("invald inventory ID"));
     }
 
     @Override
