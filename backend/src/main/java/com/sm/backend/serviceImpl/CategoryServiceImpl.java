@@ -65,7 +65,8 @@ if (request.getName()!=null){
 }
 
 if (request.getParentId()!=null){
-    category.setParentId(repository.findById(request.getParentId()).orElseThrow(()->new ResourceNotFoundException("id not found")));
+    Category parentId = repository.findById(request.getParentId()).orElseThrow(() -> new ResourceNotFoundException("id not found"));
+    category.setParentId(parentId);
 }
     return repository.save(category);
 }
