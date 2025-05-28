@@ -38,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("404 error"));
         product.setCategory(category);
         repository.save(product);
+
     }
 
     @Override
@@ -89,7 +90,7 @@ if (request.getCategoryId()!=null){
     }
 
     @Override
-    public void delete(Long productId) {
+    public void delete(Long productId)   {
     repository.deleteById(productId);
     }
 }

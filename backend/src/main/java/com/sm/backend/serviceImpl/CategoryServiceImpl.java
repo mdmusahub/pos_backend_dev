@@ -56,7 +56,7 @@ return new CategoryResponse(category);
 
     @Override
     public Object updateCategory(Long categoryId, CategoryRequest request) {
-        Category category = new Category();
+        Category category = repository.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("not found"));
         if (request.getDiscription()!=null){
             category.setDiscription(request.getDiscription());
         }

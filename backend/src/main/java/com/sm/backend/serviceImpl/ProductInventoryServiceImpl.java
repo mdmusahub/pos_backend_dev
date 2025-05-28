@@ -9,7 +9,7 @@ import com.sm.backend.repository.ProductRepository;
 import com.sm.backend.repository.ProductVariantRepository;
 import com.sm.backend.request.ProductInventoryRequest;
 import com.sm.backend.response.ProductInventoryResponse;
-import com.sm.backend.response.ProductVariantResponse;
+
 import com.sm.backend.service.ProductInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 @Service
 public class ProductInventoryServiceImpl implements ProductInventoryService {
    private final ProductRepository productRepository;
