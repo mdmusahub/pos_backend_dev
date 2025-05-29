@@ -2,10 +2,12 @@ package com.sm.backend.response;
 
 import com.sm.backend.model.Order;
 import com.sm.backend.model.OrderItem;
+import com.sm.backend.repository.OrderItemRepository;
 import com.sm.backend.utility.OrderStatus;
 import com.sm.backend.utility.PaymentMode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +15,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class OrderResponse {
+//@Autowired
+//private OrderItemRepository orderItemRepository;
+
     private Long orderID;
     private String userPhoneNumber;
     private OrderStatus status;
@@ -24,7 +29,7 @@ public class OrderResponse {
     private String cashAmount;
     private LocalDateTime orderDate;
     private LocalDateTime updatedAt;
-//   private List<OrderItem> orderItem;
+ private List<OrderItem> orderItem;
 
 
     public OrderResponse(Order order) {
@@ -39,7 +44,8 @@ public class OrderResponse {
         this.cashAmount = order.getCashAmount();
         this.orderDate = order.getOrderDate();
         this.updatedAt = order.getUpdatedAt();
-//     this.orderItem = order.
+    //this.orderItem = orderItemRepository.getItemsByOrderId(order.getOrderID());
     }
+
 
    }

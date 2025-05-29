@@ -6,4 +6,6 @@ public interface OrderService {
     void register(OrderRequest request);
 
     Object getAllOrders();
+
+    Object findById(Long orderId);
 }

@@ -60,4 +60,10 @@ public class OrderServiceImpl implements OrderService {
         List<OrderResponse> responses = orders.stream().map(OrderResponse::new).toList();
         return responses;
     }
+
+    @Override
+    public Object findById(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("id not found"));
+        return new OrderResponse(order);
+    }
 }
