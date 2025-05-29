@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(request.getDescription());
         product.setCreatedAt(request.getCreatedAt());
         product.setUpdatedAt(request.getUpdatedAt());
-        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("404 error"));
+        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category ID not found"));
         product.setCategory(category);
         repository.save(product);
     }
@@ -65,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Object updateDetails(ProductRequest request, Long productId) {
-        Product product = repository.findById(productId).orElseThrow(() -> new RuntimeException("id not found"));
+        Product product = repository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("product ID not found"));
 
         if (request.getProductPrice()!=null){
 product.setProductPrice(request.getProductPrice());
@@ -81,7 +81,7 @@ product.setProductPrice(request.getProductPrice());
     }
 
 if (request.getCategoryId()!=null){
-    Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new RuntimeException("id not found"));
+    Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("invalid category ID"));
     product.setCategory(category);
 }
 

@@ -29,7 +29,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     @Override
     public void register(ProductVariantRequest request) {
         ProductVariant variant = new ProductVariant();
-        Product productId = productRepository.findById(request.getProductId()).orElseThrow(() -> new RuntimeException("id not found"));
+        Product productId = productRepository.findById(request.getProductId()).orElseThrow(() -> new ResourceNotFoundException("product ID not found"));
         variant.setProduct(productId);
         variant.setVariantName(request.getVariantName());
         variant.setVariantValue(request.getVariantValue());
@@ -60,7 +60,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     public Object updateVariant(ProductVariantRequest request, Long variantId) {
     ProductVariant variant = repository.findById(variantId).orElseThrow(()->new RuntimeException("id not found"));
     if (request.getProductId()!=null){
-            Product product = productRepository.findById(request.getProductId()).orElseThrow(()->new RuntimeException("id not found"));
+            Product product = productRepository.findById(request.getProductId()).orElseThrow(()->new ResourceNotFoundException("product ID not found"));
             variant.setProduct(product);
     }
 
