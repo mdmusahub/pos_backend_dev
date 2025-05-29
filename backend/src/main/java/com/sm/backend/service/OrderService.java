@@ -8,4 +8,9 @@ public interface OrderService {
     Object getAllOrders();
 
     Object findById(Long orderId);
+
+
+    void updateById(Long orderId, OrderRequest request);
+
+    void deleteById(Long orderId);
 }

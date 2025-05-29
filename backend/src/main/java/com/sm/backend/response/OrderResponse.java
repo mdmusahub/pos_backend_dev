@@ -3,6 +3,8 @@ package com.sm.backend.response;
 import com.sm.backend.model.Order;
 import com.sm.backend.model.OrderItem;
 import com.sm.backend.repository.OrderItemRepository;
+import com.sm.backend.request.OrderRequest;
+import com.sm.backend.service.OrderItemService;
 import com.sm.backend.utility.OrderStatus;
 import com.sm.backend.utility.PaymentMode;
 import lombok.Data;
@@ -32,7 +34,7 @@ public class OrderResponse {
  private List<OrderItem> orderItem;
 
 
-    public OrderResponse(Order order) {
+    public OrderResponse(Order order, List<OrderItem>orderItem) {
         this.orderID = order.getOrderID();
         this.userPhoneNumber = order.getUserPhoneNumber();
         this.status = order.getStatus();
@@ -44,7 +46,7 @@ public class OrderResponse {
         this.cashAmount = order.getCashAmount();
         this.orderDate = order.getOrderDate();
         this.updatedAt = order.getUpdatedAt();
-    //this.orderItem = orderItemRepository.getItemsByOrderId(order.getOrderID());
+   this.orderItem = orderItem ;
     }
 
 

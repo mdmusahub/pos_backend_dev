@@ -30,7 +30,7 @@ private final OrderService service;
         throw new ResourceNotFoundException("cannot retrieve orders.");
     }
 }
-@GetMapping("findById/{orderId}")
+@GetMapping("/findById/{orderId}")
     public ResponseEntity<?>findById(@PathVariable Long orderId){
     try {
         return ResponseHandler.responseHandler("id retrieve successfully",HttpStatus.OK,service.findById(orderId));
@@ -38,9 +38,18 @@ private final OrderService service;
         throw new ResourceNotFoundException("id not Found");
     }
 }
-
-
-
+@PutMapping("/update/{orderId}")
+    public void  updateById (@PathVariable Long orderId,OrderRequest request){
+        service.updateById(orderId,request);
+    }
+@DeleteMapping("/delete/{orderId}")
+    public void deleteById(@PathVariable Long orderId){
+    service.deleteById(orderId);
+}
 
 }
+
+
+
+
 

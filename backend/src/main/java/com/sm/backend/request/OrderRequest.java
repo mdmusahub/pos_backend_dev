@@ -28,5 +28,6 @@ private Long productId;
 private Long productVariantId;
     private Long quantity;
     private Double unitPrice;
+
 }
 

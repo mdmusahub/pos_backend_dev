@@ -74,11 +74,21 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     @Override
     public Object update(ProductInventoryRequest request, Long inventoryId) {
         ProductInventory inventory = inventoryRepository.findById(inventoryId).orElseThrow(() -> new RuntimeException("id not found"));
-inventory.setQuantity(request.getQuantity());
+
+        if (request.getQuantity()!=null) {
+            inventory.setQuantity(request.getQuantity());
+        }
         Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new RuntimeException("id not found"));
-        inventory.setProduct(product);
-        inventory.setLocation(request.getLocation());
-        inventory.setLastUpdated(request.getLastUpdated());
+        if (request.getProductId()!=null) {
+            inventory.setProduct(product);
+        }
+        if (request.getLocation()!=null) {
+            inventory.setLocation(request.getLocation());
+        }
+        if (request.getLastUpdated()!=null ){
+            inventory.setLastUpdated(request.getLastUpdated());
+        }
+
   return inventoryRepository.save(inventory);
 }
 
