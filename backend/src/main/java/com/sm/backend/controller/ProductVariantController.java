@@ -1,58 +1,64 @@
 package com.sm.backend.controller;
 
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
+import com.sm.backend.reasponseHandler.ResponseHandler;
 import com.sm.backend.request.ProductVariantRequest;
-import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.ProductVariantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/productVariant")
 public class ProductVariantController {
-    private final ProductVariantService variantService;
+private final ProductVariantService service;
 @Autowired
-    public ProductVariantController(ProductVariantService variantService) {
-        this.variantService = variantService;
+    public ProductVariantController(ProductVariantService service) {
+        this.service = service;
     }
 
-    @PostMapping("/addVariant")
-    public void addVariant(@RequestBody ProductVariantRequest request){
-    variantService.addVariant(request);
-    }
-
-    @GetMapping("/getAll")
-    public ResponseEntity<?> getAllVariants(){
+    @PostMapping("/register")
+    public void register(@RequestBody ProductVariantRequest request){
+    service.register(request);
+}
+@GetMapping("/getAll")
+    public ResponseEntity<?>getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+                                   @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                   @RequestParam(required = false, defaultValue = "variantName") String sortby,
+                                   @RequestParam(required = false, defaultValue = "asc") String sortDir){
     try{
-        return ResponseHandler.responseBuilder("successfully retrived all variants.",
-                HttpStatus.OK,variantService.getAllVariants());
+   return ResponseHandler.responseHandler("there is list", HttpStatus.OK,service.getAll(pageNumber,pageSize,sortby,sortDir));
     } catch (Exception e) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+}
+@GetMapping("/findById/{variantId}")
+    public ResponseEntity<?>findById(@PathVariable Long  variantId){
+    try{
+        return ResponseHandler.responseHandler("id Found",HttpStatus.OK,service.findById(variantId));
     }
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<?> getVariantById(@PathVariable Long id){
-    try {
-        return ResponseHandler.responseBuilder("variant successfully retrieved by id.",
-                HttpStatus.OK,variantService.GetById(id));
+    catch (Exception e){
+        throw  new ResourceNotFoundException(e.getMessage());
+    }
+}
+@PutMapping("/updateVariant/{variantId}")
+    public ResponseEntity<?>updateVariant(@RequestBody ProductVariantRequest request, @PathVariable Long variantId){
+    try{
+        return ResponseHandler.responseHandler("Updated",HttpStatus.OK,service.updateVariant(request,variantId));
     } catch (Exception e) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    }
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateById(@PathVariable Long id,@RequestBody ProductVariantRequest request){
-try {
-    return ResponseHandler.responseBuilder("variant updated successfully.",
-            HttpStatus.OK,variantService.updateById(id,request));
-} catch (Exception e) {
-    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 }
 
-    }
-    @DeleteMapping("/delete/{id}")
-    public void deleteById(@PathVariable Long id){
-    variantService.delete(id);
+
+    @DeleteMapping("/delete/{variantId}")
+    public void delete(@PathVariable Long variantId){
+       service.delete(variantId);
+        }
+
     }
 
-}
+
+

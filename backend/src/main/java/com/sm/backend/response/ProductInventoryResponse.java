@@ -9,22 +9,23 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Data
+@NoArgsConstructor
 public class ProductInventoryResponse {
+    private Long inventoryId;
+    private Integer quantity;
+    private String location;
+    private LocalDateTime lastUpdated;
+    private Product product;
+    private ProductVariant productVariant ;
     public ProductInventoryResponse(ProductInventory inventory) {
         this.inventoryId = inventory.getInventoryId();
         this.quantity = inventory.getQuantity();
         this.location = inventory.getLocation();
         this.lastUpdated = inventory.getLastUpdated();
-        this.productId = inventory.getProductId();
-        this.variantId = inventory.getVariantId();
+        this.product = inventory.getProduct();
+        this.productVariant = inventory.getProductVariant();
     }
 
-    private Long inventoryId;
-    private Integer quantity;
-    private String location;
-    private LocalDateTime lastUpdated;
-    private Product productId;
-    private List<ProductVariant> variantId;
+
 }

@@ -1,5 +1,6 @@
 package com.sm.backend.request;
 
+import com.sm.backend.model.Product;
 import lombok.Data;
 
 @Data

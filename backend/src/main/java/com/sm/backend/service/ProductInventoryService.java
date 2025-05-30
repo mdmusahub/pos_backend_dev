@@ -3,13 +3,13 @@ package com.sm.backend.service;
 import com.sm.backend.request.ProductInventoryRequest;
 
 public interface ProductInventoryService {
-    void addInventory(ProductInventoryRequest request);
+    void register(ProductInventoryRequest request);
 
-    Object getAll();
+    Object getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
 
-    Object getById(Long id);
+    Object update(ProductInventoryRequest request, Long inventoryId);
 
-    Object updateById(Long id,ProductInventoryRequest request);
+    Object findById(Long inventoryId);
 
-    void deleteById(Long id);
+    void delete(Long inventoryId);
 }

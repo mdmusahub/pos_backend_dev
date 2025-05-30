@@ -2,23 +2,24 @@ package com.sm.backend.response;
 
 import com.sm.backend.model.Product;
 import com.sm.backend.model.ProductVariant;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ProductVariantResponse {
-    private Long variantId;
+    private Long productVariantId;
+    private Product product;
     private String variantName;
     private String variantValue;
     private Double price;
-    private Product productId;
-
-    public ProductVariantResponse(ProductVariant variant) {
-        this.price = variant.getPrice();
-        this.variantId = variant.getVariantId();
-        this.variantName = variant.getVariantName();
-        this.variantValue = variant.getVariantValue();
-        this.productId = variant.getProductId();
+    public ProductVariantResponse(ProductVariant productVariant) {
+        this.productVariantId = productVariant.getProductVariantId();
+        this.product = productVariant.getProduct()  ;
+        this.variantName = productVariant.getVariantName();
+        this.variantValue = productVariant.getVariantValue();
+        this.price = productVariant.getPrice();
     }
+
 }
+

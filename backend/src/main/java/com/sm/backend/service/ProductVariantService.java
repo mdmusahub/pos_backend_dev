@@ -3,13 +3,13 @@ package com.sm.backend.service;
 import com.sm.backend.request.ProductVariantRequest;
 
 public interface ProductVariantService {
-    void addVariant(ProductVariantRequest request);
+    void register(ProductVariantRequest request);
 
-    Object getAllVariants();
+    Object getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
 
-    Object GetById(Long id);
+    Object findById(Long variantId);
 
-    Object updateById(Long id, ProductVariantRequest request);
+    Object updateVariant(ProductVariantRequest request, Long variantId);
 
-    void delete(java.lang.Long id);
+    void delete(Long variantId);
 }

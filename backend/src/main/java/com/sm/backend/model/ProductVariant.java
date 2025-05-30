@@ -1,21 +1,18 @@
 package com.sm.backend.model;
 
 import jakarta.persistence.*;
-import jdk.jfr.Enabled;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@NoArgsConstructor
+@Entity
 public class ProductVariant {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long variantId;
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product productId;
-    private String variantName;
-    private String variantValue;
-    private Double price;
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long productVariantId;
+@ManyToOne
+@JoinColumn(name = "prodcut_id")
+private Product product;
+private String variantName;
+private String variantValue;
+private Double price;
 }

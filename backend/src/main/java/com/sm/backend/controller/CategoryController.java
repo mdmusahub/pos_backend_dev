@@ -1,7 +1,7 @@
 package com.sm.backend.controller;
 
 
-import com.sm.backend.responseHandler.ResponseHandler;
+import com.sm.backend.reasponseHandler.ResponseHandler;
 import com.sm.backend.request.CategoryRequest;
 import com.sm.backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public void register(@RequestBody CategoryRequest request){
 @GetMapping("/getById/{categoryId}")
     public ResponseEntity<?> getById(@PathVariable Long categoryId){
     try {
-        return ResponseHandler.responseBuilder("id found Successfully", HttpStatus.OK,service.getbyId(categoryId));
+        return ResponseHandler.responseHandler("id found Successfully", HttpStatus.OK,service.getbyId(categoryId));
     }
 catch (Exception e){
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -38,7 +38,7 @@ catch (Exception e){
 @PutMapping("/update/{categoryId}")
     public ResponseEntity<?>updateCategory(@RequestBody CategoryRequest request ,@PathVariable Long categoryId){
     try {
-        return ResponseHandler.responseBuilder("updated",HttpStatus.OK,service.updateCategory(categoryId,request));
+        return ResponseHandler.responseHandler("updated",HttpStatus.OK,service.updateCategory(categoryId,request));
     }
 catch (Exception e){
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -53,7 +53,7 @@ public ResponseEntity<?>findAll(
         @RequestParam(required = false,defaultValue = "asc")String sortDir
 ){
     try {
-        return ResponseHandler.responseBuilder("List of categories",HttpStatus.OK,service.findAll(pageNumber,pageSize,sortBy,sortDir));
+        return ResponseHandler.responseHandler("List of categories",HttpStatus.OK,service.findAll(pageNumber,pageSize,sortBy,sortDir));
     }
 catch (Exception e){
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
