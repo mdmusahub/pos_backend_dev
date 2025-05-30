@@ -1,7 +1,8 @@
 package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
-import com.sm.backend.reasponseHandler.ResponseHandler;
+
+import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

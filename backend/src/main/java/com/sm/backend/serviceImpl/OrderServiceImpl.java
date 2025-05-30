@@ -49,9 +49,10 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("id not Found")));
         orderItem.setProductVariant(productVariantRepository.findById(request.getProductVariantId()).orElseThrow(() -> new ResourceNotFoundException("id not found")));
         orderItem.setProduct(productRepository.findById(request.getProductId()).orElseThrow(() -> new ResourceNotFoundException("id not found")));
-        orderItem.setQuantity(request.getQuantity());
         orderItem.setUnitPrice(request.getUnitPrice());
-        order.setTotalAmount(request.getUnitPrice() * request.getQuantity());
+        orderItem.setQuantity(request.getQuantity());
+        double totalAmount = request.getUnitPrice() * request.getQuantity();
+        orderItem.setTotalPrice(totalAmount);
         orderItemRepository.save(orderItem);
     }
 
@@ -71,57 +72,16 @@ public class OrderServiceImpl implements OrderService {
   return new OrderResponse(order,orderItems);
     }
 
-    @Override
-    public void updateById(Long orderId, OrderRequest request) {
-        OrderItem orderItem = orderItemRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("id not found"));
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("id not found"));
-        if (request.getUserPhoneNumber()!=null){
-            order.setUserPhoneNumber(request.getUserPhoneNumber());
-        }
-        if (request.getStatus()!=null){
-            order.setStatus(request.getStatus());
-        }
-        if (request.getDiscount()!=null){
-            order.setDiscount(request.getDiscount());
-        }
 
-        if (request.getTax()!=null){
-            order.setTax(request.getTax());
-        }
-        if (request.getTotalAmount()!=null){
-            order.setTotalAmount(request.getTotalAmount());
-        }
-        if (request.getPaymentMode()!=null){
-            order.setPaymentMode(request.getPaymentMode());
-        }
-        if (request.getOnlineAmount()!=null){
-            order.setOnlineAmount(request.getOnlineAmount());
-        }
-
-        if (request.getOrderDate()!=null){
-            order.setOrderDate(request.getOrderDate());
-        }
-        if (request.getUpdatedAt()!=null){
-            order.setUpdatedAt(request.getUpdatedAt());
-        }
-        if (request.getQuantity()!=null){
-            orderItem.setQuantity(request.getQuantity());
-        }
-        if(request.getUnitPrice()!=null){
-            orderItem.setUnitPrice(request.getUnitPrice());
-        }
-        if (request.getCashAmount()!=null){
-            order.setCashAmount(request.getCashAmount());
-        }
-        Order save = orderRepository.save(order);
-        OrderItem save1 = orderItemRepository.save(orderItem);
-
-
-    }
 
     @Override
     public void deleteById(Long orderId) {
-        orderRepository.deleteById(orderId);
+        List<OrderItem> items=orderItemRepository.getItemsByOrderId(orderId);
+        orderItemRepository.deleteAll(items);
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(()->new ResourceNotFoundException("order not found."));
+        orderRepository.delete(order);
+
     }
 
 }

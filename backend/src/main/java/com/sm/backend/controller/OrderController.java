@@ -1,8 +1,8 @@
 package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
-import com.sm.backend.reasponseHandler.ResponseHandler;
 import com.sm.backend.request.OrderRequest;
+import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,10 +38,6 @@ private final OrderService service;
         throw new ResourceNotFoundException("id not Found");
     }
 }
-@PutMapping("/update/{orderId}")
-    public void  updateById (@PathVariable Long orderId,OrderRequest request){
-        service.updateById(orderId,request);
-    }
 @DeleteMapping("/delete/{orderId}")
     public void deleteById(@PathVariable Long orderId){
     service.deleteById(orderId);

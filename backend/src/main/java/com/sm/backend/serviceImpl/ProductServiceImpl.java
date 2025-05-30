@@ -31,7 +31,6 @@ public class ProductServiceImpl implements ProductService {
         Product product =  new Product();
         product.setProductName(request.getProductName());
         product.setSku(request.getSku());
-        product.setProductPrice(request.getProductPrice());
         product.setDescription(request.getDescription());
         product.setCreatedAt(request.getCreatedAt());
         product.setUpdatedAt(request.getUpdatedAt());
@@ -68,9 +67,6 @@ public class ProductServiceImpl implements ProductService {
     public Object updateDetails(ProductRequest request, Long productId) {
         Product product = repository.findById(productId).orElseThrow(() -> new RuntimeException("id not found"));
 
-        if (request.getProductPrice()!=null){
-product.setProductPrice(request.getProductPrice());
-}
         if (request.getProductName()!=null){
             product.setProductName(request.getProductName());
         }

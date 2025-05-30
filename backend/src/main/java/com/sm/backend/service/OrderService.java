@@ -9,8 +9,5 @@ public interface OrderService {
 
     Object findById(Long orderId);
 
-
-    void updateById(Long orderId, OrderRequest request);
-
     void deleteById(Long orderId);
 }
