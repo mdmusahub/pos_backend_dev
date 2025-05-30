@@ -20,8 +20,6 @@ public class Product {
     private Long productId;
     private String productName;
     private String sku;
-    // hatana hai
-    private Double productPrice;
     private String description;
     @ManyToOne
     private Category category;

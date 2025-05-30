@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public class ProductResponse {
     private Long productId;
     private String productName;
-    private Double productPrice;
     private String sku;
     private String description;
     private LocalDateTime createdAt;
@@ -23,7 +22,6 @@ public class ProductResponse {
      public ProductResponse(Product product) {
          this.productId = product.getProductId();
          this.productName = product.getProductName();
-         this.productPrice = product.getProductPrice();
          this.sku = product.getSku();
          this.description = product.getDescription();
          this.createdAt = product.getCreatedAt();

@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderItemResponse {
     private Long orderItemId;
-    private Order order;
     private Product product;
     private ProductVariant productVariant;
     private Long quantity;
@@ -21,7 +20,6 @@ public class OrderItemResponse {
 
     public OrderItemResponse(OrderItem item) {
         this.orderItemId = item.getOrderItemId();
-        this.order = item.getOrder();
         this.product = item.getProduct();
         this.productVariant = item.getProductVariant();
         this.quantity = item.getQuantity();

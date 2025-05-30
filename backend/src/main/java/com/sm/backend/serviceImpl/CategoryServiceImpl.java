@@ -32,7 +32,7 @@ private final CategoryRepository repository;
       else {
             Category category = new Category();
             category.setName(request.getName());
-            category.setDiscription(request.getDiscription());
+            category.setDiscription(request.getDescription());
             if (request.getParentId()!=null) {
                 Category category1 = repository.findById(request.getParentId()).orElseThrow(() -> new RuntimeException("id not found"));
                 category.setParentId(category1);
@@ -56,12 +56,17 @@ return new CategoryResponse(category);
 
     @Override
     public Object updateCategory(Long categoryId, CategoryRequest request) {
-        Category category = new Category();
-        if (request.getDiscription()!=null){
-            category.setDiscription(request.getDiscription());
+        Category category = repository.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("not found"));
+        if (request.getDescription()!=null){
+            category.setDiscription(request.getDescription());
         }
 if (request.getName()!=null){
     category.setName(request.getName());
+}
+
+if (request.getParentId()!=null){
+    Category parentId = repository.findById(request.getParentId()).orElseThrow(() -> new ResourceNotFoundException("id not found"));
+    category.setParentId(parentId);
 }
     return repository.save(category);
 }
