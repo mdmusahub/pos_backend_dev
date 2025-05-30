@@ -56,17 +56,12 @@ return new CategoryResponse(category);
 
     @Override
     public Object updateCategory(Long categoryId, CategoryRequest request) {
-        Category category = repository.findById(categoryId)
-                .orElseThrow(()->new ResourceNotFoundException("invalid category ID"));
+        Category category = new Category();
         if (request.getDiscription()!=null){
             category.setDiscription(request.getDiscription());
         }
 if (request.getName()!=null){
     category.setName(request.getName());
-}
-if (request.getParentId()!=null){
-    category.setParentId(repository.findById(request.getParentId())
-            .orElseThrow(()->new ResourceNotFoundException("invalid parent ID")));
 }
     return repository.save(category);
 }

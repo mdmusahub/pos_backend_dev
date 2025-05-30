@@ -1,6 +1,5 @@
 package com.sm.backend.controller;
 
-import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.reasponseHandler.ResponseHandler;
 import com.sm.backend.request.ProductRequest;
 import com.sm.backend.service.ProductService;
@@ -25,18 +24,18 @@ public class ProductController {
         service.register(request);
     }
 
-    @GetMapping("/getById/{productId}")
+    @GetMapping("/findById/{productId}")
 
     public ResponseEntity<?> findById(@PathVariable Long productId) {
         try {
-            return ResponseHandler.responseHandler("id retrive successfully", HttpStatus.OK, service.findById(productId));
+            return ResponseHandler.responseHandler("id retrieve successfully", HttpStatus.OK, service.findById(productId));
         } catch (Exception e) {
-            throw  new ResourceNotFoundException(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/findAll")
-    public ResponseEntity<?> findall(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
                                      @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                      @RequestParam(required = false, defaultValue = "productName") String sortby,
                                      @RequestParam(required = false, defaultValue = "asc") String sortDir) {
@@ -58,7 +57,7 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-@DeleteMapping("/delete/{productId}")
+@DeleteMapping("delete/{productId}")
 public String delete(@PathVariable Long productId){
         service.delete(productId);
 return "deleted";

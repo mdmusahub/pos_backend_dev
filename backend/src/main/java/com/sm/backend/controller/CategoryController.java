@@ -25,7 +25,7 @@ public void register(@RequestBody CategoryRequest request){
     service.register(request);
 }
 @GetMapping("/getById/{categoryId}")
-    public ResponseEntity<?> getById(@PathVariable Long categoryId){
+    public ResponseEntity<?> findById(@PathVariable Long categoryId){
     try {
         return ResponseHandler.responseHandler("id found Successfully", HttpStatus.OK,service.getbyId(categoryId));
     }
