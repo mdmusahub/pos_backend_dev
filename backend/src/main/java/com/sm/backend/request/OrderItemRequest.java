@@ -8,10 +8,9 @@ import lombok.Data;
 
 @Data
 public class OrderItemRequest {
-    private Long orderId;
-    private Long productId;
+//    private Long orderId;
     private Long variantId;
-    private Integer quantity;
-    private Double unitPrice;
-    private Double totalPrice;
+    private Long quantity;
+//    private Double unitPrice;
+//    private Double totalPrice;
 }

@@ -8,8 +8,11 @@ import com.sm.backend.utility.PaymentMode;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.catalina.LifecycleState;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 public class OrderRequest {
@@ -23,11 +26,6 @@ public class OrderRequest {
     private String cashAmount;
     private LocalDateTime orderDate;
     private LocalDateTime updatedAt;
-//private OrderItem orderItem;
-private Long productId;
-private Long productVariantId;
-    private Long quantity;
-    private Double unitPrice;
-
+   private List<OrderItemRequest>orderItemRequests;
 }
 
