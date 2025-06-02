@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
 //@Query("select a from orderItem a where a.order.id =:orderId")
-////List<OrderItem>getItemsByOrderId( @Param("orderId") Long orderId);
+//////List<OrderItem>getItemsByOrderId( @Param("orderId") Long orderId);
 //@Query("SELECT oi FROM OrderItem oi WHERE oi.order.id = :orderId")
 //List<OrderItem> getItemsByOrderId(@Param("orderId") Long orderId);
 }

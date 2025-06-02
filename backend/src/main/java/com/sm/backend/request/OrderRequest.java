@@ -20,7 +20,6 @@ public class OrderRequest {
     private OrderStatus status;
     private Double discount;
     private  Double tax;
-    private  Double totalAmount;
     private PaymentMode paymentMode;
     private String onlineAmount;
     private String cashAmount;

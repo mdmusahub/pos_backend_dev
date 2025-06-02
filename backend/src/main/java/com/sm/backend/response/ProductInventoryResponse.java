@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductInventoryResponse {
     private Long inventoryId;
-    private Integer quantity;
+    private Long quantity;
     private String location;
     private LocalDateTime lastUpdated;
     private Product product;

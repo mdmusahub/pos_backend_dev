@@ -20,8 +20,9 @@ private final OrderService service;
 
     @PostMapping("/addOrder")
     public void register(@RequestBody OrderRequest request){
-    service.register(request);
-}
+         service.register(request);
+
+    }
 @GetMapping("/getAll")
     public ResponseEntity<?>getAllOrders(){
     try{

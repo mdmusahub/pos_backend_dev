@@ -6,7 +6,7 @@ import lombok.Data;
 
 
 import java.time.LocalDateTime;
-
+import java.util.List;
 
 
 @Data
@@ -18,4 +18,5 @@ public class ProductRequest {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String description;
+    private List<ProductVariantRequest> variantRequests;
 }
