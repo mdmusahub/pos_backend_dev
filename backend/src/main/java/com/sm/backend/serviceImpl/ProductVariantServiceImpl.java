@@ -41,7 +41,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         variant.setVariantValue(request.getVariantValue());
         variant.setPrice(request.getPrice());
         repository.save(variant);
-//        creating inventory
+//        creating inventory with variant
 
             ProductInventory inventory = new ProductInventory();
             inventory.setQuantity(request.getInventoryRequest().getQuantity());
