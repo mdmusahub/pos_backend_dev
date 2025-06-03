@@ -35,14 +35,14 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     @Override
     public void register(ProductInventoryRequest request) {
         ProductInventory inventory = new ProductInventory();
-        Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new RuntimeException("id not found"));
-        inventory.setProduct(product);
         inventory.setLocation(request.getLocation());
         inventory.setQuantity(request.getQuantity());
         inventory.setLastUpdated(request.getLastUpdated());
-        inventory.setProductVariant(variantRepository.findById(request.getVariantId())
-                .orElseThrow(()->new ResourceNotFoundException("invalid variant id")));
-    inventoryRepository.save(inventory);
+        ProductVariant variant = variantRepository.findById(request.getVariantId())
+                .orElseThrow(() -> new ResourceNotFoundException("invalid variant id"));
+        inventory.setProductVariant(variant);
+        inventory.setProduct(variant.getProduct());
+        inventoryRepository.save(inventory);
     }
 
     @Override
@@ -74,11 +74,21 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     @Override
     public Object update(ProductInventoryRequest request, Long inventoryId) {
         ProductInventory inventory = inventoryRepository.findById(inventoryId).orElseThrow(() -> new RuntimeException("id not found"));
-inventory.setQuantity(request.getQuantity());
-        Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new RuntimeException("id not found"));
-        inventory.setProduct(product);
-        inventory.setLocation(request.getLocation());
-        inventory.setLastUpdated(request.getLastUpdated());
+        if (request.getQuantity()!=null){
+            inventory.setQuantity(request.getQuantity());
+        }
+        if (request.getVariantId()!=null){
+            ProductVariant variant = variantRepository.findById(request.getVariantId())
+                    .orElseThrow(() -> new ResourceNotFoundException("invalid variant ID"));
+            inventory.setProduct(variant.getProduct());
+            inventory.setProductVariant(variant);
+        }
+        if (request.getLocation()!=null){
+            inventory.setLocation(request.getLocation());
+        }
+      if (request.getLastUpdated()!=null){
+          inventory.setLastUpdated(request.getLastUpdated());
+      }
   return inventoryRepository.save(inventory);
 }
 

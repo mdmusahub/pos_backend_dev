@@ -2,9 +2,12 @@ package com.sm.backend.serviceImpl;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Product;
+import com.sm.backend.model.ProductInventory;
 import com.sm.backend.model.ProductVariant;
+import com.sm.backend.repository.ProductInventoryRepository;
 import com.sm.backend.repository.ProductRepository;
 import com.sm.backend.repository.ProductVariantRepository;
+import com.sm.backend.request.ProductInventoryRequest;
 import com.sm.backend.request.ProductVariantRequest;
 
 import com.sm.backend.response.ProductVariantResponse;
@@ -20,14 +23,17 @@ import org.springframework.stereotype.Service;
 public class ProductVariantServiceImpl implements ProductVariantService {
     private final ProductRepository productRepository;
     private final ProductVariantRepository repository;
+    private final ProductInventoryRepository inventoryRepository;
 @Autowired
-    public ProductVariantServiceImpl(ProductRepository productRepository, ProductVariantRepository repository) {
+    public ProductVariantServiceImpl(ProductRepository productRepository, ProductVariantRepository repository, ProductInventoryRepository inventoryRepository) {
         this.productRepository = productRepository;
         this.repository = repository;
-    }
+    this.inventoryRepository = inventoryRepository;
+}
 
     @Override
     public void register(ProductVariantRequest request) {
+//       creating variant
         ProductVariant variant = new ProductVariant();
         Product productId = productRepository.findById(request.getProductId()).orElseThrow(() -> new ResourceNotFoundException("product ID not found"));
         variant.setProduct(productId);
@@ -35,6 +41,18 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         variant.setVariantValue(request.getVariantValue());
         variant.setPrice(request.getPrice());
         repository.save(variant);
+//        creating inventory
+
+            ProductInventory inventory = new ProductInventory();
+            inventory.setQuantity(request.getInventoryRequest().getQuantity());
+            inventory.setLocation(request.getInventoryRequest().getLocation());
+            inventory.setLastUpdated(request.getInventoryRequest().getLastUpdated());
+//            ProductVariant variant1 = repository.findById(request.getInventoryRequest().getVariantId())
+//                    .orElseThrow(() -> new ResourceNotFoundException("invalid variant ID"));
+            inventory.setProduct(variant.getProduct());
+            inventory.setProductVariant(variant);
+            inventoryRepository.save(inventory);
+
 }
 
     @Override
