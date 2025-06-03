@@ -15,7 +15,7 @@ public class OrderItem {
 //private Order order;
 @ManyToOne
     private Product product;
-@ManyToOne
+@OneToOne
     private ProductVariant productVariant;
 private Long quantity;
 private Double unitPrice;
