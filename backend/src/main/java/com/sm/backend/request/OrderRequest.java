@@ -18,8 +18,8 @@ import java.util.List;
 public class OrderRequest {
     private String userPhoneNumber;
     private OrderStatus status;
-    private Double discount;
-    private  Double tax;
+//    private Double discount;
+//    private  Double tax;
     private PaymentMode paymentMode;
     private String onlineAmount;
     private String cashAmount;

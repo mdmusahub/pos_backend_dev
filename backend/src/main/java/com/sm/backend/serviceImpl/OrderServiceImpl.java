@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
         if(request.getStatus()== OrderStatus.COMPLETED){
             order.setStatus(OrderStatus.COMPLETED);
         }
-        order.setDiscount(request.getDiscount());
+//        order.setDiscount(request.getDiscount());
         if(request.getPaymentMode()==PaymentMode.CASH){
             order.setPaymentMode(PaymentMode.CASH);
         }
