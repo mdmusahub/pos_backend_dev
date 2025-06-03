@@ -88,6 +88,18 @@ public class OrderServiceImpl implements OrderService {
              return item;
         }).toList();
         order.setOrderItems(list);
+//        setting tax
+        order.setTax(order.getTotalAmount()*0.18d);
+//        applying tax to the total amount
+        order.setTotalAmount(order.getTotalAmount()+ order.getTax());
+//        setting 5% discount if total amount is >= 5000
+        if (order.getTotalAmount()>=5000d){
+            order.setDiscount(order.getTotalAmount()*0.05d);
+            order.setTotalAmount(order.getTotalAmount() - order.getDiscount());
+        }
+        else {
+            order.setDiscount(0d);
+        }
         orderRepository.save(order);
 //        managing inventory
         for(OrderItem item:list){

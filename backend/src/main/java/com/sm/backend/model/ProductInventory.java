@@ -17,7 +17,7 @@ private String location;
 private LocalDateTime lastUpdated;
 @ManyToOne
 private Product product;
-@ManyToOne
+@OneToOne
 private ProductVariant productVariant;
 
 
