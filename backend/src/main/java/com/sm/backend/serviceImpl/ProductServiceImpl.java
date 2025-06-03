@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
             product.setCategory(category);
             repository.save(product);
 
-//        creating variants
+//        creating variants with product
             for (ProductVariantRequest request1 : request.getVariantRequests()) {
                 ProductVariant variant = new ProductVariant();
                 variant.setVariantName(request1.getVariantName());
@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
                 variant.setPrice(request1.getPrice());
                 variant.setProduct(repository.findById(product.getProductId()).orElseThrow(() -> new ResourceNotFoundException("invalid id")));
                 variantRepository.save(variant);
-//            creating inventories
+//            creating inventories with Product
                 ProductInventory inventory = new ProductInventory();
                 inventory.setQuantity(request1.getInventoryRequest().getQuantity());
                 inventory.setLocation(request1.getInventoryRequest().getLocation());
