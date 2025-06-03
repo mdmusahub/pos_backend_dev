@@ -10,15 +10,15 @@ import java.util.List;
 @Data
 public class ProductInventory {
 @Id
- @GeneratedValue(strategy = GenerationType.IDENTITY)
- private Long inventoryId;
-private Integer quantity;
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long inventoryId;
+private Long quantity;
 private String location;
 private LocalDateTime lastUpdated;
 @ManyToOne
- private Product product;
+private Product product;
 @ManyToOne
- private ProductVariant productVariant ;
+private ProductVariant productVariant;
 
 
 }

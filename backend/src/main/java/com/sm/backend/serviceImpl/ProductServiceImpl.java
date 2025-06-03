@@ -3,9 +3,12 @@ package com.sm.backend.serviceImpl;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Category;
 import com.sm.backend.model.Product;
+import com.sm.backend.model.ProductVariant;
 import com.sm.backend.repository.CategoryRepository;
 import com.sm.backend.repository.ProductRepository;
+import com.sm.backend.repository.ProductVariantRepository;
 import com.sm.backend.request.ProductRequest;
+import com.sm.backend.request.ProductVariantRequest;
 import com.sm.backend.response.ProductResponse;
 import com.sm.backend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +22,12 @@ import org.springframework.stereotype.Service;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
     private final CategoryRepository categoryRepository;
-
+    private final ProductVariantRepository variantRepository;
     @Autowired
-    public ProductServiceImpl(ProductRepository repository, CategoryRepository categoryRepository) {
+    public ProductServiceImpl(ProductRepository repository, CategoryRepository categoryRepository, ProductVariantRepository variantRepository) {
         this.repository = repository;
         this.categoryRepository = categoryRepository;
+        this.variantRepository = variantRepository;
     }
 
     @Override
@@ -37,6 +41,14 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category ID not found"));
         product.setCategory(category);
         repository.save(product);
+        for(ProductVariantRequest request1: request.getVariantRequests()) {
+            ProductVariant variant = new ProductVariant();
+            variant.setVariantName(request1.getVariantName());
+            variant.setVariantValue(request1.getVariantValue());
+            variant.setPrice(request1.getPrice());
+            variant.setProduct(repository.findById(product.getProductId()).orElseThrow(()->new ResourceNotFoundException("invalid id")));
+            variantRepository.save(variant);
+        }
 
     }
 

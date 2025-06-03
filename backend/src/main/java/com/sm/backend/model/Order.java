@@ -5,6 +5,7 @@ import com.sm.backend.utility.PaymentMode;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +18,7 @@ public class Order {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private Long orderID;
-@OneToMany
+@OneToMany(fetch = FetchType.EAGER)
 private List<OrderItem> orderItems;
 private String userPhoneNumber;
 @Enumerated(EnumType.STRING)
