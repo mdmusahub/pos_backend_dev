@@ -6,7 +6,7 @@ import lombok.Data;
 
 
 import java.time.LocalDateTime;
-
+import java.util.List;
 
 
 @Data
@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 public class ProductRequest {
     private String productName;
     private String sku;
-    private Double productPrice;
     private Long categoryId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String description;
+    private List<ProductVariantRequest> variantRequests;
 }

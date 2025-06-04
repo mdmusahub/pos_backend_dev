@@ -1,10 +1,8 @@
 package com.sm.backend.controller;
 
 
-import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
-import com.sm.backend.model.Category;
-import com.sm.backend.reasponseHandler.ResponseHandler;
 import com.sm.backend.request.CategoryRequest;
+import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,15 +23,15 @@ public void register(@RequestBody CategoryRequest request){
     service.register(request);
 }
 @GetMapping("/getById/{categoryId}")
-    public ResponseEntity<?> findById(@PathVariable Long categoryId){
+    public ResponseEntity<?> getById(@PathVariable Long categoryId){
     try {
         return ResponseHandler.responseHandler("id found Successfully", HttpStatus.OK,service.getbyId(categoryId));
     }
 catch (Exception e){
-        throw new ResourceNotFoundException(e.getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 }
 }
-@DeleteMapping("/delete/{categoryId}")
+@DeleteMapping("/delete{categoryId}")
     public void delete(@PathVariable Long categoryId){
     service.delete(categoryId);
 }
@@ -63,6 +61,7 @@ catch (Exception e){
 
 
 }
+
 
 
 }

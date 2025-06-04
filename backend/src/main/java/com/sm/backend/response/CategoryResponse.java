@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 public class CategoryResponse {
     private Long categoryId;
     private String name;
-    private  String discription;
+    private  String description;
     private Long parentId;
     public CategoryResponse(Category category) {
         this.categoryId = category.getCategoryId();
         this.name = category.getName();
-        this.discription = category.getDiscription();
+        this.description = category.getDescription();
    this.parentId = category.getCategoryId();
     }
 }

@@ -19,4 +19,9 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleCategoryAlreadyExistsException(CategoryAlreadyExistsException e,HttpServletRequest request){
     return new ErrorResponse(LocalDateTime.now(),HttpStatus.CONFLICT.value(),HttpStatus.CONFLICT.getReasonPhrase(), e.getMessage(), request.getRequestURI());
 }
+@ExceptionHandler(value = ProductAlreadyExistsException.class)
+    public ErrorResponse handleProductNotFoundException(ProductAlreadyExistsException e,HttpServletRequest request){
+    return new ErrorResponse(LocalDateTime.now(),HttpStatus.CONFLICT.value(),HttpStatus.CONFLICT.getReasonPhrase(), e.getMessage(), request.getRequestURI());
 }
+}
+

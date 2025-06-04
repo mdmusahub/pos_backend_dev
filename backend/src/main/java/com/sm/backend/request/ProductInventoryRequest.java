@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 @Data
 public class ProductInventoryRequest {
-    private Integer quantity;
+    private Long quantity;
     private String location;
     private LocalDateTime lastUpdated;
-    private Long productId;
+//    private Long productId;
     private Long variantId;
 }
