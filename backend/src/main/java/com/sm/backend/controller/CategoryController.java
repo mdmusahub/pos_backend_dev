@@ -1,6 +1,7 @@
 package com.sm.backend.controller;
 
 
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.CategoryRequest;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.CategoryService;
@@ -28,7 +29,7 @@ public void register(@RequestBody CategoryRequest request){
         return ResponseHandler.responseHandler("id found Successfully", HttpStatus.OK,service.getbyId(categoryId));
     }
 catch (Exception e){
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        throw new ResourceNotFoundException("invalid category ID");
 }
 }
 @DeleteMapping("/delete{categoryId}")

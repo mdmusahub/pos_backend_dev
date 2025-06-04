@@ -57,22 +57,24 @@ public class ProductServiceImpl implements ProductService {
             repository.save(product);
 
 //        creating variants
-            for (ProductVariantRequest request1 : request.getVariantRequests()) {
-                ProductVariant variant = new ProductVariant();
-                variant.setVariantName(request1.getVariantName());
-                variant.setVariantValue(request1.getVariantValue());
-                variant.setPrice(request1.getPrice());
-                variant.setProduct(repository.findById(product.getProductId()).orElseThrow(() -> new ResourceNotFoundException("invalid id")));
-                variantRepository.save(variant);
+           if(request.getVariantRequests().isEmpty()==false) {
+               for (ProductVariantRequest request1 : request.getVariantRequests()) {
+                   ProductVariant variant = new ProductVariant();
+                   variant.setVariantName(request1.getVariantName());
+                   variant.setVariantValue(request1.getVariantValue());
+                   variant.setPrice(request1.getPrice());
+                   variant.setProduct(repository.findById(product.getProductId()).orElseThrow(() -> new ResourceNotFoundException("invalid id")));
+                   variantRepository.save(variant);
 //            creating inventories
-                ProductInventory inventory = new ProductInventory();
-                inventory.setQuantity(request1.getInventoryRequest().getQuantity());
-                inventory.setLocation(request1.getInventoryRequest().getLocation());
-                inventory.setLastUpdated(request1.getInventoryRequest().getLastUpdated());
-                inventory.setProduct(variant.getProduct());
-                inventory.setProductVariant(variant);
-                inventoryRepository.save(inventory);
-            }
+                   ProductInventory inventory = new ProductInventory();
+                   inventory.setQuantity(request1.getInventoryRequest().getQuantity());
+                   inventory.setLocation(request1.getInventoryRequest().getLocation());
+                   inventory.setLastUpdated(request1.getInventoryRequest().getLastUpdated());
+                   inventory.setProduct(variant.getProduct());
+                   inventory.setProductVariant(variant);
+                   inventoryRepository.save(inventory);
+               }
+           }
         }
 
     }
