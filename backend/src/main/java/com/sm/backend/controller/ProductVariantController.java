@@ -19,9 +19,9 @@ private final ProductVariantService service;
         this.service = service;
     }
 
-    @PostMapping("/register")
-    public void register(@RequestBody ProductVariantRequest request){
-    service.register(request);
+    @PostMapping("/create")
+    public void createVariant(@RequestBody ProductVariantRequest request){
+    service.createVariant(request);
 }
 @GetMapping("/getAll")
     public ResponseEntity<?>getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
@@ -29,24 +29,24 @@ private final ProductVariantService service;
                                    @RequestParam(required = false, defaultValue = "variantName") String sortby,
                                    @RequestParam(required = false, defaultValue = "asc") String sortDir){
     try{
-   return ResponseHandler.responseHandler("there is list", HttpStatus.OK,service.getAll(pageNumber,pageSize,sortby,sortDir));
+   return ResponseHandler.responseHandler("List of Variants", HttpStatus.OK,service.getAll(pageNumber,pageSize,sortby,sortDir));
     } catch (Exception e) {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
-@GetMapping("/findById/{variantId}")
-    public ResponseEntity<?>findById(@PathVariable Long  variantId){
+@GetMapping("/getById/{variantId}")
+    public ResponseEntity<?>getById(@PathVariable Long  variantId){
     try{
-        return ResponseHandler.responseHandler("id Found",HttpStatus.OK,service.findById(variantId));
+        return ResponseHandler.responseHandler("variant retrieved successfully",HttpStatus.OK,service.getById(variantId));
     }
     catch (Exception e){
         throw  new ResourceNotFoundException(e.getMessage());
     }
 }
-@PutMapping("/updateVariant/{variantId}")
-    public ResponseEntity<?>updateVariant(@RequestBody ProductVariantRequest request, @PathVariable Long variantId){
+@PutMapping("/update/{variantId}")
+    public ResponseEntity<?>update(@RequestBody ProductVariantRequest request, @PathVariable Long variantId){
     try{
-        return ResponseHandler.responseHandler("Updated",HttpStatus.OK,service.updateVariant(request,variantId));
+        return ResponseHandler.responseHandler("Variant Updated successfully",HttpStatus.OK,service.update(request,variantId));
     } catch (Exception e) {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -58,7 +58,7 @@ private final ProductVariantService service;
        service.delete(variantId);
         }
 
-    }
+   }
 
 
 

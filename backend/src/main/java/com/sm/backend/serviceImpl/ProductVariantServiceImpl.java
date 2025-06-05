@@ -32,7 +32,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 }
 
     @Override
-    public void register(ProductVariantRequest request) {
+    public void createVariant(ProductVariantRequest request) {
 //       creating variant
         ProductVariant variant = new ProductVariant();
         Product productId = productRepository.findById(request.getProductId()).orElseThrow(() -> new ResourceNotFoundException("product ID not found"));
@@ -70,15 +70,15 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
 
     @Override
-    public Object findById(Long variantId) {
+    public Object getById(Long variantId) {
         return repository.findById(variantId)
                 .orElseThrow(()->new ResourceNotFoundException("invalid variant Id"));    }
 
     @Override
-    public Object updateVariant(ProductVariantRequest request, Long variantId) {
-    ProductVariant variant = repository.findById(variantId).orElseThrow(()->new RuntimeException("id not found"));
+    public Object update(ProductVariantRequest request, Long variantId) {
+    ProductVariant variant = repository.findById(variantId).orElseThrow(()->new ResourceNotFoundException("invalid variant ID"));
     if (request.getProductId()!=null){
-            Product product = productRepository.findById(request.getProductId()).orElseThrow(()->new ResourceNotFoundException("product ID not found"));
+            Product product = productRepository.findById(request.getProductId()).orElseThrow(()->new ResourceNotFoundException("invalid product ID"));
             variant.setProduct(product);
     }
 

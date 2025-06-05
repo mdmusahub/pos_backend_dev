@@ -33,7 +33,7 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 }
 
     @Override
-    public void register(ProductInventoryRequest request) {
+    public void createInventory(ProductInventoryRequest request) {
         ProductInventory inventory = new ProductInventory();
         inventory.setLocation(request.getLocation());
         inventory.setQuantity(request.getQuantity());
@@ -60,9 +60,9 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     }
 
     @Override
-    public Object findById(Long inventoryId) {
+    public Object getById(Long inventoryId) {
         return inventoryRepository.findById(inventoryId)
-                .orElseThrow(()->new RuntimeException("invald inventory ID"));
+                .orElseThrow(()->new RuntimeException("invalid inventory ID"));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 
     @Override
     public Object update(ProductInventoryRequest request, Long inventoryId) {
-        ProductInventory inventory = inventoryRepository.findById(inventoryId).orElseThrow(() -> new RuntimeException("id not found"));
+        ProductInventory inventory = inventoryRepository.findById(inventoryId).orElseThrow(() -> new ResourceNotFoundException("invalid inventory ID"));
         if (request.getQuantity()!=null){
             inventory.setQuantity(request.getQuantity());
         }

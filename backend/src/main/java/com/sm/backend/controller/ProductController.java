@@ -19,48 +19,48 @@ public class ProductController {
         this.service = service;
     }
 
-    @PostMapping("/registerProduct")
-    public void register(@RequestBody ProductRequest request) {
-        service.register(request);
+    @PostMapping("/create")
+    public void createProduct(@RequestBody ProductRequest request) {
+        service.createProduct(request);
     }
 
-    @GetMapping("/findById/{productId}")
+    @GetMapping("/getById/{productId}")
 
-    public ResponseEntity<?> findById(@PathVariable Long productId) {
+    public ResponseEntity<?> getById(@PathVariable Long productId) {
         try {
-            return ResponseHandler.responseHandler("id retrieve successfully", HttpStatus.OK, service.findById(productId));
+            return ResponseHandler.responseHandler("id retrieved successfully", HttpStatus.OK, service.getById(productId));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/findAll")
-    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
                                      @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                      @RequestParam(required = false, defaultValue = "productName") String sortby,
                                      @RequestParam(required = false, defaultValue = "asc") String sortDir) {
         try {
-            return ResponseHandler.responseHandler("there is list", HttpStatus.OK, service.findall(pageNumber, pageSize, sortby, sortDir));
+            return ResponseHandler.responseHandler("List of Products", HttpStatus.OK, service.getall(pageNumber, pageSize, sortby, sortDir));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
     }
 
-    @PutMapping("/updateDetails/{productId}")
-    public ResponseEntity<?>updateDetails(@RequestBody ProductRequest request,@PathVariable Long productId ){
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<?>update(@RequestBody ProductRequest request,@PathVariable Long productId ){
         try {
-            return ResponseHandler.responseHandler("update",
-                    HttpStatus.OK,service.updateDetails(request,productId));
+            return ResponseHandler.responseHandler("Product updated successfully",
+                    HttpStatus.OK,service.update(request,productId));
         }
         catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-@DeleteMapping("delete/{productId}")
+@DeleteMapping("/delete/{productId}")
 public String delete(@PathVariable Long productId){
         service.delete(productId);
-return "deleted";
+return "deleted Successfully";
     }
 
 

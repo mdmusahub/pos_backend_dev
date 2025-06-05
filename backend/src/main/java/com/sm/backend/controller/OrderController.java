@@ -18,30 +18,30 @@ private final OrderService service;
         this.service = service;
     }
 
-    @PostMapping("/addOrder")
-    public void register(@RequestBody OrderRequest request){
-         service.register(request);
+    @PostMapping("/create")
+    public void createOrder(@RequestBody OrderRequest request){
+         service.createOrder(request);
 
     }
 @GetMapping("/getAll")
-    public ResponseEntity<?>getAllOrders(){
+    public ResponseEntity<?>getAll(){
     try{
-        return ResponseHandler.responseHandler("orders retrieved successfully.", HttpStatus.OK,service.getAllOrders());
+        return ResponseHandler.responseHandler("orders retrieved successfully.", HttpStatus.OK,service.getAll());
     } catch (Exception e) {
         throw new ResourceNotFoundException("cannot retrieve orders.");
     }
 }
-@GetMapping("/findById/{orderId}")
-    public ResponseEntity<?>findById(@PathVariable Long orderId){
+@GetMapping("/getById/{orderId}")
+    public ResponseEntity<?>getById(@PathVariable Long orderId){
     try {
-        return ResponseHandler.responseHandler("id retrieve successfully",HttpStatus.OK,service.findById(orderId));
+        return ResponseHandler.responseHandler("id retrieve successfully",HttpStatus.OK,service.getById(orderId));
     }catch (Exception e){
-        throw new ResourceNotFoundException("id not Found");
+        throw new ResourceNotFoundException("invalid Order ID");
     }
 }
 @DeleteMapping("/delete/{orderId}")
-    public void deleteById(@PathVariable Long orderId){
-    service.deleteById(orderId);
+    public void delete(@PathVariable Long orderId){
+    service.delete(orderId);
 }
 
 }

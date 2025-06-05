@@ -22,22 +22,22 @@ public class OrderItemController {
         this.service = service;
     }
 
-    @GetMapping("/findAll")
-    public ResponseEntity<?> findAll() {
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAll() {
         try {
-            return ResponseHandler.responseHandler("there is list", HttpStatus.OK, service.findAll());
+            return ResponseHandler.responseHandler("there is list", HttpStatus.OK, service.getAll());
 
         } catch (Exception e) {
             throw new ResourceNotFoundException("something went Wrong");
         }
     }
 
-    @GetMapping("/finfById/{orderItemId}")
-    public ResponseEntity<?> findById(@PathVariable Long orderItemId) {
+    @GetMapping("/getById/{orderItemId}")
+    public ResponseEntity<?> getById(@PathVariable Long orderItemId) {
         try {
-            return ResponseHandler.responseHandler("id found", HttpStatus.OK, service.findById(orderItemId));
+            return ResponseHandler.responseHandler("Order item retrieved successfully", HttpStatus.OK, service.getById(orderItemId));
         } catch (Exception e) {
-            throw new ResourceNotFoundException("id not found");
+            throw new ResourceNotFoundException("invalid order item ID");
         }
     }
 }

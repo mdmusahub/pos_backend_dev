@@ -2,7 +2,7 @@ package com.sm.backend.service;
 
 public interface OrderItemService {
 
-    Object findAll();
+    Object getAll();
 
-    Object findById(Long orderItemId);
+    Object getById(Long orderItemId);
 }
