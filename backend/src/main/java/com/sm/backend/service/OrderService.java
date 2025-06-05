@@ -3,11 +3,11 @@ package com.sm.backend.service;
 import com.sm.backend.request.OrderRequest;
 
 public interface OrderService {
-    void register(OrderRequest request);
+    void createOrder(OrderRequest request);
 
-    Object getAllOrders();
+    Object getAll();
 
-    Object findById(Long orderId);
+    Object getById(Long orderId);
 
-    void deleteById(Long orderId);
+    void delete(Long orderId);
 }

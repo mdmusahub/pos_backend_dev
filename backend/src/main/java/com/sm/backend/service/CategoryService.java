@@ -1,11 +1,10 @@
 package com.sm.backend.service;
 
 
-import com.sm.backend.model.Category;
 import com.sm.backend.request.CategoryRequest;
 
 public interface CategoryService {
-    void register(CategoryRequest request);
+    void createCategory(CategoryRequest request);
 
 
     Object getbyId(Long userId);
@@ -14,7 +13,7 @@ public interface CategoryService {
 
     Object updateCategory(Long categoryId, CategoryRequest request);
 
-    Object findAll(Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
+    Object getAll(Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 
 
 }

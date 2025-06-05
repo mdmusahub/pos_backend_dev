@@ -19,9 +19,9 @@ public class ProductInventoryController {
         this.service = service;
     }
 
-    @PostMapping("/register")
-    public void register(@RequestBody ProductInventoryRequest request) {
-        service.register(request);
+    @PostMapping("/create")
+    public void createInventory(@RequestBody ProductInventoryRequest request) {
+        service.createInventory(request);
     }
 
 @GetMapping("/getAll")
@@ -30,7 +30,7 @@ private ResponseEntity<?>getAll(@RequestParam(required = false, defaultValue = "
                                 @RequestParam(required = false, defaultValue = "inventoryId") String sortby,
                                 @RequestParam(required = false, defaultValue = "asc") String sortDir){
         try{
-            return ResponseHandler.responseHandler("there is list", HttpStatus.OK,service.getAll(pageNumber,pageSize,sortby,sortDir));
+            return ResponseHandler.responseHandler("List of Inventories", HttpStatus.OK,service.getAll(pageNumber,pageSize,sortby,sortDir));
         }
         catch (Exception e){
          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -39,16 +39,16 @@ private ResponseEntity<?>getAll(@RequestParam(required = false, defaultValue = "
     @PutMapping("/update/{inventoryId}")
     public ResponseEntity<?>update(@RequestBody ProductInventoryRequest request,@PathVariable Long inventoryId){
         try {
-            return ResponseHandler.responseHandler("updated",HttpStatus.OK,service.update(request,inventoryId));
+            return ResponseHandler.responseHandler("Inventory updated successfully",HttpStatus.OK,service.update(request,inventoryId));
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-@GetMapping("/findById/{inventoryId}")
-    public ResponseEntity<?>findById(@PathVariable Long inventoryId){
+@GetMapping("/getById/{inventoryId}")
+    public ResponseEntity<?>getById(@PathVariable Long inventoryId){
         try {
-            return ResponseHandler.responseHandler("id found",HttpStatus.OK,service.findById(inventoryId));
+            return ResponseHandler.responseHandler("Inventory retrieved successfully ",HttpStatus.OK,service.getById(inventoryId));
 
         } catch (Exception e) {
        throw  new ResourceNotFoundException(e.getMessage());

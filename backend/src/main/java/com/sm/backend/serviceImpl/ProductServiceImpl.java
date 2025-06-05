@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void register(ProductRequest request) {
+    public void createProduct(ProductRequest request) {
 //       creating products
         Optional<Product> productByProductName = repository.findProductByProductName(request.getProductName());
         if (productByProductName.isPresent()) {
@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
             product.setDescription(request.getDescription());
             product.setCreatedAt(request.getCreatedAt());
             product.setUpdatedAt(request.getUpdatedAt());
-            Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category ID not found"));
+            Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Invalid Category ID"));
             product.setCategory(category);
             repository.save(product);
 
@@ -63,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
                    variant.setVariantName(request1.getVariantName());
                    variant.setVariantValue(request1.getVariantValue());
                    variant.setPrice(request1.getPrice());
-                   variant.setProduct(repository.findById(product.getProductId()).orElseThrow(() -> new ResourceNotFoundException("invalid id")));
+                   variant.setProduct(repository.findById(product.getProductId()).orElseThrow(() -> new ResourceNotFoundException("invalid product ID")));
                    variantRepository.save(variant);
 //            creating inventories
                    ProductInventory inventory = new ProductInventory();
@@ -80,13 +80,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Object findById(Long productId) {
+    public Object getById(Long productId) {
         return repository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("invalid Product ID"));
     }
 
     @Override
-    public Object findall(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
+    public Object getall(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
         Sort sort = null;
 
         if (sortDir.equalsIgnoreCase("asc")) {
@@ -102,8 +102,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Object updateDetails(ProductRequest request, Long productId) {
-        Product product = repository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("product ID not found"));
+    public Object update(ProductRequest request, Long productId) {
+        Product product = repository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("invalid product ID"));
 
         if (request.getProductName() != null) {
             product.setProductName(request.getProductName());

@@ -19,9 +19,9 @@ public class CategoryController {
         this.service = service;
     }
 
-    @PostMapping("/register")
-public void register(@RequestBody CategoryRequest request){
-    service.register(request);
+    @PostMapping("/create")
+public void createCategory(@RequestBody CategoryRequest request){
+    service.createCategory(request);
 }
 @GetMapping("/getById/{categoryId}")
     public ResponseEntity<?> getById(@PathVariable Long categoryId){
@@ -32,7 +32,7 @@ catch (Exception e){
         throw new ResourceNotFoundException("invalid category ID");
 }
 }
-@DeleteMapping("/delete{categoryId}")
+@DeleteMapping("/delete/{categoryId}")
     public void delete(@PathVariable Long categoryId){
     service.delete(categoryId);
 }
@@ -47,14 +47,14 @@ catch (Exception e){
 }
 
 @GetMapping("/getAll")
-public ResponseEntity<?>findAll(
+public ResponseEntity<?> getAll(
         @RequestParam(required = false,defaultValue = "0")Integer pageNumber,
         @RequestParam(required = false,defaultValue = "10")Integer pageSize,
         @RequestParam(required = false,defaultValue = "name")String sortBy,
         @RequestParam(required = false,defaultValue = "asc")String sortDir
 ){
     try {
-        return ResponseHandler.responseHandler("List of categories",HttpStatus.OK,service.findAll(pageNumber,pageSize,sortBy,sortDir));
+        return ResponseHandler.responseHandler("List of categories",HttpStatus.OK,service.getAll(pageNumber,pageSize,sortBy,sortDir));
     }
 catch (Exception e){
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

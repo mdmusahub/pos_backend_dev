@@ -24,7 +24,7 @@ private final CategoryRepository repository;
     }
 
     @Override
-    public void register(CategoryRequest request) {
+    public void createCategory(CategoryRequest request) {
         Optional<Category> byName = repository.findCategoryByName(request.getName());
         if (byName.isPresent()){
          throw new CategoryAlreadyExistsException("the Category " +request.getName()+" already exists");
@@ -34,7 +34,7 @@ private final CategoryRepository repository;
             category.setName(request.getName());
             category.setDescription(request.getDescription());
             if (request.getParentId()!=null) {
-                Category category1 = repository.findById(request.getParentId()).orElseThrow(() -> new RuntimeException("id not found"));
+                Category category1 = repository.findById(request.getParentId()).orElseThrow(() -> new ResourceNotFoundException("invalid category ID"));
                 category.setParentId(category1);
             }
             repository.save(category);
@@ -50,13 +50,13 @@ return new CategoryResponse(category);
 
     @Override
     public void delete(Long categoryId) {
-        Category category = repository.findById(categoryId).orElseThrow(() -> new RuntimeException("error"));
+        Category category = repository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("invalid category ID"));
         repository.delete(category);
     }
 
     @Override
     public Object updateCategory(Long categoryId, CategoryRequest request) {
-        Category category = repository.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("not found"));
+        Category category = repository.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("invalid Category ID"));
         if (request.getDescription()!=null){
             category.setDescription(request.getDescription());
         }
@@ -65,14 +65,14 @@ if (request.getName()!=null){
 }
 
 if (request.getParentId()!=null){
-    Category parentId = repository.findById(request.getParentId()).orElseThrow(() -> new ResourceNotFoundException("id not found"));
+    Category parentId = repository.findById(request.getParentId()).orElseThrow(() -> new ResourceNotFoundException("invalid Category ID"));
     category.setParentId(parentId);
 }
     return repository.save(category);
 }
 
     @Override
-    public Object findAll(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
+    public Object getAll(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
 Sort sort = null;
         if (sortDir.equalsIgnoreCase("asc")){
             sort =Sort.by(sortBy).ascending();

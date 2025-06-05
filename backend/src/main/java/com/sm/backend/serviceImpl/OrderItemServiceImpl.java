@@ -16,13 +16,13 @@ public class OrderItemServiceImpl implements OrderItemService {
 
 
     @Override
-    public Object findAll() {
+    public Object getAll() {
         return repository.findAll();
     }
 
     @Override
-    public Object findById(Long orderItemId) {
+    public Object getById(Long orderItemId) {
         return repository.findById(orderItemId).orElseThrow(()->new
-                ResourceNotFoundException("not found"));
+                ResourceNotFoundException("Invalid order item ID"));
     }
 }

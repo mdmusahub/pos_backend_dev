@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void register(OrderRequest request) throws ResourceNotFoundException{
+    public void createOrder(OrderRequest request) throws ResourceNotFoundException{
         //here we're getting and setting the values of order table.
         Order order = new Order();
         order.setUserPhoneNumber(request.getUserPhoneNumber());
@@ -65,13 +65,13 @@ public class OrderServiceImpl implements OrderService {
 
 //here we are creating and setting the orderItems in the order.
    List<OrderItemRequest> orderItemRequests= request.getOrderItemRequests();
-        List<OrderItem> list = orderItemRequests.stream().map((x) -> {
+        List<OrderItem> list = orderItemRequests.stream().map(x -> {
 
             OrderItem item = new OrderItem();
 
             ProductVariant variant = productVariantRepository.findById
                             (x.getVariantId())
-                    .orElseThrow(() -> new ResourceNotFoundException("variant id not found."));
+                    .orElseThrow(() -> new ResourceNotFoundException("invalid variant ID."));
 
             item.setProductVariant(variant);
             item.setProduct(variant.getProduct());
@@ -111,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Object getAllOrders() {
+    public Object getAll() {
         List<Order> orders = orderRepository.findAll();
         List<OrderResponse> list=orders.stream().map(OrderResponse::new).toList();
         return list;
@@ -119,21 +119,21 @@ public class OrderServiceImpl implements OrderService {
 //
 
     @Override
-    public Object findById(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("id not found"));
+    public Object getById(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("invalid order ID"));
      return new OrderResponse(order);
     }
 
 
     @Override
-    public void deleteById(Long orderId) {
+    public void delete(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(()->new ResourceNotFoundException("order not found."));
+                .orElseThrow(()->new ResourceNotFoundException("invalid order ID"));
         List<OrderItem> orderItems = order.getOrderItems();
         orderRepository.delete(order);
         for(OrderItem item : orderItems){
             orderItemRepository.delete(orderItemRepository.findById
-            (item.getOrderItemId()).orElseThrow(()->new ResourceNotFoundException("invalid id")));
+            (item.getOrderItemId()).orElseThrow(()->new ResourceNotFoundException("invalid order item ID")));
         }
 //        List<Long> list = orderItems.stream().map((x) -> x.getOrderItemId()).toList();
 //        List<OrderItem> deletedItems = list.stream().map((x) -> orderItemRepository.findById(x)
