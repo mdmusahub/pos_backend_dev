@@ -57,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
             repository.save(product);
 
 //        creating variants
-           if(request.getVariantRequests().isEmpty()==false) {
+           if(!request.getVariantRequests().isEmpty()) {
                for (ProductVariantRequest request1 : request.getVariantRequests()) {
                    ProductVariant variant = new ProductVariant();
                    variant.setVariantName(request1.getVariantName());
