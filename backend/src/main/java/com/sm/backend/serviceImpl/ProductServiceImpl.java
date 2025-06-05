@@ -1,20 +1,19 @@
 package com.sm.backend.serviceImpl;
 
 import com.sm.backend.exceptionalHandling.ProductAlreadyExistsException;
+import com.sm.backend.exceptionalHandling.ProductCanNotBeDeletedException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Category;
 import com.sm.backend.model.Product;
 import com.sm.backend.model.ProductInventory;
 import com.sm.backend.model.ProductVariant;
-import com.sm.backend.repository.CategoryRepository;
-import com.sm.backend.repository.ProductInventoryRepository;
-import com.sm.backend.repository.ProductRepository;
-import com.sm.backend.repository.ProductVariantRepository;
+import com.sm.backend.repository.*;
 import com.sm.backend.request.ProductInventoryRequest;
 import com.sm.backend.request.ProductRequest;
 import com.sm.backend.request.ProductVariantRequest;
 import com.sm.backend.response.ProductResponse;
 import com.sm.backend.service.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,13 +31,15 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductVariantRepository variantRepository;
     private final ProductInventoryRepository inventoryRepository;
+    private final OrderItemRepository orderItemRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository repository, CategoryRepository categoryRepository, ProductVariantRepository variantRepository, ProductInventoryRepository inventoryRepository) {
+    public ProductServiceImpl(ProductRepository repository, CategoryRepository categoryRepository, ProductVariantRepository variantRepository, ProductInventoryRepository inventoryRepository, OrderItemRepository orderItemRepository) {
         this.repository = repository;
         this.categoryRepository = categoryRepository;
         this.variantRepository = variantRepository;
         this.inventoryRepository = inventoryRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     @Override
@@ -123,8 +126,24 @@ public class ProductServiceImpl implements ProductService {
         return repository.save(product);
     }
 
+    @Transactional
     @Override
     public void delete(Long productId) {
-        repository.deleteById(productId);
+        Product product = repository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("invalid Product ID"));
+        List<ProductVariant> variants = variantRepository.getAllVariantsByProductId(product.getProductId());
+//        deleting inventories
+        for (ProductVariant variant:variants){
+        if (orderItemRepository.findOrderItemByProductVariant(variant).isPresent()) {
+        throw new ProductCanNotBeDeletedException("this product and its variants cannot be deleted since one of its variant is present in an order item");
+        }else{
+            inventoryRepository.delete(inventoryRepository.findProductInventoryByProductVariant(variant));
+
+
+        }
+//        deleting variants
+        variantRepository.deleteAll(variants);
+//        deleting product
+        repository.delete(product);
     }
-}
+
+}}

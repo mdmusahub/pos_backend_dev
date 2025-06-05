@@ -1,9 +1,11 @@
 package com.sm.backend.serviceImpl;
 
+import com.sm.backend.exceptionalHandling.ProductCanNotBeDeletedException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Product;
 import com.sm.backend.model.ProductInventory;
 import com.sm.backend.model.ProductVariant;
+import com.sm.backend.repository.OrderItemRepository;
 import com.sm.backend.repository.ProductInventoryRepository;
 import com.sm.backend.repository.ProductRepository;
 import com.sm.backend.repository.ProductVariantRepository;
@@ -24,11 +26,13 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     private final ProductRepository productRepository;
     private final ProductVariantRepository repository;
     private final ProductInventoryRepository inventoryRepository;
+    private final OrderItemRepository orderItemRepository;
 @Autowired
-    public ProductVariantServiceImpl(ProductRepository productRepository, ProductVariantRepository repository, ProductInventoryRepository inventoryRepository) {
+    public ProductVariantServiceImpl(ProductRepository productRepository, ProductVariantRepository repository, ProductInventoryRepository inventoryRepository, OrderItemRepository orderItemRepository) {
         this.productRepository = productRepository;
         this.repository = repository;
     this.inventoryRepository = inventoryRepository;
+    this.orderItemRepository = orderItemRepository;
 }
 
     @Override
@@ -96,7 +100,15 @@ return repository.save(variant);
 
     @Override
     public void delete(Long variantId) {
-        repository.deleteById(variantId);
+        ProductVariant variant = repository.findById(variantId).orElseThrow(() -> new ResourceNotFoundException("invalid variant id"));
+        ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(variant);
+        if (orderItemRepository.findOrderItemByProductVariant(variant).isPresent()){
+            throw new ProductCanNotBeDeletedException("this variant cannot be deleted since it already exists in an order item");
+        }
+        else {
+            inventoryRepository.delete(inventory);
+            repository.delete(variant);
+        }
     }
 
 
