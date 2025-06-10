@@ -1,76 +1,33 @@
 package com.sm.backend.response;
 
 
-
 import com.sm.backend.model.Category;
+import com.sm.backend.model.Product;
+import jakarta.persistence.ManyToOne;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-
+@Data
+@NoArgsConstructor
 public class ProductResponse {
-
-    private Long id;
-    private String name;
-    private Double price;
-    private String description;
+    private Long productId;
+    private String productName;
     private String sku;
+    private String description;
     private LocalDateTime createdAt;
+    private Category category;
     private LocalDateTime updatedAt;
-    private Category categoryId;
+
+     public ProductResponse(Product product) {
+         this.productId = product.getProductId();
+         this.productName = product.getProductName();
+         this.sku = product.getSku();
+         this.description = product.getDescription();
+         this.createdAt = product.getCreatedAt();
+         this.category = product.getCategory();
+         this.updatedAt =product.getUpdatedAt() ;
+     }
 
 
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public Double getPrice() {
-        return price;
-    }
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public String getSku() {
-        return sku;
-    }
-    public void setSku(String sku) {
-        this.sku = sku;
-    }
-
-    public Category getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Category categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }

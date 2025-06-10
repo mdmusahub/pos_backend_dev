@@ -1,45 +1,68 @@
 package com.sm.backend.controller;
 
 
-import com.sm.backend.model.Category;
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.CategoryRequest;
-import com.sm.backend.response.CategoryResponse;
+import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping("/category")
 public class CategoryController {
-
-    @Autowired
-    private CategoryService categoryService;
-
-    @PostMapping
-    public ResponseEntity createCategory(@RequestBody CategoryRequest request){
-        return categoryService.save(request);
+    private final CategoryService service;
+@Autowired
+    public CategoryController(CategoryService service) {
+        this.service = service;
     }
 
-    @GetMapping("/{id}")
-    public Category getCategory(@PathVariable Long id){
-        return categoryService.getCategory(id);
+    @PostMapping("/create")
+public void createCategory(@RequestBody CategoryRequest request){
+    service.createCategory(request);
+}
+@GetMapping("/getById/{categoryId}")
+    public ResponseEntity<?> getById(@PathVariable Long categoryId){
+    try {
+        return ResponseHandler.responseHandler("id found Successfully", HttpStatus.OK,service.getbyId(categoryId));
     }
-    @GetMapping
-    public List<CategoryResponse> getAllCategory(){
-        return categoryService.getAllCategory();
+catch (Exception e){
+        throw new ResourceNotFoundException("invalid category ID");
+}
+}
+@DeleteMapping("/delete/{categoryId}")
+    public void delete(@PathVariable Long categoryId){
+    service.delete(categoryId);
+}
+@PutMapping("/update/{categoryId}")
+    public ResponseEntity<?>updateCategory(@RequestBody CategoryRequest request ,@PathVariable Long categoryId){
+    try {
+        return ResponseHandler.responseHandler("updated",HttpStatus.OK,service.updateCategory(categoryId,request));
     }
+catch (Exception e){
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+}
+}
 
-    @PutMapping("/{id}")
-    public ResponseEntity updateCategory(@PathVariable Long id, @RequestBody CategoryRequest request){
-        return categoryService.update(id, request);
+@GetMapping("/getAll")
+public ResponseEntity<?> getAll(
+        @RequestParam(required = false,defaultValue = "0")Integer pageNumber,
+        @RequestParam(required = false,defaultValue = "10")Integer pageSize,
+        @RequestParam(required = false,defaultValue = "name")String sortBy,
+        @RequestParam(required = false,defaultValue = "asc")String sortDir
+){
+    try {
+        return ResponseHandler.responseHandler("List of categories",HttpStatus.OK,service.getAll(pageNumber,pageSize,sortBy,sortDir));
     }
+catch (Exception e){
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+}
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteProduct(@PathVariable Long id){
-        return categoryService.delete(id);
-    }
+}
+
+
+
 }

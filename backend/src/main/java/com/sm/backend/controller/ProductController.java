@@ -1,45 +1,67 @@
 package com.sm.backend.controller;
 
-import com.sm.backend.model.Product;
 import com.sm.backend.request.ProductRequest;
-import com.sm.backend.response.ProductResponse;
+import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/product")
+
 public class ProductController {
+    private final ProductService service;
 
     @Autowired
-    private ProductService productService;
-
-    @PostMapping
-    public ResponseEntity createProduct(@RequestBody ProductRequest request){
-        return productService.save(request);
+    public ProductController(ProductService service) {
+        this.service = service;
     }
 
-    @GetMapping("/{id}")
-    public Optional<Product> getProduct(@PathVariable Long id){
-        return productService.getProduct(id);
+    @PostMapping("/create")
+    public void createProduct(@RequestBody ProductRequest request) {
+        service.createProduct(request);
     }
 
-    @GetMapping
-    public List<ProductResponse> getAllProduct(){
-        return productService.getAllProduct();
+    @GetMapping("/getById/{productId}")
+
+    public ResponseEntity<?> getById(@PathVariable Long productId) {
+        try {
+            return ResponseHandler.responseHandler("id retrieved successfully", HttpStatus.OK, service.getById(productId));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteProduct(@PathVariable Long id){
-        return productService.deleteProduct(id);
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                     @RequestParam(required = false, defaultValue = "productName") String sortby,
+                                     @RequestParam(required = false, defaultValue = "asc") String sortDir) {
+        try {
+            return ResponseHandler.responseHandler("List of Products", HttpStatus.OK, service.getall(pageNumber, pageSize, sortby, sortDir));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
-    @PutMapping({"/{id}"})
-    public ResponseEntity updateProduct(@PathVariable Long id, @RequestBody ProductRequest request){
-        return productService.updateProduct(id, request);
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<?>update(@RequestBody ProductRequest request,@PathVariable Long productId ){
+        try {
+            return ResponseHandler.responseHandler("Product updated successfully",
+                    HttpStatus.OK,service.update(request,productId));
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
+@DeleteMapping("/delete/{productId}")
+public String delete(@PathVariable Long productId){
+        service.delete(productId);
+return "deleted Successfully";
+    }
+
+
 }
