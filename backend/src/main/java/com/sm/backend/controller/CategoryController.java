@@ -1,6 +1,4 @@
 package com.sm.backend.controller;
-
-
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.CategoryRequest;
 import com.sm.backend.responseHandler.ResponseHandler;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/category")
+@CrossOrigin(origins = "http://localhost:5173")
 public class CategoryController {
     private final CategoryService service;
 @Autowired

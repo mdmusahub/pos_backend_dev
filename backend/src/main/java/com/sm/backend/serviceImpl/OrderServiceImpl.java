@@ -144,4 +144,7 @@ public class OrderServiceImpl implements OrderService {
 }
 
 
+//http://192.168.235.145:8081/product/getAll
+
+
 

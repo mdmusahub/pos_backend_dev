@@ -7,7 +7,7 @@ import com.sm.backend.model.ProductVariant;
 import com.sm.backend.repository.ProductInventoryRepository;
 import com.sm.backend.repository.ProductRepository;
 import com.sm.backend.repository.ProductVariantRepository;
-import com.sm.backend.request.ProductInventoryRequest;
+
 import com.sm.backend.request.ProductVariantRequest;
 
 import com.sm.backend.response.ProductVariantResponse;
