@@ -122,7 +122,6 @@ public class ProductServiceImpl implements ProductService {
             Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("invalid category ID"));
             product.setCategory(category);
         }
-
         return repository.save(product);
     }
 
