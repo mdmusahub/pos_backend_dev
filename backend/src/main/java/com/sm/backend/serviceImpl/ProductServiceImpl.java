@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -86,17 +87,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Object getall(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
-        Sort sort = null;
-
-        if (sortDir.equalsIgnoreCase("asc")) {
-            sort = Sort.by(sortby).ascending();
-        } else {
-            sort = Sort.by(sortby).descending();
-        }
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<Product> all = repository.findAll(pageable);
-        return all.stream().map(ProductResponse::new).toList();
+    public List<ProductResponse> getAll() {
+//        Sort sort = null;
+//
+//        if (sortDir.equalsIgnoreCase("asc")) {
+//            sort = Sort.by(sortby).ascending();
+//        } else {
+//            sort = Sort.by(sortby).descending();
+//        }
+//        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+//        Page<Product> all = repository.findAll(pageable);
+        return repository.findAll().stream().map(ProductResponse::new).toList();
 
 
     }
