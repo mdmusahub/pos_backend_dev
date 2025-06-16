@@ -69,13 +69,13 @@ public class ProductServiceImpl implements ProductService {
                    variant.setProduct(repository.findById(product.getProductId()).orElseThrow(() -> new ResourceNotFoundException("invalid product ID")));
                    variantRepository.save(variant);
 //            creating inventories
-                   ProductInventory inventory = new ProductInventory();
-                   inventory.setQuantity(request1.getInventoryRequest().getQuantity());
-                   inventory.setLocation(request1.getInventoryRequest().getLocation());
-                   inventory.setLastUpdated(request1.getInventoryRequest().getLastUpdated());
-                   inventory.setProduct(variant.getProduct());
-                   inventory.setProductVariant(variant);
-                   inventoryRepository.save(inventory);
+//                   ProductInventory inventory = new ProductInventory();
+//                   inventory.setQuantity(request1.getInventoryRequest().getQuantity());
+//                   inventory.setLocation(request1.getInventoryRequest().getLocation());
+//                   inventory.setLastUpdated(request1.getInventoryRequest().getLastUpdated());
+//                   inventory.setProduct(variant.getProduct());
+//                   inventory.setProductVariant(variant);
+//                   inventoryRepository.save(inventory);
                }
            }
         }
@@ -132,18 +132,22 @@ public class ProductServiceImpl implements ProductService {
         Product product = repository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("invalid Product ID"));
         List<ProductVariant> variants = variantRepository.getAllVariantsByProductId(product.getProductId());
 //        deleting inventories
-        for (ProductVariant variant:variants){
-        if (orderItemRepository.findOrderItemByProductVariant(variant).isPresent()) {
-        throw new ProductCanNotBeDeletedException("this product and its variants cannot be deleted since one of its variant is present in an order item");
-        }else{
-            inventoryRepository.delete(inventoryRepository.findProductInventoryByProductVariant(variant));
+       if (variants.isEmpty()){
+           repository.delete(product);
+       }
+           else {
+           for (ProductVariant variant : variants) {
+               if (orderItemRepository.findOrderItemByProductVariant(variant).isPresent()) {
+                   throw new ProductCanNotBeDeletedException("this product and its variants cannot be deleted since one of its variant is present in an order item");
+               } else {
+                   inventoryRepository.delete(inventoryRepository.findProductInventoryByProductVariant(variant));
 
 
-        }
+               }
 //        deleting variants
-        variantRepository.deleteAll(variants);
+               variantRepository.deleteAll(variants);
 //        deleting product
-        repository.delete(product);
-    }
-
+               repository.delete(product);
+           }
+       }
 }}
