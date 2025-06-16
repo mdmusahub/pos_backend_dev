@@ -1,5 +1,6 @@
 package com.sm.backend.controller;
 
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.ProductRequest;
 import com.sm.backend.response.ProductResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
@@ -61,10 +62,10 @@ public class ProductController {
         }
     }
 @DeleteMapping("/delete/{productId}")
-public String delete(@PathVariable Long productId){
-        service.delete(productId);
-return "deleted Successfully";
-    }
+public void delete(@PathVariable Long productId){
+       service.delete(productId);
+
+}
 
 
 }
