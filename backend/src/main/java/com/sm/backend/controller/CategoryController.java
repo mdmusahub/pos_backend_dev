@@ -3,12 +3,15 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.CategoryRequest;
+import com.sm.backend.response.CategoryResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/category")
@@ -48,14 +51,9 @@ catch (Exception e){
 }
 
 @GetMapping("/getAll")
-public ResponseEntity<?> getAll(
-        @RequestParam(required = false,defaultValue = "0")Integer pageNumber,
-        @RequestParam(required = false,defaultValue = "10")Integer pageSize,
-        @RequestParam(required = false,defaultValue = "name")String sortBy,
-        @RequestParam(required = false,defaultValue = "asc")String sortDir
-){
+public ResponseEntity<List<CategoryResponse>> getAll(){
     try {
-        return ResponseHandler.responseHandler("List of categories",HttpStatus.OK,service.getAll(pageNumber,pageSize,sortBy,sortDir));
+        return new ResponseEntity<>(service.getAll(),HttpStatus.OK);
     }
 catch (Exception e){
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
