@@ -34,9 +34,9 @@ public class OrderItemController {
     }
 
     @GetMapping("/getById/{orderItemId}")
-    public ResponseEntity<?> getById(@PathVariable Long orderItemId) {
+    public ResponseEntity<OrderItemResponse> getById(@PathVariable Long orderItemId) {
         try {
-            return ResponseHandler.responseHandler("Order item retrieved successfully", HttpStatus.OK, service.getById(orderItemId));
+            return new ResponseEntity<>(service.getById(orderItemId),HttpStatus.OK) ;
         } catch (Exception e) {
             throw new ResourceNotFoundException("invalid order item ID");
         }

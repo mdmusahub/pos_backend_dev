@@ -39,9 +39,9 @@ private final ProductVariantService service;
     }
 }
 @GetMapping("/getById/{variantId}")
-    public ResponseEntity<?>getById(@PathVariable Long  variantId){
+    public ResponseEntity<ProductVariantResponse>getById(@PathVariable Long  variantId){
     try{
-        return ResponseHandler.responseHandler("variant retrieved successfully",HttpStatus.OK,service.getById(variantId));
+        return new ResponseEntity<>(service.getById(variantId),HttpStatus.OK);
     }
     catch (Exception e){
         throw  new ResourceNotFoundException(e.getMessage());

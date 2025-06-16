@@ -28,9 +28,9 @@ public void createCategory(@RequestBody CategoryRequest request){
     service.createCategory(request);
 }
 @GetMapping("/getById/{categoryId}")
-    public ResponseEntity<?> getById(@PathVariable Long categoryId){
+    public ResponseEntity<CategoryResponse> getById(@PathVariable Long categoryId){
     try {
-        return ResponseHandler.responseHandler("id found Successfully", HttpStatus.OK,service.getbyId(categoryId));
+        return new ResponseEntity<>(service.getById(categoryId),HttpStatus.OK);
     }
 catch (Exception e){
         throw new ResourceNotFoundException("invalid category ID");

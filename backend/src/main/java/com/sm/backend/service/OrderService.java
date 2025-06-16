@@ -10,7 +10,7 @@ public interface OrderService {
 
     List<OrderResponse> getAll(Integer pageNumber,Integer pageSize, String sortby,String sortDir);
 
-    Object getById(Long orderId);
+    OrderResponse getById(Long orderId);
 
     void delete(Long orderId);
 }

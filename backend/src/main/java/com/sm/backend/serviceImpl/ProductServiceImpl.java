@@ -83,9 +83,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Object getById(Long productId) {
-        return repository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("invalid Product ID"));
+    public ProductResponse getById(Long productId) {
+        return new ProductResponse(repository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("invalid Product ID"))) ;
     }
 
     @Override

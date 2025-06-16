@@ -8,5 +8,5 @@ public interface OrderItemService {
 
     List<OrderItemResponse> getAll();
 
-    Object getById(Long orderItemId);
+    OrderItemResponse getById(Long orderItemId);
 }

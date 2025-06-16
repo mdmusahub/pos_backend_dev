@@ -60,9 +60,9 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     }
 
     @Override
-    public Object getById(Long inventoryId) {
-        return inventoryRepository.findById(inventoryId)
-                .orElseThrow(()->new RuntimeException("invalid inventory ID"));
+    public ProductInventoryResponse getById(Long inventoryId) {
+        return new ProductInventoryResponse(inventoryRepository.findById(inventoryId)
+                .orElseThrow(()->new RuntimeException("invalid inventory ID")));
     }
 
     @Override

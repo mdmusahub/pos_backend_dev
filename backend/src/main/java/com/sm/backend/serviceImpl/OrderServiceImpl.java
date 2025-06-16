@@ -131,7 +131,7 @@ public class OrderServiceImpl implements OrderService {
 //
 
     @Override
-    public Object getById(Long orderId) {
+    public OrderResponse getById(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("invalid order ID"));
      return new OrderResponse(order);
     }

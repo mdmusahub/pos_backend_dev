@@ -30,9 +30,9 @@ public class ProductController {
 
     @GetMapping("/getById/{productId}")
 
-    public ResponseEntity<?> getById(@PathVariable Long productId) {
+    public ResponseEntity<ProductResponse> getById(@PathVariable Long productId) {
         try {
-            return ResponseHandler.responseHandler("id retrieved successfully", HttpStatus.OK, service.getById(productId));
+            return new ResponseEntity<>(service.getById(productId),HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

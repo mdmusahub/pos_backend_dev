@@ -44,7 +44,7 @@ private final CategoryRepository repository;
     }
 
     @Override
-    public Object getbyId(Long categoryId) {
+    public CategoryResponse getById(Long categoryId) {
   Category category = repository.findById(categoryId)
  .orElseThrow(() -> new ResourceNotFoundException("invalid category Id" ));
 return new CategoryResponse(category);

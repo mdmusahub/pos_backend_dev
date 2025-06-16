@@ -50,9 +50,9 @@ private ResponseEntity<List<ProductInventoryResponse>>getAll(@RequestParam(requi
         }
     }
 @GetMapping("/getById/{inventoryId}")
-    public ResponseEntity<?>getById(@PathVariable Long inventoryId){
+    public ResponseEntity<ProductInventoryResponse>getById(@PathVariable Long inventoryId){
         try {
-            return ResponseHandler.responseHandler("Inventory retrieved successfully ",HttpStatus.OK,service.getById(inventoryId));
+            return new ResponseEntity<>(service.getById(inventoryId),HttpStatus.OK);
 
         } catch (Exception e) {
        throw  new ResourceNotFoundException(e.getMessage());

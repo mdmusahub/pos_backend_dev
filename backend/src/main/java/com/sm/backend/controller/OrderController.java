@@ -39,9 +39,9 @@ private final OrderService service;
     }
 }
 @GetMapping("/getById/{orderId}")
-    public ResponseEntity<?>getById(@PathVariable Long orderId){
+    public ResponseEntity<OrderResponse>getById(@PathVariable Long orderId){
     try {
-        return ResponseHandler.responseHandler("id retrieve successfully",HttpStatus.OK,service.getById(orderId));
+        return new ResponseEntity<>(service.getById(orderId),HttpStatus.OK);
     }catch (Exception e){
         throw new ResourceNotFoundException("invalid Order ID");
     }

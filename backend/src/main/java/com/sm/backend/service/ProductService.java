@@ -10,7 +10,7 @@ public interface ProductService {
 
     void createProduct(ProductRequest request);
 
-    Object getById(Long productId);
+    ProductResponse getById(Long productId);
 
     List<ProductResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
 

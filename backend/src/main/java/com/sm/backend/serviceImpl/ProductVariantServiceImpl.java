@@ -76,9 +76,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
 
     @Override
-    public Object getById(Long variantId) {
-        return repository.findById(variantId)
-                .orElseThrow(()->new ResourceNotFoundException("invalid variant Id"));    }
+    public ProductVariantResponse getById(Long variantId) {
+        return new ProductVariantResponse(repository.findById(variantId)
+                .orElseThrow(()->new ResourceNotFoundException("invalid variant Id")));    }
 
     @Override
     public Object update(ProductVariantRequest request, Long variantId) {

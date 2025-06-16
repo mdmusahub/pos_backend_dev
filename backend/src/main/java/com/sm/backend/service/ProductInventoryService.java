@@ -12,7 +12,7 @@ public interface ProductInventoryService {
 
     Object update(ProductInventoryRequest request, Long inventoryId);
 
-    Object getById(Long inventoryId);
+    ProductInventoryResponse getById(Long inventoryId);
 
     void delete(Long inventoryId);
 }

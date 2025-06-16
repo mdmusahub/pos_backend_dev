@@ -10,7 +10,7 @@ public interface CategoryService {
     void createCategory(CategoryRequest request);
 
 
-    Object getbyId(Long userId);
+  CategoryResponse getById(Long categoryId);
 
     void delete(Long categoryId);
 

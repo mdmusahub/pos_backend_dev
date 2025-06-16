@@ -24,8 +24,8 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public Object getById(Long orderItemId) {
-        return repository.findById(orderItemId).orElseThrow(()->new
-                ResourceNotFoundException("Invalid order item ID"));
+    public OrderItemResponse getById(Long orderItemId) {
+        return new OrderItemResponse( repository.findById(orderItemId).orElseThrow(()->new
+                ResourceNotFoundException("Invalid order item ID")));
     }
 }
