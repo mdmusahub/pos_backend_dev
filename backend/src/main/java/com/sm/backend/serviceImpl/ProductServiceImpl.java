@@ -69,13 +69,13 @@ public class ProductServiceImpl implements ProductService {
                    variant.setProduct(repository.findById(product.getProductId()).orElseThrow(() -> new ResourceNotFoundException("invalid product ID")));
                    variantRepository.save(variant);
 //            creating inventories
-//                   ProductInventory inventory = new ProductInventory();
-//                   inventory.setQuantity(request1.getInventoryRequest().getQuantity());
-//                   inventory.setLocation(request1.getInventoryRequest().getLocation());
-//                   inventory.setLastUpdated(request1.getInventoryRequest().getLastUpdated());
-//                   inventory.setProduct(variant.getProduct());
-//                   inventory.setProductVariant(variant);
-//                   inventoryRepository.save(inventory);
+                   ProductInventory inventory = new ProductInventory();
+                   inventory.setQuantity(request1.getInventoryRequest().getQuantity());
+                   inventory.setLocation(request1.getInventoryRequest().getLocation());
+                   inventory.setLastUpdated(request1.getInventoryRequest().getLastUpdated());
+                   inventory.setProduct(variant.getProduct());
+                   inventory.setProductVariant(variant);
+                   inventoryRepository.save(inventory);
                }
            }
         }
