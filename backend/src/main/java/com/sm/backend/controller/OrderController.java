@@ -24,16 +24,14 @@ private final OrderService service;
 
     @PostMapping("/create")
     public void createOrder(@RequestBody OrderRequest request){
+        System.out.println(request.getOrderItemRequests() + "this is payload");
          service.createOrder(request);
 
     }
 @GetMapping("/getAll")
-    public ResponseEntity<List<OrderResponse>>getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                                     @RequestParam(required = false, defaultValue = "orderId") String sortby,
-                                                     @RequestParam(required = false, defaultValue = "asc") String sortDir){
+    public ResponseEntity<List<OrderResponse>>getAll(){
     try{
-        return new ResponseEntity<>(service.getAll(pageNumber,pageSize,sortby,sortDir), HttpStatus.OK);
+        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     } catch (Exception e) {
         throw new ResourceNotFoundException("cannot retrieve orders.");
     }

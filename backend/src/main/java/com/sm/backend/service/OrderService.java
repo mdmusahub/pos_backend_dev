@@ -8,7 +8,7 @@ import java.util.List;
 public interface OrderService {
     void createOrder(OrderRequest request);
 
-    List<OrderResponse> getAll(Integer pageNumber,Integer pageSize, String sortby,String sortDir);
+    List<OrderResponse> getAll();
 
     OrderResponse getById(Long orderId);
 

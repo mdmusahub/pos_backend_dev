@@ -80,14 +80,14 @@ public class OrderServiceImpl implements OrderService {
 
             item.setProductVariant(variant);
             item.setProduct(variant.getProduct());
-            item.setUnitPrice(variant.getPrice());
+            item.setUnitPrice(x.getUnitPrice());
             //if order quantity is greater than inventory quantity then this will throw an exception.
             if(inventoryRepository.findProductInventoryByProductVariant(variant).getQuantity()>=x.getQuantity())
             {item.setQuantity(x.getQuantity());}
             else {
                 throw new  ResourceNotFoundException("out of stock.");
             }
-            item.setTotalPrice(variant.getPrice() * x.getQuantity());
+            item.setTotalPrice(x.getUnitPrice() * x.getQuantity());
             order.setTotalAmount(order.getTotalAmount()+ item.getTotalPrice());
              orderItemRepository.save(item);
              return item;
@@ -116,16 +116,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getAll(Integer pageNumber,Integer pageSize, String sortby,String sortDir) {
-        Sort sort = null;
+    public List<OrderResponse> getAll() {
 
-        if (sortDir.equalsIgnoreCase("asc")) {
-            sort = Sort.by(sortby).ascending();
-        } else {
-            sort = Sort.by(sortby).descending();
-        }
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<Order> all = orderRepository.findAll(pageable);
+        List<Order> all = orderRepository.findAll();
         return all.stream().map(OrderResponse::new).toList();
     }
 //
