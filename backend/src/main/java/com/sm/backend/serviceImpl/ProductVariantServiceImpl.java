@@ -21,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductVariantServiceImpl implements ProductVariantService {
     private final ProductRepository productRepository;
@@ -60,7 +62,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 }
 
     @Override
-    public Object getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
+    public List<ProductVariantResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
         Sort sort = null;
 
         if (sortDir.equalsIgnoreCase("asc")) {
@@ -74,9 +76,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     }
 
     @Override
-    public Object getById(Long variantId) {
-        return repository.findById(variantId)
-                .orElseThrow(()->new ResourceNotFoundException("invalid variant Id"));    }
+    public ProductVariantResponse getById(Long variantId) {
+        return new ProductVariantResponse(repository.findById(variantId)
+                .orElseThrow(()->new ResourceNotFoundException("invalid variant Id")));    }
 
     @Override
     public Object update(ProductVariantRequest request, Long variantId) {

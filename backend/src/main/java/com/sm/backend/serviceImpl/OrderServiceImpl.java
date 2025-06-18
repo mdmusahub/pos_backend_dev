@@ -9,10 +9,15 @@ import com.sm.backend.repository.*;
 import com.sm.backend.request.OrderItemRequest;
 import com.sm.backend.request.OrderRequest;
 import com.sm.backend.response.OrderResponse;
+import com.sm.backend.response.ProductInventoryResponse;
 import com.sm.backend.service.OrderService;
 import com.sm.backend.utility.OrderStatus;
 import com.sm.backend.utility.PaymentMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -75,14 +80,14 @@ public class OrderServiceImpl implements OrderService {
 
             item.setProductVariant(variant);
             item.setProduct(variant.getProduct());
-            item.setUnitPrice(variant.getPrice());
+            item.setUnitPrice(x.getUnitPrice());
             //if order quantity is greater than inventory quantity then this will throw an exception.
             if(inventoryRepository.findProductInventoryByProductVariant(variant).getQuantity()>=x.getQuantity())
             {item.setQuantity(x.getQuantity());}
             else {
                 throw new  ResourceNotFoundException("out of stock.");
             }
-            item.setTotalPrice(variant.getPrice() * x.getQuantity());
+            item.setTotalPrice(x.getUnitPrice() * x.getQuantity());
             order.setTotalAmount(order.getTotalAmount()+ item.getTotalPrice());
              orderItemRepository.save(item);
              return item;
@@ -111,15 +116,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Object getAll() {
-        List<Order> orders = orderRepository.findAll();
-        List<OrderResponse> list=orders.stream().map(OrderResponse::new).toList();
-        return list;
+    public List<OrderResponse> getAll() {
+
+        List<Order> all = orderRepository.findAll();
+        return all.stream().map(OrderResponse::new).toList();
     }
 //
 
     @Override
-    public Object getById(Long orderId) {
+    public OrderResponse getById(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("invalid order ID"));
      return new OrderResponse(order);
     }

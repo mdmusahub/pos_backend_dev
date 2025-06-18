@@ -2,12 +2,15 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 
+import com.sm.backend.response.OrderItemResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/orderItem")
@@ -21,9 +24,9 @@ public class OrderItemController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<List<OrderItemResponse>> getAll() {
         try {
-            return ResponseHandler.responseHandler("there is list", HttpStatus.OK, service.getAll());
+            return new ResponseEntity<>(service.getAll(),HttpStatus.OK);
 
         } catch (Exception e) {
             throw new ResourceNotFoundException("something went Wrong");
@@ -31,9 +34,9 @@ public class OrderItemController {
     }
 
     @GetMapping("/getById/{orderItemId}")
-    public ResponseEntity<?> getById(@PathVariable Long orderItemId) {
+    public ResponseEntity<OrderItemResponse> getById(@PathVariable Long orderItemId) {
         try {
-            return ResponseHandler.responseHandler("Order item retrieved successfully", HttpStatus.OK, service.getById(orderItemId));
+            return new ResponseEntity<>(service.getById(orderItemId),HttpStatus.OK) ;
         } catch (Exception e) {
             throw new ResourceNotFoundException("invalid order item ID");
         }

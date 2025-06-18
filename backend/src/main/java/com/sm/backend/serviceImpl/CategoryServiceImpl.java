@@ -7,11 +7,13 @@ import com.sm.backend.repository.CategoryRepository;
 import com.sm.backend.request.CategoryRequest;
 import com.sm.backend.response.CategoryResponse;
 import com.sm.backend.service.CategoryService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,7 +44,7 @@ private final CategoryRepository repository;
     }
 
     @Override
-    public Object getbyId(Long categoryId) {
+    public CategoryResponse getById(Long categoryId) {
   Category category = repository.findById(categoryId)
  .orElseThrow(() -> new ResourceNotFoundException("invalid category Id" ));
 return new CategoryResponse(category);
@@ -72,16 +74,9 @@ if (request.getParentId()!=null){
 }
 
     @Override
-    public Object getAll(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
-Sort sort = null;
-        if (sortDir.equalsIgnoreCase("asc")){
-            sort =Sort.by(sortBy).ascending();
-        }
-        else {
-            sort = Sort.by(sortBy).descending();
-        }
-        Pageable pageable = PageRequest.of(pageNumber,pageSize,sort);
-        return repository.findAll(pageable);
+    public List<CategoryResponse> getAll() {
+        List<Category> all = repository.findAll();
+        return all.stream().map(CategoryResponse::new).toList();
     }
 
 

@@ -46,7 +46,7 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     }
 
     @Override
-    public Object getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
+    public List<ProductInventoryResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
         Sort sort = null;
 
         if (sortDir.equalsIgnoreCase("asc")) {
@@ -60,9 +60,9 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     }
 
     @Override
-    public Object getById(Long inventoryId) {
-        return inventoryRepository.findById(inventoryId)
-                .orElseThrow(()->new RuntimeException("invalid inventory ID"));
+    public ProductInventoryResponse getById(Long inventoryId) {
+        return new ProductInventoryResponse(inventoryRepository.findById(inventoryId)
+                .orElseThrow(()->new RuntimeException("invalid inventory ID")));
     }
 
     @Override
