@@ -89,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Object getall(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
+    public List<ProductResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
         Sort sort = null;
 
         if (sortDir.equalsIgnoreCase("asc")) {

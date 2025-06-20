@@ -113,5 +113,12 @@ return repository.save(variant);
         }
     }
 
+    @Override
+    public List<ProductVariantResponse> findVariantByProductId(Long id) {
+            Product product=productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("product id not found"));
+            List<ProductVariant> productVariants=repository.getAllVariantsByProductId(id);
+            return productVariants.stream().map(ProductVariantResponse::new).toList();
+    }
+
 
 }
