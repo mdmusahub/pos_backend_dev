@@ -2,6 +2,7 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.ProductVariantRequest;
+import com.sm.backend.response.ProductVariantResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.ProductVariantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,11 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/productVariant")
+@CrossOrigin(origins = "*")
 public class ProductVariantController {
 private final ProductVariantService service;
 @Autowired
@@ -24,12 +28,12 @@ private final ProductVariantService service;
     service.createVariant(request);
 }
 @GetMapping("/getAll")
-    public ResponseEntity<?>getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                   @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                   @RequestParam(required = false, defaultValue = "variantName") String sortby,
-                                   @RequestParam(required = false, defaultValue = "asc") String sortDir){
+    public ResponseEntity<List<ProductVariantResponse>>getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+                                                              @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                                              @RequestParam(required = false, defaultValue = "variantName") String sortby,
+                                                              @RequestParam(required = false, defaultValue = "asc") String sortDir){
     try{
-   return ResponseHandler.responseHandler("List of Variants", HttpStatus.OK,service.getAll(pageNumber,pageSize,sortby,sortDir));
+   return new ResponseEntity<>(service.getAll(pageNumber,pageSize,sortby,sortDir),HttpStatus.OK);
     } catch (Exception e) {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

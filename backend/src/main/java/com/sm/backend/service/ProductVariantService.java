@@ -1,11 +1,14 @@
 package com.sm.backend.service;
 
 import com.sm.backend.request.ProductVariantRequest;
+import com.sm.backend.response.ProductVariantResponse;
+
+import java.util.List;
 
 public interface ProductVariantService {
     void createVariant(ProductVariantRequest request);
 
-    Object getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
+    List<ProductVariantResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
 
     Object getById(Long variantId);
 

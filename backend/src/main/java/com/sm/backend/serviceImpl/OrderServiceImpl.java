@@ -9,10 +9,15 @@ import com.sm.backend.repository.*;
 import com.sm.backend.request.OrderItemRequest;
 import com.sm.backend.request.OrderRequest;
 import com.sm.backend.response.OrderResponse;
+import com.sm.backend.response.ProductInventoryResponse;
 import com.sm.backend.service.OrderService;
 import com.sm.backend.utility.OrderStatus;
 import com.sm.backend.utility.PaymentMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -111,10 +116,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Object getAll() {
-        List<Order> orders = orderRepository.findAll();
-        List<OrderResponse> list=orders.stream().map(OrderResponse::new).toList();
-        return list;
+    public List<OrderResponse> getAll(Integer pageNumber,Integer pageSize, String sortby,String sortDir) {
+        Sort sort = null;
+
+        if (sortDir.equalsIgnoreCase("asc")) {
+            sort = Sort.by(sortby).ascending();
+        } else {
+            sort = Sort.by(sortby).descending();
+        }
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Order> all = orderRepository.findAll(pageable);
+        return all.stream().map(OrderResponse::new).toList();
     }
 //
 

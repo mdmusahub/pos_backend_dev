@@ -2,6 +2,7 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.OrderRequest;
+import com.sm.backend.response.OrderResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/order")
+@CrossOrigin(origins = "*")
 public class OrderController {
 private final OrderService service;
 @Autowired
@@ -24,9 +28,12 @@ private final OrderService service;
 
     }
 @GetMapping("/getAll")
-    public ResponseEntity<?>getAll(){
+    public ResponseEntity<List<OrderResponse>>getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+                                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                                     @RequestParam(required = false, defaultValue = "orderId") String sortby,
+                                                     @RequestParam(required = false, defaultValue = "asc") String sortDir){
     try{
-        return ResponseHandler.responseHandler("orders retrieved successfully.", HttpStatus.OK,service.getAll());
+        return new ResponseEntity<>(service.getAll(pageNumber,pageSize,sortby,sortDir), HttpStatus.OK);
     } catch (Exception e) {
         throw new ResourceNotFoundException("cannot retrieve orders.");
     }
