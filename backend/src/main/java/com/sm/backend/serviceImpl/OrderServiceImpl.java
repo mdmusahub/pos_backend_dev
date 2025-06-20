@@ -65,8 +65,8 @@ public class OrderServiceImpl implements OrderService {
         order.setCashAmount(request.getCashAmount());
         order.setOnlineAmount(request.getOnlineAmount());
         order.setTotalAmount(0d);
-        order.setOrderDate(request.getOrderDate());
-        order.setUpdatedAt(request.getUpdatedAt());
+//        order.setOrderDate(request.getOrderDate());
+//        order.setUpdatedAt(request.getUpdatedAt());
 
 //here we are creating and setting the orderItems in the order.
    List<OrderItemRequest> orderItemRequests= request.getOrderItemRequests();
@@ -146,7 +146,74 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Override
+    public void updateOrder(Long id, OrderRequest request) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("order id does not exist."));
+        if(request.getUserPhoneNumber()!=null){
+            order.setUserPhoneNumber(request.getUserPhoneNumber());
+        }
+        if(request.getCashAmount()!=null){
+            order.setCashAmount(request.getCashAmount());
+        }
+        if(request.getOnlineAmount()!=null){
+            order.setOnlineAmount(request.getOnlineAmount());
+        }
+        if(request.getPaymentMode()!=null){
+            order.setPaymentMode(request.getPaymentMode());
+        }
+        if(request.getStatus()!=null){
+            order.setStatus(request.getStatus());
+        }
+        if(request.getOrderItemRequests()!=null){
+            List<OrderItem> oldOrderItems = order.getOrderItems();
+
+            order.setTotalAmount(0d);
+            List<OrderItemRequest> orderItemRequests = request.getOrderItemRequests();
+
+            List<OrderItem> newOrderItems=orderItemRequests.stream().map(a->{
+             OrderItem orderItem= new OrderItem();
+                ProductVariant variant = productVariantRepository.findById(a.getVariantId()).orElseThrow(() -> new ResourceNotFoundException("variant id does not exist."));
+                orderItem.setProductVariant(variant);
+                orderItem.setProduct(variant.getProduct());
+                ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(variant);
+                if(inventory.getQuantity()>=a.getQuantity()){
+                    orderItem.setQuantity(a.getQuantity());
+                    inventory.setQuantity(inventory.getQuantity()-a.getQuantity());
+
+                }
+                else {
+                    throw new ResourceNotFoundException("item is out of stock.");
+                }
+                orderItem.setUnitPrice(a.getUnitPrice());
+                orderItem.setTotalPrice(a.getUnitPrice()*a.getQuantity());
+                order.setTotalAmount(order.getTotalAmount()+orderItem.getTotalPrice());
+                orderItemRepository.save(orderItem);
+                return orderItem;
+            }).toList();
+            order.setOrderItems(newOrderItems);
+            for(OrderItem item: oldOrderItems){
+                ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(item.getProductVariant());
+                inventory.setQuantity(inventory.getQuantity()+item.getQuantity());
+                inventoryRepository.save(inventory);
+                orderItemRepository.delete(item);
+            }
+            order.setTax(order.getTotalAmount()*0.18d);
+            order.setTotalAmount(order.getTotalAmount()+ order.getTax());
+            if(order.getTotalAmount()>=5000){
+                order.setDiscount(order.getDiscount()*0.5d);
+                order.setTotalAmount(order.getTotalAmount()-order.getDiscount());
+            }
+            else {
+                order.setDiscount(0d);
+            }
+            orderRepository.save(order);
+//            for(OrderItem orderItem:newOrderItems){
+//                ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(orderItem.getProductVariant());
+//               inventory.setQuantity(inventory.getQuantity()-orderItem.getQuantity());
+//               inventoryRepository.save(inventory);
+//            }
+        }
+    }
+
 }
-
-
-

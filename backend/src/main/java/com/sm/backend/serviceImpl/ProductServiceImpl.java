@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,8 +54,8 @@ public class ProductServiceImpl implements ProductService {
             product.setProductName(request.getProductName());
             product.setSku(request.getSku());
             product.setDescription(request.getDescription());
-            product.setCreatedAt(request.getCreatedAt());
-            product.setUpdatedAt(request.getUpdatedAt());
+//            product.setCreatedAt(request.getCreatedAt());
+//            product.setUpdatedAt(request.getUpdatedAt());
             Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Invalid Category ID"));
             product.setCategory(category);
             repository.save(product);
@@ -69,13 +70,13 @@ public class ProductServiceImpl implements ProductService {
                    variant.setProduct(repository.findById(product.getProductId()).orElseThrow(() -> new ResourceNotFoundException("invalid product ID")));
                    variantRepository.save(variant);
 //            creating inventories
-//                   ProductInventory inventory = new ProductInventory();
-//                   inventory.setQuantity(request1.getInventoryRequest().getQuantity());
-//                   inventory.setLocation(request1.getInventoryRequest().getLocation());
-//                   inventory.setLastUpdated(request1.getInventoryRequest().getLastUpdated());
-//                   inventory.setProduct(variant.getProduct());
-//                   inventory.setProductVariant(variant);
-//                   inventoryRepository.save(inventory);
+                   ProductInventory inventory = new ProductInventory();
+                   inventory.setQuantity(request1.getInventoryRequest().getQuantity());
+                   inventory.setLocation(request1.getInventoryRequest().getLocation());
+                   inventory.setLastUpdated(request1.getInventoryRequest().getLastUpdated());
+                   inventory.setProduct(variant.getProduct());
+                   inventory.setProductVariant(variant);
+                   inventoryRepository.save(inventory);
                }
            }
         }
@@ -117,6 +118,7 @@ public class ProductServiceImpl implements ProductService {
         if (request.getSku() != null) {
             product.setSku(request.getSku());
         }
+        product.setUpdatedAt(LocalDateTime.now());
 
         if (request.getCategoryId() != null) {
             Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("invalid category ID"));
