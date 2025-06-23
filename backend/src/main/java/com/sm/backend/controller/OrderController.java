@@ -49,6 +49,10 @@ private final OrderService service;
     service.delete(orderId);
 }
 
+@PutMapping("update/{id}")
+    public void updateOrder(@PathVariable Long id,@RequestBody OrderRequest request){
+    service.updateOrder(id,request);
+}
 }
 
 
