@@ -20,8 +20,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -150,6 +153,7 @@ public class OrderServiceImpl implements OrderService {
     public void updateOrder(Long id, OrderRequest request) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("order id does not exist."));
+        order.setUpdatedAt(LocalDateTime.now());
         if(request.getUserPhoneNumber()!=null){
             order.setUserPhoneNumber(request.getUserPhoneNumber());
         }
@@ -166,42 +170,56 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus(request.getStatus());
         }
         if(request.getOrderItemRequests()!=null){
+            //here we collected all the old order items.
             List<OrderItem> oldOrderItems = order.getOrderItems();
 
             order.setTotalAmount(0d);
+            //here we fetched all the requests for new orderItems.
             List<OrderItemRequest> orderItemRequests = request.getOrderItemRequests();
 
+            //here we are creating and setting the newOrderItems in the order.
             List<OrderItem> newOrderItems=orderItemRequests.stream().map(a->{
              OrderItem orderItem= new OrderItem();
                 ProductVariant variant = productVariantRepository.findById(a.getVariantId()).orElseThrow(() -> new ResourceNotFoundException("variant id does not exist."));
                 orderItem.setProductVariant(variant);
                 orderItem.setProduct(variant.getProduct());
+
+                //here we are managing the quantity of variants in inventory.
                 ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(variant);
                 if(inventory.getQuantity()>=a.getQuantity()){
                     orderItem.setQuantity(a.getQuantity());
                     inventory.setQuantity(inventory.getQuantity()-a.getQuantity());
-
                 }
                 else {
                     throw new ResourceNotFoundException("item is out of stock.");
                 }
                 orderItem.setUnitPrice(a.getUnitPrice());
+
+                //This is the total of orderItem based on its quantity.
                 orderItem.setTotalPrice(a.getUnitPrice()*a.getQuantity());
+
+                //This is the total of whole Order.
                 order.setTotalAmount(order.getTotalAmount()+orderItem.getTotalPrice());
                 orderItemRepository.save(orderItem);
                 return orderItem;
-            }).toList();
+            }).collect(Collectors.toCollection(ArrayList::new)); //stream ended here.
+            //here we are setting the newOrderItems in Order.
             order.setOrderItems(newOrderItems);
+
+            //here we are managing the inventory of variants which were used as oldOrderItems.
             for(OrderItem item: oldOrderItems){
                 ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(item.getProductVariant());
                 inventory.setQuantity(inventory.getQuantity()+item.getQuantity());
                 inventoryRepository.save(inventory);
                 orderItemRepository.delete(item);
             }
+            //setting Tax.
             order.setTax(order.getTotalAmount()*0.18d);
-            order.setTotalAmount(order.getTotalAmount()+ order.getTax());
+            order.setTotalAmount(order.getTotalAmount()+order.getTax());
+
+            //setting Discount.
             if(order.getTotalAmount()>=5000){
-                order.setDiscount(order.getDiscount()*0.5d);
+                order.setDiscount(order.getTotalAmount()*0.05d);
                 order.setTotalAmount(order.getTotalAmount()-order.getDiscount());
             }
             else {
