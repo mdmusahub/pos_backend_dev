@@ -52,7 +52,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
             ProductInventory inventory = new ProductInventory();
             inventory.setQuantity(request.getInventoryRequest().getQuantity());
             inventory.setLocation(request.getInventoryRequest().getLocation());
-            inventory.setLastUpdated(request.getInventoryRequest().getLastUpdated());
+//            inventory.setLastUpdated(request.getInventoryRequest().getLastUpdated());
 //            ProductVariant variant1 = repository.findById(request.getInventoryRequest().getVariantId())
 //                    .orElseThrow(() -> new ResourceNotFoundException("invalid variant ID"));
             inventory.setProduct(variant.getProduct());

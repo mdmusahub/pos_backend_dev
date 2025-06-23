@@ -2,6 +2,7 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.ProductRequest;
+import com.sm.backend.response.PVIResponse;
 import com.sm.backend.response.ProductResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.ProductService;
@@ -66,6 +67,13 @@ public void delete(@PathVariable Long productId){
        service.delete(productId);
 
 }
-
+@GetMapping("/getAllDetails/{id}")
+    public ResponseEntity<PVIResponse> getAllProductDetails(@PathVariable Long id){
+        try {
+            return new ResponseEntity<>(service.getAllProductDetails(id),HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
+}
 
 }

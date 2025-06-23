@@ -11,7 +11,7 @@ import com.sm.backend.repository.*;
 import com.sm.backend.request.ProductInventoryRequest;
 import com.sm.backend.request.ProductRequest;
 import com.sm.backend.request.ProductVariantRequest;
-import com.sm.backend.response.ProductResponse;
+import com.sm.backend.response.*;
 import com.sm.backend.service.ProductService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
                    ProductInventory inventory = new ProductInventory();
                    inventory.setQuantity(request1.getInventoryRequest().getQuantity());
                    inventory.setLocation(request1.getInventoryRequest().getLocation());
-                   inventory.setLastUpdated(request1.getInventoryRequest().getLastUpdated());
+//                   inventory.setLastUpdated(request1.getInventoryRequest().getLastUpdated());
                    inventory.setProduct(variant.getProduct());
                    inventory.setProductVariant(variant);
                    inventoryRepository.save(inventory);
@@ -151,4 +151,24 @@ public class ProductServiceImpl implements ProductService {
                repository.delete(product);
            }
        }
-}}
+}
+
+    @Override
+    public PVIResponse getAllProductDetails(Long id) {
+        Product product = repository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("invalid product id"));
+        List<ProductVariant> variants = variantRepository.getAllVariantsByProductId(id);
+        List<VIResponse> viResponses = new ArrayList<>();
+      try {
+          for (ProductVariant variant:variants){
+              ProductVariantResponse variantResponse=new ProductVariantResponse(variant);
+              ProductInventoryResponse inventoryResponse= new ProductInventoryResponse(inventoryRepository.findProductInventoryByProductVariant(variant));
+              VIResponse viResponse = new VIResponse(variantResponse,inventoryResponse);
+              viResponses.add(viResponse);
+          }
+      } catch (Exception e) {
+          throw new ResourceNotFoundException("some variant does not have inventory ");
+      }
+        return new PVIResponse(product,viResponses);
+    }
+}

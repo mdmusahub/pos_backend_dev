@@ -2,6 +2,7 @@ package com.sm.backend.service;
 
 
 import com.sm.backend.request.ProductRequest;
+import com.sm.backend.response.PVIResponse;
 import com.sm.backend.response.ProductResponse;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface ProductService {
 
 
     void delete(Long productId);
+
+    PVIResponse getAllProductDetails(Long id);
 }
