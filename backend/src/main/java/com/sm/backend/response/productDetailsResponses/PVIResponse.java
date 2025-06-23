@@ -1,4 +1,4 @@
-package com.sm.backend.response;
+package com.sm.backend.response.productDetailsResponses;
 
 
 import com.sm.backend.model.Category;

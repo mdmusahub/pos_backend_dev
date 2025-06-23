@@ -8,10 +8,15 @@ import com.sm.backend.model.Product;
 import com.sm.backend.model.ProductInventory;
 import com.sm.backend.model.ProductVariant;
 import com.sm.backend.repository.*;
-import com.sm.backend.request.ProductInventoryRequest;
 import com.sm.backend.request.ProductRequest;
 import com.sm.backend.request.ProductVariantRequest;
+import com.sm.backend.request.productUpdateReq.ProdRequest;
+import com.sm.backend.request.productUpdateReq.VarRequest;
 import com.sm.backend.response.*;
+import com.sm.backend.response.productDetailsResponses.InventoryResponse;
+import com.sm.backend.response.productDetailsResponses.PVIResponse;
+import com.sm.backend.response.productDetailsResponses.VIResponse;
+import com.sm.backend.response.productDetailsResponses.VariantResponse;
 import com.sm.backend.service.ProductService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,8 +166,8 @@ public class ProductServiceImpl implements ProductService {
         List<VIResponse> viResponses = new ArrayList<>();
       try {
           for (ProductVariant variant:variants){
-              ProductVariantResponse variantResponse=new ProductVariantResponse(variant);
-              ProductInventoryResponse inventoryResponse= new ProductInventoryResponse(inventoryRepository.findProductInventoryByProductVariant(variant));
+              VariantResponse variantResponse=new VariantResponse(variant);
+              InventoryResponse inventoryResponse= new InventoryResponse(inventoryRepository.findProductInventoryByProductVariant(variant));
               VIResponse viResponse = new VIResponse(variantResponse,inventoryResponse);
               viResponses.add(viResponse);
           }
@@ -171,4 +176,54 @@ public class ProductServiceImpl implements ProductService {
       }
         return new PVIResponse(product,viResponses);
     }
+
+
+
+    @Override
+    public void updateAllDetails(ProdRequest request, Long id) {
+        Product product = repository.findById(id).orElseThrow(()->new ResourceNotFoundException("invalid id."));
+        if(request.getProductName()!=null){
+            product.setProductName(request.getProductName());
+        }
+        if(request.getSku()!=null){
+            product.setSku(request.getSku());
+        }
+        if(request.getDescription()!=null){
+            product.setDescription(request.getDescription());
+        }
+        if(request.getCategoryId()!=null){
+            product.setCategory(categoryRepository.findById(request.getCategoryId()).orElseThrow(()->new ResourceNotFoundException("invalid category id.")));
+        }
+
+      product.setUpdatedAt(LocalDateTime.now());
+        List<VarRequest> variants=request.getVariant();
+
+        for(VarRequest vi:variants){
+           ProductVariant productVariant=variantRepository.findById(vi.getVariantId()).orElseThrow(()->new ResourceNotFoundException("invalid variant id."));
+            if(vi.getVariantName()!=null){
+                productVariant.setVariantName(vi.getVariantName());
+            }
+            if(vi.getVariantValue()!=null){
+                productVariant.setVariantValue(vi.getVariantValue());
+            }
+            if(vi.getVariantPrice()!=null){
+                productVariant.setPrice(vi.getVariantPrice());
+            }
+
+            ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(productVariant);
+            inventory.setLastUpdated(LocalDateTime.now());
+            if(vi.getQuantity()!=null){
+                inventory.setQuantity(vi.getQuantity());
+            }
+            if(vi.getLocation()!=null){
+                inventory.setLocation(vi.getLocation());
+            }
+            inventoryRepository.save(inventory);
+            variantRepository.save(productVariant);
+        }
+        repository.save(product);
+
+    }
+
+
 }

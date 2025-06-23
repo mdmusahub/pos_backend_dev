@@ -2,7 +2,8 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.ProductRequest;
-import com.sm.backend.response.PVIResponse;
+import com.sm.backend.request.productUpdateReq.ProdRequest;
+import com.sm.backend.response.productDetailsResponses.PVIResponse;
 import com.sm.backend.response.ProductResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.ProductService;
@@ -74,6 +75,10 @@ public void delete(@PathVariable Long productId){
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage());
         }
+}
+@PutMapping("/updateAllDetails/{id}")
+    public void updateAllDetails(@RequestBody ProdRequest request, @PathVariable Long id){
+        service.updateAllDetails(request,id);
 }
 
 }
