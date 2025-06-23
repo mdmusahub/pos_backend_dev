@@ -16,4 +16,6 @@ public interface ProductVariantService {
     Object update(ProductVariantRequest request, Long variantId);
 
     void delete(Long variantId);
+
+    List<ProductVariantResponse> findVariantByProductId(Long id);
 }

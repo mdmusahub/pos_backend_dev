@@ -62,6 +62,16 @@ private final ProductVariantService service;
        service.delete(variantId);
         }
 
+        @GetMapping("/findByProductId/{id}")
+        public ResponseEntity<List<ProductVariantResponse>> findVariantByProductId(@PathVariable Long id){
+            try {
+                return new ResponseEntity<>(service.findVariantByProductId(id),HttpStatus.OK);
+
+            } catch (Exception e) {
+                throw new ResourceNotFoundException(e.getMessage());            }
+
+        }
+
    }
 
 
