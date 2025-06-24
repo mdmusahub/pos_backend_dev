@@ -7,7 +7,7 @@ import java.util.List;
 public class ProductInventoryRequest {
     private Long quantity;
     private String location;
-    private LocalDateTime lastUpdated;
+//    private LocalDateTime lastUpdated;
 //    private Long productId;
     private Long variantId;
 }

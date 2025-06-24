@@ -1,20 +1,22 @@
 package com.sm.backend.service;
 
 
-import com.sm.backend.model.Category;
 import com.sm.backend.request.CategoryRequest;
+import com.sm.backend.response.CategoryResponse;
+
+import java.util.List;
 
 public interface CategoryService {
-    void register(CategoryRequest request);
+    void createCategory(CategoryRequest request);
 
 
-    Object getbyId(Long userId);
+  CategoryResponse getById(Long categoryId);
 
     void delete(Long categoryId);
 
     Object updateCategory(Long categoryId, CategoryRequest request);
 
-    Object findAll(Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
+    List<CategoryResponse> getAll();
 
 
 }

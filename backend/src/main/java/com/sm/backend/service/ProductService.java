@@ -2,17 +2,23 @@ package com.sm.backend.service;
 
 
 import com.sm.backend.request.ProductRequest;
+import com.sm.backend.response.PVIResponse;
+import com.sm.backend.response.ProductResponse;
+
+import java.util.List;
 
 public interface ProductService {
 
-    void register(ProductRequest request);
+    void createProduct(ProductRequest request);
 
-    Object findById(Long productId);
+    ProductResponse getById(Long productId);
 
-    Object findall(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
+    List<ProductResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
 
-    Object updateDetails(ProductRequest request, Long productId);
+    Object update(ProductRequest request, Long productId);
 
 
     void delete(Long productId);
+
+    PVIResponse getAllProductDetails(Long id);
 }
