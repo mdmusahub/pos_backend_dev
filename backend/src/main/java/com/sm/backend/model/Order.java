@@ -5,7 +5,9 @@ import com.sm.backend.utility.PaymentMode;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +20,8 @@ public class Order {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private Long orderID;
+@ManyToOne
+private Customer customer;
 @OneToMany(fetch = FetchType.EAGER)
 private List<OrderItem> orderItems;
 private String userPhoneNumber;
@@ -30,6 +34,7 @@ private  Double totalAmount;
 private PaymentMode paymentMode;
 private String onlineAmount;
 private String cashAmount;
+@CreationTimestamp
 private LocalDateTime orderDate;
 private LocalDateTime updatedAt;
 }

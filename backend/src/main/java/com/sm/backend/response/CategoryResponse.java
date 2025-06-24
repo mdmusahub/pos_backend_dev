@@ -11,11 +11,12 @@ public class CategoryResponse {
     private Long categoryId;
     private String name;
     private  String description;
-    private Long parentId;
+    private Category parentId;
+
     public CategoryResponse(Category category) {
         this.categoryId = category.getCategoryId();
         this.name = category.getName();
         this.description = category.getDescription();
-   this.parentId = category.getCategoryId();
+   this.parentId = category.getParentId();
     }
 }

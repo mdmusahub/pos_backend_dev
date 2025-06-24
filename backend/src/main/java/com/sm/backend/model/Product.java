@@ -23,10 +23,7 @@ public class Product {
     private String description;
     @ManyToOne
     private Category category;
-    @DateTimeFormat
     @CreationTimestamp
     private LocalDateTime createdAt;
-    @DateTimeFormat
-    @CreationTimestamp
     private LocalDateTime updatedAt;
 }

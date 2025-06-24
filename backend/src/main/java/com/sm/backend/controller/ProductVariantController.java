@@ -2,6 +2,7 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.ProductVariantRequest;
+import com.sm.backend.response.ProductVariantResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.ProductVariantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,11 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/productVariant")
+@CrossOrigin(origins = "*")
 public class ProductVariantController {
 private final ProductVariantService service;
 @Autowired
@@ -19,34 +23,34 @@ private final ProductVariantService service;
         this.service = service;
     }
 
-    @PostMapping("/register")
-    public void register(@RequestBody ProductVariantRequest request){
-    service.register(request);
+    @PostMapping("/create")
+    public void createVariant(@RequestBody ProductVariantRequest request){
+    service.createVariant(request);
 }
 @GetMapping("/getAll")
-    public ResponseEntity<?>getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                   @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                   @RequestParam(required = false, defaultValue = "variantName") String sortby,
-                                   @RequestParam(required = false, defaultValue = "asc") String sortDir){
+    public ResponseEntity<List<ProductVariantResponse>>getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+                                                              @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                                              @RequestParam(required = false, defaultValue = "variantName") String sortby,
+                                                              @RequestParam(required = false, defaultValue = "asc") String sortDir){
     try{
-   return ResponseHandler.responseHandler("there is list", HttpStatus.OK,service.getAll(pageNumber,pageSize,sortby,sortDir));
+   return new ResponseEntity<>(service.getAll(pageNumber,pageSize,sortby,sortDir),HttpStatus.OK);
     } catch (Exception e) {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
-@GetMapping("/findById/{variantId}")
-    public ResponseEntity<?>findById(@PathVariable Long  variantId){
+@GetMapping("/getById/{variantId}")
+    public ResponseEntity<ProductVariantResponse>getById(@PathVariable Long  variantId){
     try{
-        return ResponseHandler.responseHandler("id Found",HttpStatus.OK,service.findById(variantId));
+        return new ResponseEntity<>(service.getById(variantId),HttpStatus.OK);
     }
     catch (Exception e){
         throw  new ResourceNotFoundException(e.getMessage());
     }
 }
-@PutMapping("/updateVariant/{variantId}")
-    public ResponseEntity<?>updateVariant(@RequestBody ProductVariantRequest request, @PathVariable Long variantId){
+@PutMapping("/update/{variantId}")
+    public ResponseEntity<?>update(@RequestBody ProductVariantRequest request, @PathVariable Long variantId){
     try{
-        return ResponseHandler.responseHandler("Updated",HttpStatus.OK,service.updateVariant(request,variantId));
+        return ResponseHandler.responseHandler("Variant Updated successfully",HttpStatus.OK,service.update(request,variantId));
     } catch (Exception e) {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -58,7 +62,17 @@ private final ProductVariantService service;
        service.delete(variantId);
         }
 
-    }
+        @GetMapping("/findByProductId/{id}")
+        public ResponseEntity<List<ProductVariantResponse>> findVariantByProductId(@PathVariable Long id){
+            try {
+                return new ResponseEntity<>(service.findVariantByProductId(id),HttpStatus.OK);
+
+            } catch (Exception e) {
+                throw new ResourceNotFoundException(e.getMessage());            }
+
+        }
+
+   }
 
 
 
