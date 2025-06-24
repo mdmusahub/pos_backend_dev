@@ -1,5 +1,6 @@
 package com.sm.backend.response;
 
+import com.sm.backend.model.Customer;
 import com.sm.backend.model.Order;
 import com.sm.backend.model.OrderItem;
 import com.sm.backend.utility.OrderStatus;
@@ -16,19 +17,20 @@ public class OrderResponse {
 
 
     private Long orderID;
+    private CustomerResponse customer;
     private String userPhoneNumber;
     private OrderStatus status;
     private Double discount;
-    private  Double tax;
-    private  Double totalAmount;
+    private Double tax;
+    private Double totalAmount;
     private PaymentMode paymentMode;
     private String onlineAmount;
     private String cashAmount;
     private LocalDateTime orderDate;
     private LocalDateTime updatedAt;
- private List<OrderItem> orderItems;
+    private List<OrderItem> orderItems;
 
- public OrderResponse(Order order) {
+    public OrderResponse(Order order) {
         this.orderID = order.getOrderID();
         this.userPhoneNumber = order.getUserPhoneNumber();
         this.status = order.getStatus();
@@ -40,8 +42,9 @@ public class OrderResponse {
         this.cashAmount = order.getCashAmount();
         this.orderDate = order.getOrderDate();
         this.updatedAt = order.getUpdatedAt();
-   this.orderItems = order.getOrderItems() ;
+        this.orderItems = order.getOrderItems();
+        this.customer = new CustomerResponse(order.getCustomer());
     }
 
 
-   }
+}

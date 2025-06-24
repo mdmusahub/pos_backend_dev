@@ -1,10 +1,7 @@
 package com.sm.backend.serviceImpl;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
-import com.sm.backend.model.Order;
-import com.sm.backend.model.OrderItem;
-import com.sm.backend.model.ProductInventory;
-import com.sm.backend.model.ProductVariant;
+import com.sm.backend.model.*;
 import com.sm.backend.repository.*;
 import com.sm.backend.request.OrderItemRequest;
 import com.sm.backend.request.OrderRequest;
@@ -23,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -33,21 +31,35 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final ProductVariantRepository productVariantRepository;
-
+private final CustomerRepository customerRepository;
     @Autowired
-    public OrderServiceImpl(ProductInventoryRepository inventoryRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository, ProductRepository productRepository, ProductVariantRepository productVariantRepository) {
+    public OrderServiceImpl(ProductInventoryRepository inventoryRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository, ProductRepository productRepository, ProductVariantRepository productVariantRepository, CustomerRepository customerRepository) {
         this.inventoryRepository = inventoryRepository;
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.productRepository = productRepository;
         this.productVariantRepository = productVariantRepository;
+        this.customerRepository = customerRepository;
     }
 
     @Override
     public void createOrder(OrderRequest request) throws ResourceNotFoundException {
         //here we're getting and setting the values of order table.
+
         Order order = new Order();
         order.setUserPhoneNumber(request.getUserPhoneNumber());
+
+        Optional<Customer> byPhoneNumber = customerRepository.findByPhoneNumber(request.getUserPhoneNumber());
+        if (byPhoneNumber.isPresent()){
+            order.setCustomer(byPhoneNumber.get());
+        }
+        else {
+            Customer customer = new Customer();
+            customer.setPhoneNumber(request.getUserPhoneNumber());
+        customerRepository.save(customer);
+        order.setCustomer(customer);
+        }
+
         if (request.getStatus() == OrderStatus.PENDING) {
             order.setStatus(OrderStatus.PENDING);
         }
