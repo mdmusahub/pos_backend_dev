@@ -14,8 +14,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class OrderResponse {
-
-
     private Long orderID;
     private CustomerResponse customer;
     private String userPhoneNumber;
