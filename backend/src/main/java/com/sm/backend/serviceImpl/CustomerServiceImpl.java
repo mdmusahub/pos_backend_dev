@@ -9,6 +9,7 @@ import com.sm.backend.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -37,6 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("invalid id"));
         if (request.getPhoneNumber() != null) {
             customer.setPhoneNumber(request.getPhoneNumber());
+            customer.setUpdatedAt(LocalDateTime.now());
         }
         customerRepository.save(customer);
     }
