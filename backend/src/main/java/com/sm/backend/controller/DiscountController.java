@@ -31,4 +31,22 @@ public class DiscountController {
         }
     }
 
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<DiscountResponse>getById(@PathVariable Long id){
+        try {
+            return new ResponseEntity<>(discountService.getById(id),HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
+    }
+    @DeleteMapping("/delete/{id}")
+    public void deleteDiscount(@PathVariable Long id){
+        try {
+            discountService.deleteDiscount(id);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
+    }
+
 }
