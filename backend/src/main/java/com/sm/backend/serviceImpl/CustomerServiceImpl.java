@@ -43,9 +43,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void delete(Long id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("invalid id"));
         try {
-        customerRepository.delete(customerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("invalid id")));
+        customerRepository.delete(customer);
     } catch (Exception e) {
             throw new ResourceNotFoundException("This customer is involved in an order.");
         }
