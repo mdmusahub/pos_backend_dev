@@ -1,0 +1,34 @@
+package com.sm.backend.controller;
+
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
+import com.sm.backend.request.DiscountRequest;
+import com.sm.backend.response.DiscountResponse;
+import com.sm.backend.service.DiscountService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/discount")
+public class DiscountController {
+    private final DiscountService discountService;
+
+    public DiscountController(DiscountService discountService) {
+        this.discountService = discountService;
+    }
+    @PostMapping("/create")
+    public void createDiscount(@RequestBody DiscountRequest request){
+        discountService.createDiscount(request);
+    }
+    @GetMapping("/getAll")
+    public ResponseEntity<List<DiscountResponse>>getAllDiscounts(){
+        try {
+            return new ResponseEntity<>(discountService.getAll(), HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("cannot retrieve all discounts");
+        }
+    }
+
+}
