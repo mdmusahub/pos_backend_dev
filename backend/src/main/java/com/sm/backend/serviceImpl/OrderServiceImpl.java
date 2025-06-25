@@ -6,22 +6,15 @@ import com.sm.backend.repository.*;
 import com.sm.backend.request.OrderItemRequest;
 import com.sm.backend.request.OrderRequest;
 import com.sm.backend.response.OrderResponse;
-import com.sm.backend.response.ProductInventoryResponse;
 import com.sm.backend.service.OrderService;
 import com.sm.backend.utility.OrderStatus;
 import com.sm.backend.utility.PaymentMode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,15 +22,13 @@ public class OrderServiceImpl implements OrderService {
     private final ProductInventoryRepository inventoryRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final ProductRepository productRepository;
     private final ProductVariantRepository productVariantRepository;
 private final CustomerRepository customerRepository;
     @Autowired
-    public OrderServiceImpl(ProductInventoryRepository inventoryRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository, ProductRepository productRepository, ProductVariantRepository productVariantRepository, CustomerRepository customerRepository) {
+    public OrderServiceImpl(ProductInventoryRepository inventoryRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository,ProductVariantRepository productVariantRepository, CustomerRepository customerRepository) {
         this.inventoryRepository = inventoryRepository;
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
-        this.productRepository = productRepository;
         this.productVariantRepository = productVariantRepository;
         this.customerRepository = customerRepository;
     }
@@ -66,7 +57,6 @@ private final CustomerRepository customerRepository;
         if (request.getStatus() == OrderStatus.COMPLETED) {
             order.setStatus(OrderStatus.COMPLETED);
         }
-//        order.setDiscount(request.getDiscount());
         if (request.getPaymentMode() == PaymentMode.CASH) {
             order.setPaymentMode(PaymentMode.CASH);
         }
@@ -76,12 +66,10 @@ private final CustomerRepository customerRepository;
         if (request.getPaymentMode() == PaymentMode.BOTH) {
             order.setPaymentMode(PaymentMode.BOTH);
         }
-//        order.setPaymentMode(request.getPaymentMode());
+
         order.setCashAmount(request.getCashAmount());
         order.setOnlineAmount(request.getOnlineAmount());
         order.setTotalAmount(0d);
-//        order.setOrderDate(request.getOrderDate());
-//        order.setUpdatedAt(request.getUpdatedAt());
 
 //here we are creating and setting the orderItems in the order.
         List<OrderItemRequest> orderItemRequests = request.getOrderItemRequests();
