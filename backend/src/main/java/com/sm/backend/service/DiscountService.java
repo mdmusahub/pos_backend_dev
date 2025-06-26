@@ -9,4 +9,10 @@ public interface DiscountService {
     void createDiscount(DiscountRequest request);
 
     List<DiscountResponse> getAll();
+
+    DiscountResponse getById(Long id);
+
+    void delete(Long id);
+
+    void update(DiscountRequest request, Long id);
 }
