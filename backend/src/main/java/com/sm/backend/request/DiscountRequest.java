@@ -11,12 +11,11 @@ import java.time.LocalDateTime;
 @Data
 public class DiscountRequest {
     private String discountName;
-    private DiscountType discountType;
-    private Long productId;
+//    private DiscountType discountType;
+    private Long variantId;
     private WaiverMode waiverMode;
     private Double discountValue;
-    private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private Double minimumPrice;
-    private Long minimumQuantity;
+//    private Double minimumPrice;
+//    private Long minimumQuantity;
 }

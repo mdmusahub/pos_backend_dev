@@ -5,6 +5,7 @@ import com.sm.backend.util.WaiverMode;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -17,15 +18,18 @@ public class Discount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long discountId;
     private String discountName;
-    private DiscountType discountType;
+//    private DiscountType discountType;
+//    @ManyToOne
+//    private Product product;
     @ManyToOne
-    private Product product;
+    private ProductVariant variant;
     private WaiverMode waiverMode;
     private Double discountValue;
+    @CreationTimestamp
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private Boolean isActive;
-    private Double minimumPrice;
-    private Long minimumQuantity;
+//    private Double minimumPrice;
+//    private Long minimumQuantity;
 
 }
