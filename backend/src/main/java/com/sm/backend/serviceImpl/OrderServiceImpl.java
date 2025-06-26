@@ -7,6 +7,7 @@ import com.sm.backend.request.OrderItemRequest;
 import com.sm.backend.request.OrderRequest;
 import com.sm.backend.response.OrderResponse;
 import com.sm.backend.service.OrderService;
+import com.sm.backend.util.WaiverMode;
 import com.sm.backend.utility.OrderStatus;
 import com.sm.backend.utility.PaymentMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +25,22 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductVariantRepository productVariantRepository;
 private final CustomerRepository customerRepository;
+private final DiscountRepository discountRepository;
     @Autowired
-    public OrderServiceImpl(ProductInventoryRepository inventoryRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository,ProductVariantRepository productVariantRepository, CustomerRepository customerRepository) {
+    public OrderServiceImpl(ProductInventoryRepository inventoryRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository, ProductVariantRepository productVariantRepository, CustomerRepository customerRepository, DiscountRepository discountRepository) {
         this.inventoryRepository = inventoryRepository;
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.productVariantRepository = productVariantRepository;
         this.customerRepository = customerRepository;
+        this.discountRepository = discountRepository;
     }
 
     @Override
     public void createOrder(OrderRequest request) throws ResourceNotFoundException {
         //here we're getting and setting the values of order table.
-
         Order order = new Order();
         order.setUserPhoneNumber(request.getUserPhoneNumber());
-
         Optional<Customer> byPhoneNumber = customerRepository.findByPhoneNumber(request.getUserPhoneNumber());
         if (byPhoneNumber.isPresent()){
             order.setCustomer(byPhoneNumber.get());
@@ -91,6 +92,17 @@ private final CustomerRepository customerRepository;
                 throw new ResourceNotFoundException("out of stock.");
             }
             item.setTotalPrice(x.getUnitPrice() * x.getQuantity());
+            Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
+            if(discount.isPresent()){
+            if (discount.get().getWaiverMode()== WaiverMode.PERCENT){
+                item.setTotalPrice(item.getTotalPrice()*discount.get().getDiscountValue()/100);
+                order.setDiscount(order.getDiscount()+item.getTotalPrice()*discount.get().getDiscountValue()/100);
+            }
+            if(discount.get().getWaiverMode()==WaiverMode.FIXED){
+                item.setTotalPrice(item.getTotalPrice()-discount.get().getDiscountValue());
+                order.setTotalAmount(order.getDiscount()+item.getTotalPrice()-discount.get().getDiscountValue());
+            }}
+            item.setTotalPrice(item.getTotalPrice()-discount.get().getDiscountValue());
             order.setTotalAmount(order.getTotalAmount() + item.getTotalPrice());
             orderItemRepository.save(item);
             return item;
@@ -182,7 +194,6 @@ private final CustomerRepository customerRepository;
                 ProductVariant variant = productVariantRepository.findById(a.getVariantId()).orElseThrow(() -> new ResourceNotFoundException("variant id does not exist."));
                 orderItem.setProductVariant(variant);
                 orderItem.setProduct(variant.getProduct());
-
                 //here we are managing the quantity of variants in inventory.
                 ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(variant);
                 if (inventory.getQuantity() >= a.getQuantity()) {
