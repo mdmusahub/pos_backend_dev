@@ -70,6 +70,7 @@ private final DiscountRepository discountRepository;
 
         order.setCashAmount(request.getCashAmount());
         order.setOnlineAmount(request.getOnlineAmount());
+        order.setDiscount(0d);
         order.setTotalAmount(0d);
 
 //here we are creating and setting the orderItems in the order.
@@ -92,18 +93,20 @@ private final DiscountRepository discountRepository;
                 throw new ResourceNotFoundException("out of stock.");
             }
             item.setTotalPrice(x.getUnitPrice() * x.getQuantity());
+            //here we are setting product level discount.
             Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
-            if(discount.isPresent()){
-            if (discount.get().getWaiverMode()== WaiverMode.PERCENT){
-                item.setTotalPrice(item.getTotalPrice()*discount.get().getDiscountValue()/100);
-                order.setDiscount(order.getDiscount()+item.getTotalPrice()*discount.get().getDiscountValue()/100);
+            if(discount.isPresent()) {
+                if (discount.get().getWaiverMode() == WaiverMode.PERCENT) {
+                    double couponDiscount = item.getTotalPrice() * discount.get().getDiscountValue() / 100;
+                    item.setTotalPrice(item.getTotalPrice()-couponDiscount);
+                    order.setDiscount(order.getDiscount() + couponDiscount);
+                }
+                else {
+                    item.setTotalPrice(item.getTotalPrice() - discount.get().getDiscountValue());
+                    order.setDiscount(order.getDiscount() + item.getTotalPrice() - discount.get().getDiscountValue());
+                }
+                order.setTotalAmount(order.getTotalAmount() + item.getTotalPrice());
             }
-            if(discount.get().getWaiverMode()==WaiverMode.FIXED){
-                item.setTotalPrice(item.getTotalPrice()-discount.get().getDiscountValue());
-                order.setTotalAmount(order.getDiscount()+item.getTotalPrice()-discount.get().getDiscountValue());
-            }}
-            item.setTotalPrice(item.getTotalPrice()-discount.get().getDiscountValue());
-            order.setTotalAmount(order.getTotalAmount() + item.getTotalPrice());
             orderItemRepository.save(item);
             return item;
         }).toList();
@@ -114,8 +117,9 @@ private final DiscountRepository discountRepository;
         order.setTotalAmount(order.getTotalAmount() + order.getTax());
 //        setting 5% discount if total amount is >= 5000
         if (order.getTotalAmount() >= 5000d) {
-            order.setDiscount(order.getTotalAmount() * 0.05d);
-            order.setTotalAmount(order.getTotalAmount() - order.getDiscount());
+            double orderLevelDiscount = order.getTotalAmount() * 0.05d;
+            order.setDiscount(order.getDiscount()+orderLevelDiscount);
+            order.setTotalAmount(order.getTotalAmount() - orderLevelDiscount);
         } else {
             order.setDiscount(0d);
         }

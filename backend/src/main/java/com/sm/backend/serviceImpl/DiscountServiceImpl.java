@@ -57,8 +57,9 @@ public class DiscountServiceImpl implements DiscountService {
      return discounts.stream().map(DiscountResponse::new).toList();
     }
 
-    @Scheduled(cron = "0 0 12 * * ?")//everyday 12 pm
-//    @Scheduled(cron = "0 * * * * ?")//every minute.
+    //    @Scheduled(cron = "0 0 12 * * ?")//everyday 12 pm
+
+    @Scheduled(cron = "0 * * * * ?")//every minute.
     public void changeActiveStatusBasedOnStartEndDate(){
         List<Discount>discounts=discountRepository.findAll();
         discounts.stream().map((x)->{
@@ -75,4 +76,36 @@ public class DiscountServiceImpl implements DiscountService {
         System.out.println("Scheduler is running");
     }
 
+    @Override
+    public DiscountResponse getById(Long id) {
+Discount discount = discountRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("invalid id"));
+return new DiscountResponse(discount);
+    }
+
+    @Override
+    public void delete(Long id) {
+        discountRepository.delete(discountRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("invalid id")));
+    }
+
+    @Override
+    public void update(DiscountRequest request, Long id) {
+        Discount discount = discountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("invalid id"));
+       if(request.getDiscountName()!=null){
+           discount.setDiscountName(request.getDiscountName());
+       }
+       if (request.getDiscountValue()!=null){
+           discount.setDiscountValue(request.getDiscountValue());
+       }
+       if(request.getWaiverMode()!=null){
+           discount.setWaiverMode(request.getWaiverMode());
+       }
+       if(request.getEndDateTime()!=null){
+           discount.setEndDateTime(request.getEndDateTime());
+       }
+       if(request.getVariantId()!=null){
+           discount.setVariant(variantRepository.findById(request.getVariantId())
+                   .orElseThrow(()->new ResourceNotFoundException("invalid id")));
+       }
+       discountRepository.save(discount);
+    }
 }
