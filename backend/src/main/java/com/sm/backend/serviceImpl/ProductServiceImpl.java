@@ -123,6 +123,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(Long productId) {
-        repository.deleteById(productId);
+        if (repository.existsById(productId)) {
+            repository.deleteById(productId);
+        } else {
+            throw new RuntimeException("Id not Found");
+        }
     }
 }

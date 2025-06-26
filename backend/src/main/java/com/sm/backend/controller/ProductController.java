@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/product")
-
 public class ProductController {
     private final ProductService service;
 
@@ -19,13 +19,14 @@ public class ProductController {
         this.service = service;
     }
 
+
     @PostMapping("/registerProduct")
     public void register(@RequestBody ProductRequest request) {
         service.register(request);
     }
 
-    @GetMapping("/findById/{productId}")
 
+    @GetMapping("/findById/{productId}")
     public ResponseEntity<?> findById(@PathVariable Long productId) {
         try {
             return ResponseHandler.responseHandler("id retrieve successfully", HttpStatus.OK, service.findById(productId));

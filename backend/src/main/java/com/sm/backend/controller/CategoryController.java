@@ -1,6 +1,5 @@
 package com.sm.backend.controller;
 
-
 import com.sm.backend.request.CategoryRequest;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.CategoryService;
@@ -18,10 +17,13 @@ public class CategoryController {
         this.service = service;
     }
 
+
     @PostMapping("/register")
 public void register(@RequestBody CategoryRequest request){
     service.register(request);
 }
+
+
 @GetMapping("/getById/{categoryId}")
     public ResponseEntity<?> getById(@PathVariable Long categoryId){
     try {
@@ -31,10 +33,14 @@ catch (Exception e){
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 }
 }
+
+
 @DeleteMapping("/delete{categoryId}")
     public void delete(@PathVariable Long categoryId){
     service.delete(categoryId);
 }
+
+
 @PutMapping("/update/{categoryId}")
     public ResponseEntity<?>updateCategory(@RequestBody CategoryRequest request ,@PathVariable Long categoryId){
     try {
@@ -44,6 +50,7 @@ catch (Exception e){
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 }
 }
+
 
 @GetMapping("/getAll")
 public ResponseEntity<?>findAll(
@@ -65,3 +72,10 @@ catch (Exception e){
 
 
 }
+
+
+
+
+
+
+

@@ -19,10 +19,12 @@ public class ProductInventoryController {
         this.service = service;
     }
 
+
     @PostMapping("/register")
     public void register(@RequestBody ProductInventoryRequest request) {
         service.register(request);
     }
+
 
 @GetMapping("/getAll")
 private ResponseEntity<?>getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
@@ -36,6 +38,9 @@ private ResponseEntity<?>getAll(@RequestParam(required = false, defaultValue = "
          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+
+
     @PutMapping("/update/{inventoryId}")
     public ResponseEntity<?>update(@RequestBody ProductInventoryRequest request,@PathVariable Long inventoryId){
         try {
@@ -45,6 +50,8 @@ private ResponseEntity<?>getAll(@RequestParam(required = false, defaultValue = "
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+
 @GetMapping("/findById/{inventoryId}")
     public ResponseEntity<?>findById(@PathVariable Long inventoryId){
         try {
