@@ -93,6 +93,7 @@ private final DiscountRepository discountRepository;
                 throw new ResourceNotFoundException("out of stock.");
             }
             item.setTotalPrice(x.getUnitPrice() * x.getQuantity());
+            //here we are setting product level discount.
             Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
             if(discount.isPresent()) {
                 if (discount.get().getWaiverMode() == WaiverMode.PERCENT) {
