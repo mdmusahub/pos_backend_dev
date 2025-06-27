@@ -23,6 +23,7 @@ public class Discount {
 //    private Product product;
     @ManyToOne
     private ProductVariant variant;
+    @Enumerated(EnumType.STRING)
     private WaiverMode waiverMode;
     private Double discountValue;
     @CreationTimestamp

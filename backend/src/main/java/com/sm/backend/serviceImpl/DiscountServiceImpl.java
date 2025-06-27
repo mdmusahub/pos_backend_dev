@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DiscountServiceImpl implements DiscountService {
@@ -27,28 +28,34 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public void createDiscount(DiscountRequest request) {
-        Discount discount = new Discount();
-        discount.setDiscountName(request.getDiscountName());
+        Optional<Discount> discountCheck = discountRepository.findDiscountByVariantId(request.getVariantId());
+        if (discountCheck.isPresent()){
+            throw new ResourceNotFoundException("discount already exists");
+        }
+        else {
+            Discount discount = new Discount();
+            discount.setDiscountName(request.getDiscountName());
 //        if(request.getDiscountType()==DiscountType.ORDER_LEVEL){
 //            discount.setDiscountType(DiscountType.ORDER_LEVEL);
 //        }
 //        if(request.getDiscountType()==DiscountType.PRODUCT_LEVEL){
 //            discount.setDiscountType(DiscountType.PRODUCT_LEVEL);
 //        }
-        if(request.getWaiverMode()==WaiverMode.FIXED){
-            discount.setWaiverMode(WaiverMode.FIXED);
-        }
-        if(request.getWaiverMode()== WaiverMode.PERCENT){
-            discount.setWaiverMode(WaiverMode.PERCENT);
-        }
-        discount.setVariant(variantRepository.findById(request.getVariantId())
-                .orElseThrow(()->new ResourceNotFoundException("invalid id")));
-        discount.setDiscountValue(request.getDiscountValue());
-        discount.setEndDateTime(request.getEndDateTime());
-       discount.setIsActive(true);
+            if (request.getWaiverMode() == WaiverMode.FIXED) {
+                discount.setWaiverMode(WaiverMode.FIXED);
+            }
+            if (request.getWaiverMode() == WaiverMode.PERCENT) {
+                discount.setWaiverMode(WaiverMode.PERCENT);
+            }
+            discount.setVariant(variantRepository.findById(request.getVariantId())
+                    .orElseThrow(() -> new ResourceNotFoundException("invalid id")));
+            discount.setDiscountValue(request.getDiscountValue());
+            discount.setEndDateTime(request.getEndDateTime());
+            discount.setIsActive(true);
 //       discount.setMinimumPrice(request.getMinimumPrice());
 //       discount.setMinimumQuantity(request.getMinimumQuantity());
-        discountRepository.save(discount);
+            discountRepository.save(discount);
+        }
     }
 
     @Override

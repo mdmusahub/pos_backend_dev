@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/discount")
+@CrossOrigin(origins = "*")
 public class DiscountController {
     private final DiscountService discountService;
 
