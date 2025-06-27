@@ -102,8 +102,9 @@ private final DiscountRepository discountRepository;
                     order.setDiscount(order.getDiscount() + couponDiscount);
                 }
                 else {
-                    item.setTotalPrice(item.getTotalPrice() - discount.get().getDiscountValue());
-                    order.setDiscount(order.getDiscount() + item.getTotalPrice() - discount.get().getDiscountValue());
+
+                    item.setTotalPrice(item.getTotalPrice() - discount.get().getDiscountValue()*item.getQuantity());
+                    order.setDiscount(order.getDiscount() +discount.get().getDiscountValue());
                 }
                 order.setTotalAmount(order.getTotalAmount() + item.getTotalPrice());
             }
@@ -111,18 +112,19 @@ private final DiscountRepository discountRepository;
             return item;
         }).toList();
         order.setOrderItems(list);
-//        setting tax
-        order.setTax(order.getTotalAmount() * 0.18d);
-//        applying tax to the total amount
-        order.setTotalAmount(order.getTotalAmount() + order.getTax());
+
 //        setting 5% discount if total amount is >= 5000
         if (order.getTotalAmount() >= 5000d) {
             double orderLevelDiscount = order.getTotalAmount() * 0.05d;
             order.setDiscount(order.getDiscount()+orderLevelDiscount);
             order.setTotalAmount(order.getTotalAmount() - orderLevelDiscount);
-        } else {
-            order.setDiscount(0d);
         }
+
+        //        setting tax
+        order.setTax(order.getTotalAmount() * 0.18d);
+//        applying tax to the total amount
+        order.setTotalAmount(order.getTotalAmount() + order.getTax());
+
         orderRepository.save(order);
 //        managing inventory
         for (OrderItem item : list) {
