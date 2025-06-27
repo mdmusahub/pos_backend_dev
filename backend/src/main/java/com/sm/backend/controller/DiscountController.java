@@ -30,6 +30,23 @@ public class DiscountController {
             throw new ResourceNotFoundException("cannot retrieve all discounts");
         }
     }
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<DiscountResponse>getById(@PathVariable Long id){
+        try{
+            return new ResponseEntity<>(discountService.getById(id),HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("invalid id");
+        }
+    }
+    @PutMapping("/update/{id}")
+    public void update(@RequestBody DiscountRequest request,@PathVariable Long id ){
+        discountService.update(request,id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable Long id){
+        discountService.delete(id);
+    }
 
 
     @GetMapping("/getById/{id}")

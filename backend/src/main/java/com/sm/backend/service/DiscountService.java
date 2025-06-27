@@ -12,5 +12,7 @@ public interface DiscountService {
 
     DiscountResponse getById(Long id);
 
-    void deleteDiscount(Long id);
+    void delete(Long id);
+
+    void update(DiscountRequest request, Long id);
 }
