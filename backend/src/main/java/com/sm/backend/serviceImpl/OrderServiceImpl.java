@@ -105,7 +105,7 @@ private final DiscountRepository discountRepository;
                 }
                 else {
                     item.setTotalPrice(item.getTotalPrice() - discount.get().getDiscountValue());
-                    order.setDiscount(order.getDiscount() + item.getTotalPrice() - discount.get().getDiscountValue());
+                    order.setDiscount(order.getDiscount() + discount.get().getDiscountValue());
                 }
                 order.setTotalAmount(order.getTotalAmount() + item.getTotalPrice());
             }
