@@ -101,10 +101,10 @@ private final DiscountRepository discountRepository;
                     item.setTotalPrice(item.getTotalPrice()-couponDiscount);
                     order.setDiscount(order.getDiscount() + couponDiscount);
                 }
-                else {
-
-                    item.setTotalPrice(item.getTotalPrice() - discount.get().getDiscountValue()*item.getQuantity());
-                    order.setDiscount(order.getDiscount() +discount.get().getDiscountValue());
+                if (discount.get().getWaiverMode()==WaiverMode.FIXED) {
+                    double flatDiscount = discount.get().getDiscountValue() * item.getQuantity();
+                    item.setTotalPrice(item.getTotalPrice() - flatDiscount);
+                    order.setDiscount(order.getDiscount() +flatDiscount);
                 }
                 order.setTotalAmount(order.getTotalAmount() + item.getTotalPrice());
             }
