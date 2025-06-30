@@ -93,8 +93,6 @@ private final DiscountRepository discountRepository;
                 throw new ResourceNotFoundException("out of stock.");
             }
             item.setTotalPrice(x.getUnitPrice() * x.getQuantity());
-
-
             //here we are setting product level discount.
             Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
             if(discount.isPresent()) {
@@ -103,9 +101,10 @@ private final DiscountRepository discountRepository;
                     item.setTotalPrice(item.getTotalPrice()-couponDiscount);
                     order.setDiscount(order.getDiscount() + couponDiscount);
                 }
-                else {
-                    item.setTotalPrice(item.getTotalPrice() - discount.get().getDiscountValue());
-                    order.setDiscount(order.getDiscount() + discount.get().getDiscountValue());
+                if (discount.get().getWaiverMode()==WaiverMode.FIXED) {
+                    double flatDiscount = discount.get().getDiscountValue() * item.getQuantity();
+                    item.setTotalPrice(item.getTotalPrice() - flatDiscount);
+                    order.setDiscount(order.getDiscount() +flatDiscount);
                 }
                 order.setTotalAmount(order.getTotalAmount() + item.getTotalPrice());
             }
@@ -113,18 +112,19 @@ private final DiscountRepository discountRepository;
             return item;
         }).toList();
         order.setOrderItems(list);
-//        setting tax
-        order.setTax(order.getTotalAmount() * 0.18d);
-//        applying tax to the total amount
-        order.setTotalAmount(order.getTotalAmount() + order.getTax());
+
 //        setting 5% discount if total amount is >= 5000
         if (order.getTotalAmount() >= 5000d) {
             double orderLevelDiscount = order.getTotalAmount() * 0.05d;
             order.setDiscount(order.getDiscount()+orderLevelDiscount);
             order.setTotalAmount(order.getTotalAmount() - orderLevelDiscount);
-        } else {
-            order.setDiscount(0d);
         }
+
+        //        setting tax
+        order.setTax(order.getTotalAmount() * 0.18d);
+//        applying tax to the total amount
+        order.setTotalAmount(order.getTotalAmount() + order.getTax());
+
         orderRepository.save(order);
 //        managing inventory
         for (OrderItem item : list) {

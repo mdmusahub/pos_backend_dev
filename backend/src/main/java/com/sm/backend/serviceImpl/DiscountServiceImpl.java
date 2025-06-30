@@ -1,5 +1,7 @@
 package com.sm.backend.serviceImpl;
 
+import com.sm.backend.exceptionalHandling.DiscountAlreadyExistException;
+import com.sm.backend.exceptionalHandling.ProductAlreadyExistsException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Discount;
 import com.sm.backend.repository.DiscountRepository;
@@ -29,33 +31,33 @@ public class DiscountServiceImpl implements DiscountService {
     @Override
     public void createDiscount(DiscountRequest request) {
         Optional<Discount> discountCheck = discountRepository.findDiscountByVariantId(request.getVariantId());
-        if (discountCheck.isPresent()){
-            throw new ResourceNotFoundException("discount already exists");
+        if(discountCheck.isPresent()){
+            throw new DiscountAlreadyExistException("discount already exist");
         }
         else {
-            Discount discount = new Discount();
-            discount.setDiscountName(request.getDiscountName());
+        Discount discount = new Discount();
+        discount.setDiscountName(request.getDiscountName());
 //        if(request.getDiscountType()==DiscountType.ORDER_LEVEL){
 //            discount.setDiscountType(DiscountType.ORDER_LEVEL);
 //        }
 //        if(request.getDiscountType()==DiscountType.PRODUCT_LEVEL){
 //            discount.setDiscountType(DiscountType.PRODUCT_LEVEL);
 //        }
-            if (request.getWaiverMode() == WaiverMode.FIXED) {
-                discount.setWaiverMode(WaiverMode.FIXED);
-            }
-            if (request.getWaiverMode() == WaiverMode.PERCENT) {
-                discount.setWaiverMode(WaiverMode.PERCENT);
-            }
-            discount.setVariant(variantRepository.findById(request.getVariantId())
-                    .orElseThrow(() -> new ResourceNotFoundException("invalid id")));
-            discount.setDiscountValue(request.getDiscountValue());
-            discount.setEndDateTime(request.getEndDateTime());
-            discount.setIsActive(true);
+        if(request.getWaiverMode()==WaiverMode.FIXED){
+            discount.setWaiverMode(WaiverMode.FIXED);
+        }
+        if(request.getWaiverMode()== WaiverMode.PERCENT){
+            discount.setWaiverMode(WaiverMode.PERCENT);
+        }
+        discount.setVariant(variantRepository.findById(request.getVariantId())
+                .orElseThrow(()->new ResourceNotFoundException("invalid id")));
+        discount.setDiscountValue(request.getDiscountValue());
+        discount.setEndDateTime(request.getEndDateTime());
+       discount.setIsActive(true);
 //       discount.setMinimumPrice(request.getMinimumPrice());
 //       discount.setMinimumQuantity(request.getMinimumQuantity());
-            discountRepository.save(discount);
-        }
+        discountRepository.save(discount);
+    }
     }
 
     @Override
@@ -64,29 +66,28 @@ public class DiscountServiceImpl implements DiscountService {
      return discounts.stream().map(DiscountResponse::new).toList();
     }
 
-    //    @Scheduled(cron = "0 0 12 * * ?")//everyday 12 pm
-
-    @Scheduled(cron = "0 * * * * ?")//every minute.
-    public void changeActiveStatusBasedOnStartEndDate(){
-        List<Discount>discounts=discountRepository.findAll();
-        discounts.stream().map((x)->{
-         if (LocalDateTime.now().isBefore(x.getEndDateTime())&&LocalDateTime.now().isAfter(x.getStartDateTime())){
-             x.setIsActive(true);
-         }
-         if(LocalDateTime.now().isAfter(x.getEndDateTime())){
-             x.setIsActive(false);
-         }
-         discountRepository.save(x);
-         return x;
-        }).toList();
-//    discountRepository.saveAll(discounts);
-        System.out.println("Scheduler is running");
-    }
-
     @Override
     public DiscountResponse getById(Long id) {
 Discount discount = discountRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("invalid id"));
 return new DiscountResponse(discount);
+    }
+
+    @Scheduled(cron = "0 0 12 * * ?")//everyday 12 pm
+//    @Scheduled(cron = "0 * * * * ?")//every minute.
+    public void changeActiveStatusBasedOnStartEndDate(){
+        List<Discount>discounts=discountRepository.findAll();
+        discounts.stream().map((x)->{
+            if (LocalDateTime.now().isBefore(x.getEndDateTime())&&LocalDateTime.now().isAfter(x.getStartDateTime())){
+                x.setIsActive(true);
+            }
+            if(LocalDateTime.now().isAfter(x.getEndDateTime())){
+                x.setIsActive(false);
+            }
+            discountRepository.save(x);
+            return x;
+        }).toList();
+//    discountRepository.saveAll(discounts);
+        System.out.println("Scheduler is running");
     }
 
     @Override

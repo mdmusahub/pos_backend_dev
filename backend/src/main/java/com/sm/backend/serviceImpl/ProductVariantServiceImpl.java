@@ -1,5 +1,4 @@
 package com.sm.backend.serviceImpl;
-
 import com.sm.backend.exceptionalHandling.ProductCanNotBeDeletedException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Product;
@@ -9,9 +8,7 @@ import com.sm.backend.repository.OrderItemRepository;
 import com.sm.backend.repository.ProductInventoryRepository;
 import com.sm.backend.repository.ProductRepository;
 import com.sm.backend.repository.ProductVariantRepository;
-import com.sm.backend.request.ProductInventoryRequest;
 import com.sm.backend.request.ProductVariantRequest;
-
 import com.sm.backend.response.ProductVariantResponse;
 import com.sm.backend.service.ProductVariantService;
 import org.springframework.beans.factory.annotation.Autowired;
