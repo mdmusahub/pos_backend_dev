@@ -2,8 +2,8 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.ProductRequest;
-import com.sm.backend.request.productUpdateReq.ProdRequest;
-import com.sm.backend.response.productDetailsResponses.PVIResponse;
+import com.sm.backend.request.productUpdateReq.ProductUpdateRequest;
+import com.sm.backend.response.productDetailsResponses.ProductVariantInventoryResponse;
 import com.sm.backend.response.ProductResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.ProductService;
@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -70,7 +69,7 @@ public void delete(@PathVariable Long productId){
 
 }
 @GetMapping("/getAllDetails/{id}")
-    public ResponseEntity<PVIResponse> getAllProductDetails(@PathVariable Long id){
+    public ResponseEntity<ProductVariantInventoryResponse> getAllProductDetails(@PathVariable Long id){
         try {
             return new ResponseEntity<>(service.getAllProductDetails(id),HttpStatus.OK);
         } catch (Exception e) {
@@ -78,7 +77,7 @@ public void delete(@PathVariable Long productId){
         }
 }
 @PutMapping("/updateAllDetails/{id}")
-    public void updateAllDetails(@RequestBody ProdRequest request, @PathVariable Long id){
+    public void updateAllDetails(@RequestBody ProductUpdateRequest request, @PathVariable Long id){
         service.updateAllDetails(request,id);
 
 

@@ -72,8 +72,8 @@ Discount discount = discountRepository.findById(id).orElseThrow(()->new Resource
 return new DiscountResponse(discount);
     }
 
-    @Scheduled(cron = "0 0 12 * * ?")//everyday 12 pm
-//    @Scheduled(cron = "0 * * * * ?")//every minute.
+//    @Scheduled(cron = "0 0 12 * * ?")//everyday 12 pm
+    @Scheduled(cron = "0 * * * * ?")//every minute.
     public void changeActiveStatusBasedOnStartEndDate(){
         List<Discount>discounts=discountRepository.findAll();
         discounts.stream().map((x)->{

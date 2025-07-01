@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class PVIResponse {
+public class ProductVariantInventoryResponse {
     private Long productId;
     private String productName;
     private String sku;
@@ -19,10 +19,10 @@ public class PVIResponse {
     private LocalDateTime createdAt;
     private Category category;
     private LocalDateTime updatedAt;
-    private List<VIResponse> variantInventoryResponses;
+    private List<VariantInventoryResponse> variantInventoryResponses;
 
 
-    public PVIResponse(Product product,List<VIResponse> variantInventoryResponses) {
+    public ProductVariantInventoryResponse(Product product, List<VariantInventoryResponse> variantInventoryResponses) {
         this.productId = product.getProductId();
         this.productName = product.getProductName();
         this.sku = product.getSku();

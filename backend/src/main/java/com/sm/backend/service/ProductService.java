@@ -2,8 +2,8 @@ package com.sm.backend.service;
 
 
 import com.sm.backend.request.ProductRequest;
-import com.sm.backend.request.productUpdateReq.ProdRequest;
-import com.sm.backend.response.productDetailsResponses.PVIResponse;
+import com.sm.backend.request.productUpdateReq.ProductUpdateRequest;
+import com.sm.backend.response.productDetailsResponses.ProductVariantInventoryResponse;
 import com.sm.backend.response.ProductResponse;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public interface ProductService {
 
     void delete(Long productId);
 
-    PVIResponse getAllProductDetails(Long id);
+    ProductVariantInventoryResponse getAllProductDetails(Long id);
 
-    void updateAllDetails(ProdRequest request, Long id);
+    void updateAllDetails(ProductUpdateRequest request, Long id);
 }
