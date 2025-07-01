@@ -14,7 +14,7 @@ public interface ProductService {
 
     ProductResponse getById(Long productId);
 
-    List<ProductResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
+    List<ProductResponse> getAll();
 
     Object update(ProductRequest request, Long productId);
 

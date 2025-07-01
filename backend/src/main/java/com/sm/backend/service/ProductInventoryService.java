@@ -8,7 +8,7 @@ import java.util.List;
 public interface ProductInventoryService {
     void createInventory(ProductInventoryRequest request);
 
-    List<ProductInventoryResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
+    List<ProductInventoryResponse> getAll();
 
     Object update(ProductInventoryRequest request, Long inventoryId);
 

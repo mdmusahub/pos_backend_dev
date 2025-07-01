@@ -95,19 +95,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
-        Sort sort = null;
-
-        if (sortDir.equalsIgnoreCase("asc")) {
-            sort = Sort.by(sortby).ascending();
-        } else {
-            sort = Sort.by(sortby).descending();
-        }
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<Product> all = repository.findAll(pageable);
+    public List<ProductResponse> getAll() {
+        List<Product> all = repository.findAll();
         return all.stream().map(ProductResponse::new).toList();
-
-
     }
 
     @Override
@@ -150,11 +140,12 @@ public class ProductServiceImpl implements ProductService {
 
 
                }
-//        deleting variants
-               variantRepository.deleteAll(variants);
-//        deleting product
-               repository.delete(product);
+
            }
+           //         deleting variants
+           variantRepository.deleteAll(variants);
+//        deleting product
+           repository.delete(product);
        }
 }
 

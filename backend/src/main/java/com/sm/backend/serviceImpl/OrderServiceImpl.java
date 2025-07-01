@@ -114,12 +114,29 @@ public class OrderServiceImpl implements OrderService {
         }).toList();
         order.setOrderItems(list);
 
-//        setting 5% discount if total amount is >= 5000
-        if (order.getTotalAmount() >= 5000d) {
+//        setting 5% discount if total amount is >= 1000 && < 2000
+        if(order.getTotalAmount() >= 1000d && order.getTotalAmount() < 2000d){
             double orderLevelDiscount = order.getTotalAmount() * 0.05d;
             order.setDiscount(order.getDiscount() + orderLevelDiscount);
             order.setTotalAmount(order.getTotalAmount() - orderLevelDiscount);
         }
+
+//        setting 10% discount if total amount is >= 2000 && < 5000
+        else if (order.getTotalAmount() >= 2000d && order.getTotalAmount() < 5000d) {
+            double orderLevelDiscount = order.getTotalAmount() * 0.05d;
+            order.setDiscount(order.getDiscount() + orderLevelDiscount);
+            order.setTotalAmount(order.getTotalAmount() - orderLevelDiscount);
+            }
+
+//        setting 15% discount if total amount is >= 5000
+        else if (order.getTotalAmount() >= 5000d) {
+                    double orderLevelDiscount = order.getTotalAmount() * 0.15d;
+                    order.setDiscount(order.getDiscount() + orderLevelDiscount);
+                    order.setTotalAmount(order.getTotalAmount() - orderLevelDiscount);
+                }
+
+
+
 
         //        setting tax
         order.setTax(order.getTotalAmount() * 0.18d);
