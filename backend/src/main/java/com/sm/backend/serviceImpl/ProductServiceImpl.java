@@ -10,12 +10,12 @@ import com.sm.backend.model.ProductVariant;
 import com.sm.backend.repository.*;
 import com.sm.backend.request.ProductRequest;
 import com.sm.backend.request.ProductVariantRequest;
-import com.sm.backend.request.productUpdateReq.ProdRequest;
-import com.sm.backend.request.productUpdateReq.VarRequest;
+import com.sm.backend.request.productUpdateReq.ProductUpdateRequest;
+import com.sm.backend.request.productUpdateReq.VariantUpdateRequest;
 import com.sm.backend.response.*;
 import com.sm.backend.response.productDetailsResponses.InventoryResponse;
-import com.sm.backend.response.productDetailsResponses.PVIResponse;
-import com.sm.backend.response.productDetailsResponses.VIResponse;
+import com.sm.backend.response.productDetailsResponses.ProductVariantInventoryResponse;
+import com.sm.backend.response.productDetailsResponses.VariantInventoryResponse;
 import com.sm.backend.response.productDetailsResponses.VariantResponse;
 import com.sm.backend.service.ProductService;
 import jakarta.transaction.Transactional;
@@ -159,28 +159,27 @@ public class ProductServiceImpl implements ProductService {
 }
 
     @Override
-    public PVIResponse getAllProductDetails(Long id) {
+    public ProductVariantInventoryResponse getAllProductDetails(Long id) {
         Product product = repository.findById(id)
                 .orElseThrow(()->new ResourceNotFoundException("invalid product id"));
         List<ProductVariant> variants = variantRepository.getAllVariantsByProductId(id);
-        List<VIResponse> viResponses = new ArrayList<>();
+        List<VariantInventoryResponse> variantInventoryResponseList = new ArrayList<>();
       try {
           for (ProductVariant variant:variants){
               VariantResponse variantResponse=new VariantResponse(variant);
               InventoryResponse inventoryResponse= new InventoryResponse(inventoryRepository.findProductInventoryByProductVariant(variant));
-              VIResponse viResponse = new VIResponse(variantResponse,inventoryResponse);
-              viResponses.add(viResponse);
+              variantInventoryResponseList.add(new VariantInventoryResponse(variantResponse,inventoryResponse));
           }
       } catch (Exception e) {
           throw new ResourceNotFoundException("some variant does not have inventory ");
       }
-        return new PVIResponse(product,viResponses);
+        return new ProductVariantInventoryResponse(product, variantInventoryResponseList);
     }
 
 
 
     @Override
-    public void updateAllDetails(ProdRequest request, Long id) {
+    public void updateAllDetails(ProductUpdateRequest request, Long id) {
         Product product = repository.findById(id).orElseThrow(()->new ResourceNotFoundException("invalid id."));
         if(request.getProductName()!=null){
             product.setProductName(request.getProductName());
@@ -196,9 +195,9 @@ public class ProductServiceImpl implements ProductService {
         }
 
       product.setUpdatedAt(LocalDateTime.now());
-        List<VarRequest> variants=request.getVariant();
+        List<VariantUpdateRequest> variants=request.getVariant();
 
-        for(VarRequest vi:variants){
+        for(VariantUpdateRequest vi:variants){
            ProductVariant productVariant=variantRepository.findById(vi.getVariantId()).orElseThrow(()->new ResourceNotFoundException("invalid variant id."));
             if(vi.getVariantName()!=null){
                 productVariant.setVariantName(vi.getVariantName());

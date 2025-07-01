@@ -5,10 +5,10 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ProdRequest {
+public class ProductUpdateRequest {
     private String productName;
     private String sku;
     private String description;
     private Long categoryId;
-    List<VarRequest> variant;
+    List<VariantUpdateRequest> variant;
 }

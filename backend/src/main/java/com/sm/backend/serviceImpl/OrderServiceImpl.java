@@ -12,6 +12,7 @@ import com.sm.backend.utility.OrderStatus;
 import com.sm.backend.utility.PaymentMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,9 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final ProductVariantRepository productVariantRepository;
-private final CustomerRepository customerRepository;
-private final DiscountRepository discountRepository;
+    private final CustomerRepository customerRepository;
+    private final DiscountRepository discountRepository;
+
     @Autowired
     public OrderServiceImpl(ProductInventoryRepository inventoryRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository, ProductVariantRepository productVariantRepository, CustomerRepository customerRepository, DiscountRepository discountRepository) {
         this.inventoryRepository = inventoryRepository;
@@ -42,14 +44,13 @@ private final DiscountRepository discountRepository;
         Order order = new Order();
         order.setUserPhoneNumber(request.getUserPhoneNumber());
         Optional<Customer> byPhoneNumber = customerRepository.findByPhoneNumber(request.getUserPhoneNumber());
-        if (byPhoneNumber.isPresent()){
+        if (byPhoneNumber.isPresent()) {
             order.setCustomer(byPhoneNumber.get());
-        }
-        else {
+        } else {
             Customer customer = new Customer();
             customer.setPhoneNumber(request.getUserPhoneNumber());
-        customerRepository.save(customer);
-        order.setCustomer(customer);
+            customerRepository.save(customer);
+            order.setCustomer(customer);
         }
 
         if (request.getStatus() == OrderStatus.PENDING) {
@@ -95,16 +96,16 @@ private final DiscountRepository discountRepository;
             item.setTotalPrice(x.getUnitPrice() * x.getQuantity());
             //here we are setting product level discount.
             Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
-            if(discount.isPresent()) {
+            if (discount.isPresent()) {
                 if (discount.get().getWaiverMode() == WaiverMode.PERCENT) {
                     double couponDiscount = item.getTotalPrice() * discount.get().getDiscountValue() / 100;
-                    item.setTotalPrice(item.getTotalPrice()-couponDiscount);
+                    item.setTotalPrice(item.getTotalPrice() - couponDiscount);
                     order.setDiscount(order.getDiscount() + couponDiscount);
                 }
-                if (discount.get().getWaiverMode()==WaiverMode.FIXED) {
+                if (discount.get().getWaiverMode() == WaiverMode.FIXED) {
                     double flatDiscount = discount.get().getDiscountValue() * item.getQuantity();
                     item.setTotalPrice(item.getTotalPrice() - flatDiscount);
-                    order.setDiscount(order.getDiscount() +flatDiscount);
+                    order.setDiscount(order.getDiscount() + flatDiscount);
                 }
                 order.setTotalAmount(order.getTotalAmount() + item.getTotalPrice());
             }
@@ -116,7 +117,7 @@ private final DiscountRepository discountRepository;
 //        setting 5% discount if total amount is >= 5000
         if (order.getTotalAmount() >= 5000d) {
             double orderLevelDiscount = order.getTotalAmount() * 0.05d;
-            order.setDiscount(order.getDiscount()+orderLevelDiscount);
+            order.setDiscount(order.getDiscount() + orderLevelDiscount);
             order.setTotalAmount(order.getTotalAmount() - orderLevelDiscount);
         }
 
