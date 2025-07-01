@@ -1,6 +1,10 @@
 package com.sm.backend.controller;
 
+import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.ProductRequest;
+import com.sm.backend.request.productUpdateReq.ProductUpdateRequest;
+import com.sm.backend.response.productDetailsResponses.ProductVariantInventoryResponse;
+import com.sm.backend.response.ProductResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
+@CrossOrigin(origins = "*")
 public class ProductController {
     private final ProductService service;
 
@@ -19,50 +25,58 @@ public class ProductController {
         this.service = service;
     }
 
-
-    @PostMapping("/registerProduct")
-    public void register(@RequestBody ProductRequest request) {
-        service.register(request);
+    @PostMapping("/create")
+    public void createProduct(@RequestBody ProductRequest request) {
+        service.createProduct(request);
     }
 
+    @GetMapping("/getById/{productId}")
 
-    @GetMapping("/findById/{productId}")
-    public ResponseEntity<?> findById(@PathVariable Long productId) {
+    public ResponseEntity<ProductResponse> getById(@PathVariable Long productId) {
         try {
-            return ResponseHandler.responseHandler("id retrieve successfully", HttpStatus.OK, service.findById(productId));
+            return new ResponseEntity<>(service.getById(productId),HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/findAll")
-    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                     @RequestParam(required = false, defaultValue = "productName") String sortby,
-                                     @RequestParam(required = false, defaultValue = "asc") String sortDir) {
+    @GetMapping("/getAll")
+    public ResponseEntity<List<ProductResponse>> getAll() {
         try {
-            return ResponseHandler.responseHandler("there is list", HttpStatus.OK, service.findall(pageNumber, pageSize, sortby, sortDir));
+            return new ResponseEntity<>(service.getAll(),HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
     }
 
-    @PutMapping("/updateDetails/{productId}")
-    public ResponseEntity<?>updateDetails(@RequestBody ProductRequest request,@PathVariable Long productId ){
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<?>update(@RequestBody ProductRequest request,@PathVariable Long productId ){
         try {
-            return ResponseHandler.responseHandler("update",
-                    HttpStatus.OK,service.updateDetails(request,productId));
+            return ResponseHandler.responseHandler("Product updated successfully",
+                    HttpStatus.OK,service.update(request,productId));
         }
         catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-@DeleteMapping("delete/{productId}")
-public String delete(@PathVariable Long productId){
-        service.delete(productId);
-return "deleted";
-    }
+@DeleteMapping("/delete/{productId}")
+public void delete(@PathVariable Long productId){
+       service.delete(productId);
+
+}
+@GetMapping("/getAllDetails/{id}")
+    public ResponseEntity<ProductVariantInventoryResponse> getAllProductDetails(@PathVariable Long id){
+        try {
+            return new ResponseEntity<>(service.getAllProductDetails(id),HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
+}
+@PutMapping("/updateAllDetails/{id}")
+    public void updateAllDetails(@RequestBody ProductUpdateRequest request, @PathVariable Long id){
+        service.updateAllDetails(request,id);
 
 
+}
 }

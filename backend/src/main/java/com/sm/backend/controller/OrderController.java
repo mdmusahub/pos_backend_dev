@@ -2,6 +2,7 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.OrderRequest;
+import com.sm.backend.response.OrderResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/order")
+@CrossOrigin(origins = "*")
 public class OrderController {
 private final OrderService service;
 @Autowired
@@ -18,32 +22,37 @@ private final OrderService service;
         this.service = service;
     }
 
-    @PostMapping("/addOrder")
-    public void register(@RequestBody OrderRequest request){
-         service.register(request);
+    @PostMapping("/create")
+    public void createOrder(@RequestBody OrderRequest request){
+        System.out.println(request.getOrderItemRequests() + "this is payload");
+         service.createOrder(request);
 
     }
 @GetMapping("/getAll")
-    public ResponseEntity<?>getAllOrders(){
+    public ResponseEntity<List<OrderResponse>>getAll(){
     try{
-        return ResponseHandler.responseHandler("orders retrieved successfully.", HttpStatus.OK,service.getAllOrders());
+        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     } catch (Exception e) {
         throw new ResourceNotFoundException("cannot retrieve orders.");
     }
 }
-@GetMapping("/findById/{orderId}")
-    public ResponseEntity<?>findById(@PathVariable Long orderId){
+@GetMapping("/getById/{orderId}")
+    public ResponseEntity<OrderResponse>getById(@PathVariable Long orderId){
     try {
-        return ResponseHandler.responseHandler("id retrieve successfully",HttpStatus.OK,service.findById(orderId));
+        return new ResponseEntity<>(service.getById(orderId),HttpStatus.OK);
     }catch (Exception e){
-        throw new ResourceNotFoundException("id not Found");
+        throw new ResourceNotFoundException("invalid Order ID");
     }
 }
 @DeleteMapping("/delete/{orderId}")
-    public void deleteById(@PathVariable Long orderId){
-    service.deleteById(orderId);
+    public void delete(@PathVariable Long orderId){
+    service.delete(orderId);
 }
 
+@PutMapping("update/{id}")
+    public void updateOrder(@PathVariable Long id,@RequestBody OrderRequest request){
+    service.updateOrder(id,request);
+}
 }
 
 

@@ -1,13 +1,18 @@
 package com.sm.backend.service;
 
 import com.sm.backend.request.OrderRequest;
+import com.sm.backend.response.OrderResponse;
+
+import java.util.List;
 
 public interface OrderService {
-    void register(OrderRequest request);
+    void createOrder(OrderRequest request);
 
-    Object getAllOrders();
+    List<OrderResponse> getAll();
 
-    Object findById(Long orderId);
+    OrderResponse getById(Long orderId);
 
-    void deleteById(Long orderId);
+    void delete(Long orderId);
+
+    void updateOrder(Long id, OrderRequest request);
 }

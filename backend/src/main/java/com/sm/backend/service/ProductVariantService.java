@@ -1,15 +1,21 @@
 package com.sm.backend.service;
 
 import com.sm.backend.request.ProductVariantRequest;
+import com.sm.backend.response.ProductResponse;
+import com.sm.backend.response.ProductVariantResponse;
+
+import java.util.List;
 
 public interface ProductVariantService {
-    void register(ProductVariantRequest request);
+    void createVariant(ProductVariantRequest request);
 
-    Object getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
+    List<ProductVariantResponse> getAll();
 
-    Object findById(Long variantId);
+    ProductVariantResponse getById(Long variantId);
 
-    Object updateVariant(ProductVariantRequest request, Long variantId);
+    Object update(ProductVariantRequest request, Long variantId);
 
     void delete(Long variantId);
+
+    List<ProductVariantResponse> findVariantByProductId(Long id);
 }

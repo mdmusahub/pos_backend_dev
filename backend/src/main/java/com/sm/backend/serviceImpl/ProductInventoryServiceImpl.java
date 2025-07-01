@@ -33,11 +33,11 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 }
 
     @Override
-    public void register(ProductInventoryRequest request) {
+    public void createInventory(ProductInventoryRequest request) {
         ProductInventory inventory = new ProductInventory();
         inventory.setLocation(request.getLocation());
         inventory.setQuantity(request.getQuantity());
-        inventory.setLastUpdated(request.getLastUpdated());
+//        inventory.setLastUpdated(request.getLastUpdated());
         ProductVariant variant = variantRepository.findById(request.getVariantId())
                 .orElseThrow(() -> new ResourceNotFoundException("invalid variant id"));
         inventory.setProductVariant(variant);
@@ -46,23 +46,15 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     }
 
     @Override
-    public Object getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
-        Sort sort = null;
-
-        if (sortDir.equalsIgnoreCase("asc")) {
-            sort = Sort.by(sortby).ascending();
-        } else {
-            sort = Sort.by(sortby).descending();
-        }
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<ProductInventory> all = inventoryRepository.findAll(pageable);
+    public List<ProductInventoryResponse> getAll() {
+        List<ProductInventory> all = inventoryRepository.findAll();
         return all.stream().map(ProductInventoryResponse::new).toList();
     }
 
     @Override
-    public Object findById(Long inventoryId) {
-        return inventoryRepository.findById(inventoryId)
-                .orElseThrow(()->new RuntimeException("invald inventory ID"));
+    public ProductInventoryResponse getById(Long inventoryId) {
+        return new ProductInventoryResponse(inventoryRepository.findById(inventoryId)
+                .orElseThrow(()->new RuntimeException("invalid inventory ID")));
     }
 
     @Override
@@ -73,7 +65,7 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 
     @Override
     public Object update(ProductInventoryRequest request, Long inventoryId) {
-        ProductInventory inventory = inventoryRepository.findById(inventoryId).orElseThrow(() -> new RuntimeException("id not found"));
+        ProductInventory inventory = inventoryRepository.findById(inventoryId).orElseThrow(() -> new ResourceNotFoundException("invalid inventory ID"));
         if (request.getQuantity()!=null){
             inventory.setQuantity(request.getQuantity());
         }
@@ -86,9 +78,9 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
         if (request.getLocation()!=null){
             inventory.setLocation(request.getLocation());
         }
-      if (request.getLastUpdated()!=null){
-          inventory.setLastUpdated(request.getLastUpdated());
-      }
+//      if (request.getLastUpdated()!=null){
+//          inventory.setLastUpdated(request.getLastUpdated());
+//      }
   return inventoryRepository.save(inventory);
 }
 

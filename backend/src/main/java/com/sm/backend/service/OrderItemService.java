@@ -1,8 +1,12 @@
 package com.sm.backend.service;
 
+import com.sm.backend.response.OrderItemResponse;
+
+import java.util.List;
+
 public interface OrderItemService {
 
-    Object findAll();
+    List<OrderItemResponse> getAll();
 
-    Object findById(Long orderItemId);
+    OrderItemResponse getById(Long orderItemId);
 }

@@ -1,15 +1,18 @@
 package com.sm.backend.service;
 
 import com.sm.backend.request.ProductInventoryRequest;
+import com.sm.backend.response.ProductInventoryResponse;
+
+import java.util.List;
 
 public interface ProductInventoryService {
-    void register(ProductInventoryRequest request);
+    void createInventory(ProductInventoryRequest request);
 
-    Object getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
+    List<ProductInventoryResponse> getAll();
 
     Object update(ProductInventoryRequest request, Long inventoryId);
 
-    Object findById(Long inventoryId);
+    ProductInventoryResponse getById(Long inventoryId);
 
     void delete(Long inventoryId);
 }

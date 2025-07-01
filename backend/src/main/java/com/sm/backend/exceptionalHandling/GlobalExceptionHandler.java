@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
-
 public class GlobalExceptionHandler {
 @ExceptionHandler(value = ResourceNotFoundException.class)
     public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException e, HttpServletRequest request){
@@ -23,5 +22,12 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleProductNotFoundException(ProductAlreadyExistsException e,HttpServletRequest request){
     return new ErrorResponse(LocalDateTime.now(),HttpStatus.CONFLICT.value(),HttpStatus.CONFLICT.getReasonPhrase(), e.getMessage(), request.getRequestURI());
 }
+@ExceptionHandler(value = ProductCanNotBeDeletedException.class)
+    public ErrorResponse handleProductCanNotBeDeletedException(ProductCanNotBeDeletedException e,HttpServletRequest request){
+    return new ErrorResponse(LocalDateTime.now(),HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase(), e.getMessage(), request.getRequestURI());
 }
+@ExceptionHandler(value = DiscountAlreadyExistException.class)
+public ErrorResponse handleDiscountAlreadyExistException(DiscountAlreadyExistException e,HttpServletRequest request){
+    return new ErrorResponse(LocalDateTime.now(),HttpStatus.FORBIDDEN.value(),HttpStatus.FORBIDDEN.getReasonPhrase(), e.getMessage(), request.getRequestURI());
+}}
 

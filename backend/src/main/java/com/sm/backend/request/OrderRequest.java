@@ -18,13 +18,14 @@ import java.util.List;
 public class OrderRequest {
     private String userPhoneNumber;
     private OrderStatus status;
+    private Long discountId;
 //    private Double discount;
 //    private  Double tax;
     private PaymentMode paymentMode;
     private String onlineAmount;
     private String cashAmount;
-    private LocalDateTime orderDate;
-    private LocalDateTime updatedAt;
+//    private LocalDateTime orderDate;
+//    private LocalDateTime updatedAt;
    private List<OrderItemRequest>orderItemRequests;
 }
 

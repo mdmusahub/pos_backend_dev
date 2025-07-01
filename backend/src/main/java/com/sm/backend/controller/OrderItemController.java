@@ -2,18 +2,19 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 
+import com.sm.backend.response.OrderItemResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/orderItem")
+@CrossOrigin(origins = "*")
 public class OrderItemController {
     private final OrderItemService service;
 
@@ -22,22 +23,22 @@ public class OrderItemController {
         this.service = service;
     }
 
-    @GetMapping("/findAll")
-    public ResponseEntity<?> findAll() {
+    @GetMapping("/getAll")
+    public ResponseEntity<List<OrderItemResponse>> getAll() {
         try {
-            return ResponseHandler.responseHandler("there is list", HttpStatus.OK, service.findAll());
+            return new ResponseEntity<>(service.getAll(),HttpStatus.OK);
 
         } catch (Exception e) {
             throw new ResourceNotFoundException("something went Wrong");
         }
     }
 
-    @GetMapping("/finfById/{orderItemId}")
-    public ResponseEntity<?> findById(@PathVariable Long orderItemId) {
+    @GetMapping("/getById/{orderItemId}")
+    public ResponseEntity<OrderItemResponse> getById(@PathVariable Long orderItemId) {
         try {
-            return ResponseHandler.responseHandler("id found", HttpStatus.OK, service.findById(orderItemId));
+            return new ResponseEntity<>(service.getById(orderItemId),HttpStatus.OK) ;
         } catch (Exception e) {
-            throw new ResourceNotFoundException("id not found");
+            throw new ResourceNotFoundException("invalid order item ID");
         }
     }
 }
