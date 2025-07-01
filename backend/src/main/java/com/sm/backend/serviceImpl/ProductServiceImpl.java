@@ -8,10 +8,15 @@ import com.sm.backend.model.Product;
 import com.sm.backend.model.ProductInventory;
 import com.sm.backend.model.ProductVariant;
 import com.sm.backend.repository.*;
-import com.sm.backend.request.ProductInventoryRequest;
 import com.sm.backend.request.ProductRequest;
 import com.sm.backend.request.ProductVariantRequest;
+import com.sm.backend.request.productUpdateReq.ProductUpdateRequest;
+import com.sm.backend.request.productUpdateReq.VariantUpdateRequest;
 import com.sm.backend.response.*;
+import com.sm.backend.response.productDetailsResponses.InventoryResponse;
+import com.sm.backend.response.productDetailsResponses.ProductVariantInventoryResponse;
+import com.sm.backend.response.productDetailsResponses.VariantInventoryResponse;
+import com.sm.backend.response.productDetailsResponses.VariantResponse;
 import com.sm.backend.service.ProductService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,19 +95,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
-        Sort sort = null;
-
-        if (sortDir.equalsIgnoreCase("asc")) {
-            sort = Sort.by(sortby).ascending();
-        } else {
-            sort = Sort.by(sortby).descending();
-        }
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<Product> all = repository.findAll(pageable);
+    public List<ProductResponse> getAll() {
+        List<Product> all = repository.findAll();
         return all.stream().map(ProductResponse::new).toList();
-
-
     }
 
     @Override
@@ -154,21 +149,69 @@ public class ProductServiceImpl implements ProductService {
 }
 
     @Override
-    public PVIResponse getAllProductDetails(Long id) {
+    public ProductVariantInventoryResponse getAllProductDetails(Long id) {
         Product product = repository.findById(id)
                 .orElseThrow(()->new ResourceNotFoundException("invalid product id"));
         List<ProductVariant> variants = variantRepository.getAllVariantsByProductId(id);
-        List<VIResponse> viResponses = new ArrayList<>();
+        List<VariantInventoryResponse> variantInventoryResponseList = new ArrayList<>();
       try {
           for (ProductVariant variant:variants){
-              ProductVariantResponse variantResponse=new ProductVariantResponse(variant);
-              ProductInventoryResponse inventoryResponse= new ProductInventoryResponse(inventoryRepository.findProductInventoryByProductVariant(variant));
-              VIResponse viResponse = new VIResponse(variantResponse,inventoryResponse);
-              viResponses.add(viResponse);
+              VariantResponse variantResponse=new VariantResponse(variant);
+              InventoryResponse inventoryResponse= new InventoryResponse(inventoryRepository.findProductInventoryByProductVariant(variant));
+              variantInventoryResponseList.add(new VariantInventoryResponse(variantResponse,inventoryResponse));
           }
       } catch (Exception e) {
           throw new ResourceNotFoundException("some variant does not have inventory ");
       }
-        return new PVIResponse(product,viResponses);
+        return new ProductVariantInventoryResponse(product, variantInventoryResponseList);
     }
+
+
+
+    @Override
+    public void updateAllDetails(ProductUpdateRequest request, Long id) {
+        Product product = repository.findById(id).orElseThrow(()->new ResourceNotFoundException("invalid id."));
+        if(request.getProductName()!=null){
+            product.setProductName(request.getProductName());
+        }
+        if(request.getSku()!=null){
+            product.setSku(request.getSku());
+        }
+        if(request.getDescription()!=null){
+            product.setDescription(request.getDescription());
+        }
+        if(request.getCategoryId()!=null){
+            product.setCategory(categoryRepository.findById(request.getCategoryId()).orElseThrow(()->new ResourceNotFoundException("invalid category id.")));
+        }
+
+      product.setUpdatedAt(LocalDateTime.now());
+        List<VariantUpdateRequest> variants=request.getVariant();
+
+        for(VariantUpdateRequest vi:variants){
+           ProductVariant productVariant=variantRepository.findById(vi.getVariantId()).orElseThrow(()->new ResourceNotFoundException("invalid variant id."));
+            if(vi.getVariantName()!=null){
+                productVariant.setVariantName(vi.getVariantName());
+            }
+            if(vi.getVariantValue()!=null){
+                productVariant.setVariantValue(vi.getVariantValue());
+            }
+            if(vi.getVariantPrice()!=null){
+                productVariant.setPrice(vi.getVariantPrice());
+            }
+
+            ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(productVariant);
+            inventory.setLastUpdated(LocalDateTime.now());
+            if(vi.getQuantity()!=null){
+                inventory.setQuantity(vi.getQuantity());
+            }
+            if(vi.getLocation()!=null){
+                inventory.setLocation(vi.getLocation());
+            }
+            inventoryRepository.save(inventory);
+            variantRepository.save(productVariant);
+        }
+        repository.save(product);
+
+    }
+
 }

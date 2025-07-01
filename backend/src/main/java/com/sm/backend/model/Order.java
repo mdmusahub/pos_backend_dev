@@ -20,6 +20,8 @@ public class Order {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private Long orderID;
+@ManyToOne
+private Customer customer;
 @OneToMany(fetch = FetchType.EAGER)
 private List<OrderItem> orderItems;
 private String userPhoneNumber;

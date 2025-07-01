@@ -1,5 +1,4 @@
 package com.sm.backend.serviceImpl;
-
 import com.sm.backend.exceptionalHandling.ProductCanNotBeDeletedException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Product;
@@ -9,9 +8,7 @@ import com.sm.backend.repository.OrderItemRepository;
 import com.sm.backend.repository.ProductInventoryRepository;
 import com.sm.backend.repository.ProductRepository;
 import com.sm.backend.repository.ProductVariantRepository;
-import com.sm.backend.request.ProductInventoryRequest;
 import com.sm.backend.request.ProductVariantRequest;
-
 import com.sm.backend.response.ProductVariantResponse;
 import com.sm.backend.service.ProductVariantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,16 +59,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 }
 
     @Override
-    public List<ProductVariantResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
-        Sort sort = null;
+    public List<ProductVariantResponse> getAll() {
 
-        if (sortDir.equalsIgnoreCase("asc")) {
-            sort = Sort.by(sortby).ascending();
-        } else {
-            sort = Sort.by(sortby).descending();
-        }
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<ProductVariant> all = repository.findAll(pageable);
+        List<ProductVariant> all = repository.findAll();
         return all.stream().map(ProductVariantResponse::new).toList();
     }
 

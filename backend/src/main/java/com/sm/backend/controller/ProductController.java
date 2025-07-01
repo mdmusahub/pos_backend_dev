@@ -2,7 +2,8 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.ProductRequest;
-import com.sm.backend.response.PVIResponse;
+import com.sm.backend.request.productUpdateReq.ProductUpdateRequest;
+import com.sm.backend.response.productDetailsResponses.ProductVariantInventoryResponse;
 import com.sm.backend.response.ProductResponse;
 import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.ProductService;
@@ -40,12 +41,9 @@ public class ProductController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<ProductResponse>> getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                                        @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                                        @RequestParam(required = false, defaultValue = "productName") String sortby,
-                                                        @RequestParam(required = false, defaultValue = "asc") String sortDir) {
+    public ResponseEntity<List<ProductResponse>> getAll() {
         try {
-            return new ResponseEntity<>(service.getAll(pageNumber, pageSize, sortby, sortDir),HttpStatus.OK);
+            return new ResponseEntity<>(service.getAll(),HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -68,12 +66,17 @@ public void delete(@PathVariable Long productId){
 
 }
 @GetMapping("/getAllDetails/{id}")
-    public ResponseEntity<PVIResponse> getAllProductDetails(@PathVariable Long id){
+    public ResponseEntity<ProductVariantInventoryResponse> getAllProductDetails(@PathVariable Long id){
         try {
             return new ResponseEntity<>(service.getAllProductDetails(id),HttpStatus.OK);
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage());
         }
 }
+@PutMapping("/updateAllDetails/{id}")
+    public void updateAllDetails(@RequestBody ProductUpdateRequest request, @PathVariable Long id){
+        service.updateAllDetails(request,id);
 
+
+}
 }
