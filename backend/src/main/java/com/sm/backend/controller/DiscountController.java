@@ -1,5 +1,7 @@
 package com.sm.backend.controller;
 
+import com.sm.backend.exceptionalHandling.DiscountAlreadyExistException;
+import com.sm.backend.exceptionalHandling.ProductAlreadyExistsException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.DiscountRequest;
 import com.sm.backend.response.DiscountResponse;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/discount")
+@CrossOrigin(origins = "*")
 public class DiscountController {
     private final DiscountService discountService;
 
@@ -20,7 +23,11 @@ public class DiscountController {
     }
     @PostMapping("/create")
     public void createDiscount(@RequestBody DiscountRequest request){
-        discountService.createDiscount(request);
+        try {
+            discountService.createDiscount(request);
+        } catch (Exception e) {
+            throw new DiscountAlreadyExistException(e.getMessage());
+        }
     }
     @GetMapping("/getAll")
     public ResponseEntity<List<DiscountResponse>>getAllDiscounts(){
@@ -47,5 +54,6 @@ public class DiscountController {
     public void delete(@PathVariable Long id){
         discountService.delete(id);
     }
-
 }
+
+
