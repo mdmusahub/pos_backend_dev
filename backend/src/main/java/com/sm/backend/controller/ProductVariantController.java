@@ -28,12 +28,9 @@ private final ProductVariantService service;
     service.createVariant(request);
 }
 @GetMapping("/getAll")
-    public ResponseEntity<List<ProductVariantResponse>>getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                                              @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                                              @RequestParam(required = false, defaultValue = "variantName") String sortby,
-                                                              @RequestParam(required = false, defaultValue = "asc") String sortDir){
+    public ResponseEntity<List<ProductVariantResponse>>getAll(){
     try{
-   return new ResponseEntity<>(service.getAll(pageNumber,pageSize,sortby,sortDir),HttpStatus.OK);
+   return new ResponseEntity<>(service.getAll(),HttpStatus.OK);
     } catch (Exception e) {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

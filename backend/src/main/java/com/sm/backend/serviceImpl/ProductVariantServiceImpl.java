@@ -59,16 +59,9 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 }
 
     @Override
-    public List<ProductVariantResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
-        Sort sort = null;
+    public List<ProductVariantResponse> getAll() {
 
-        if (sortDir.equalsIgnoreCase("asc")) {
-            sort = Sort.by(sortby).ascending();
-        } else {
-            sort = Sort.by(sortby).descending();
-        }
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<ProductVariant> all = repository.findAll(pageable);
+        List<ProductVariant> all = repository.findAll();
         return all.stream().map(ProductVariantResponse::new).toList();
     }
 

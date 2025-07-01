@@ -41,12 +41,9 @@ public class ProductController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<ProductResponse>> getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                                        @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                                        @RequestParam(required = false, defaultValue = "productName") String sortby,
-                                                        @RequestParam(required = false, defaultValue = "asc") String sortDir) {
+    public ResponseEntity<List<ProductResponse>> getAll() {
         try {
-            return new ResponseEntity<>(service.getAll(pageNumber, pageSize, sortby, sortDir),HttpStatus.OK);
+            return new ResponseEntity<>(service.getAll(),HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

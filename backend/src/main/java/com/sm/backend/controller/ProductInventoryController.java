@@ -29,12 +29,9 @@ public class ProductInventoryController {
     }
 
 @GetMapping("/getAll")
-private ResponseEntity<List<ProductInventoryResponse>>getAll(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                                             @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                                             @RequestParam(required = false, defaultValue = "inventoryId") String sortby,
-                                                             @RequestParam(required = false, defaultValue = "asc") String sortDir){
+private ResponseEntity<List<ProductInventoryResponse>>getAll(){
         try{
-            return new ResponseEntity<>(service.getAll(pageNumber,pageSize,sortby,sortDir),HttpStatus.OK);
+            return new ResponseEntity<>(service.getAll(),HttpStatus.OK);
         }
         catch (Exception e){
          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
