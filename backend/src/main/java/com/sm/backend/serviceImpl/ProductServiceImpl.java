@@ -140,11 +140,12 @@ public class ProductServiceImpl implements ProductService {
 
 
                }
-//        deleting variants
-               variantRepository.deleteAll(variants);
-//        deleting product
-               repository.delete(product);
+
            }
+           //         deleting variants
+           variantRepository.deleteAll(variants);
+//        deleting product
+           repository.delete(product);
        }
 }
 
