@@ -1,5 +1,6 @@
 package com.sm.backend.serviceImpl;
 
+import com.sm.backend.exceptionalHandling.DiscountAlreadyExistException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.*;
 import com.sm.backend.repository.*;
@@ -107,8 +108,8 @@ public class OrderServiceImpl implements OrderService {
                     item.setTotalPrice(item.getTotalPrice() - flatDiscount);
                     order.setDiscount(order.getDiscount() + flatDiscount);
                 }
-                order.setTotalAmount(order.getTotalAmount() + item.getTotalPrice());
             }
+            order.setTotalAmount(order.getTotalAmount() + item.getTotalPrice());
             orderItemRepository.save(item);
             return item;
         }).toList();
@@ -123,7 +124,7 @@ public class OrderServiceImpl implements OrderService {
 
 //        setting 10% discount if total amount is >= 2000 && < 5000
         else if (order.getTotalAmount() >= 2000d && order.getTotalAmount() < 5000d) {
-            double orderLevelDiscount = order.getTotalAmount() * 0.05d;
+            double orderLevelDiscount = order.getTotalAmount() * 0.10d;
             order.setDiscount(order.getDiscount() + orderLevelDiscount);
             order.setTotalAmount(order.getTotalAmount() - orderLevelDiscount);
             }
@@ -209,6 +210,7 @@ public class OrderServiceImpl implements OrderService {
             List<OrderItem> oldOrderItems = order.getOrderItems();
 
             order.setTotalAmount(0d);
+            order.setDiscount(0d);
             //here we fetched all the requests for new orderItems.
             List<OrderItemRequest> orderItemRequests = request.getOrderItemRequests();
 
@@ -218,6 +220,7 @@ public class OrderServiceImpl implements OrderService {
                 ProductVariant variant = productVariantRepository.findById(a.getVariantId()).orElseThrow(() -> new ResourceNotFoundException("variant id does not exist."));
                 orderItem.setProductVariant(variant);
                 orderItem.setProduct(variant.getProduct());
+
                 //here we are managing the quantity of variants in inventory.
                 ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(variant);
                 if (inventory.getQuantity() >= a.getQuantity()) {
@@ -230,6 +233,22 @@ public class OrderServiceImpl implements OrderService {
 
                 //This is the total of orderItem based on its quantity.
                 orderItem.setTotalPrice(a.getUnitPrice() * a.getQuantity());
+
+                Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
+                if (discount.isPresent()){
+                    if(discount.get().getWaiverMode() == WaiverMode.FIXED){
+                        double flatDiscount = discount.get().getDiscountValue() * orderItem.getQuantity();
+                        orderItem.setTotalPrice(orderItem.getTotalPrice() - flatDiscount);
+                        order.setDiscount(order.getDiscount() + flatDiscount);
+
+                    }
+                    if(discount.get().getWaiverMode() == WaiverMode.PERCENT){
+                        double coupenDiscount = orderItem.getTotalPrice() * discount.get().getDiscountValue() /100;
+                        orderItem.setTotalPrice(orderItem.getTotalPrice() - coupenDiscount);
+                        order.setDiscount(order.getDiscount() + coupenDiscount);
+                    }
+                }
+
 
                 //This is the total of whole Order.
                 order.setTotalAmount(order.getTotalAmount() + orderItem.getTotalPrice());
@@ -245,18 +264,30 @@ public class OrderServiceImpl implements OrderService {
                 inventory.setQuantity(inventory.getQuantity() + item.getQuantity());
                 inventoryRepository.save(inventory);
                 orderItemRepository.delete(item);
+
             }
+
+//        setting 5% discount if total amount is >= 1000 && < 2000
+            if(order.getTotalAmount() >=1000 && order.getTotalAmount() <2000){
+                double orderLevelDiscount = order.getTotalAmount() * 0.05d;
+                order.setDiscount(order.getDiscount()+ orderLevelDiscount);
+                order.setTotalAmount(order.getTotalAmount() - orderLevelDiscount);
+//        setting 10% discount if total amount is >= 2000 && <5000
+            } else if (order.getDiscount() >=2000 && order.getDiscount() <5000) {
+                double orderLevelDiscount = order.getTotalAmount() * 0.10d;
+                order.setDiscount(order.getDiscount() + orderLevelDiscount);
+                order.setTotalAmount(order.getTotalAmount() - orderLevelDiscount);
+//        setting 15% discount if total amount is >= 5000
+            } else if (order.getTotalAmount() >= 5000) {
+                double orderLevelDiscount = order.getTotalAmount() * 0.15d;
+                order.setDiscount(order.getDiscount() + orderLevelDiscount);
+                order.setTotalAmount(order.getTotalAmount() - orderLevelDiscount);
+            }
+
             //setting Tax.
             order.setTax(order.getTotalAmount() * 0.18d);
             order.setTotalAmount(order.getTotalAmount() + order.getTax());
 
-            //setting Discount.
-            if (order.getTotalAmount() >= 5000) {
-                order.setDiscount(order.getTotalAmount() * 0.05d);
-                order.setTotalAmount(order.getTotalAmount() - order.getDiscount());
-            } else {
-                order.setDiscount(0d);
-            }
             orderRepository.save(order);
 //            for(OrderItem orderItem:newOrderItems){
 //                ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(orderItem.getProductVariant());
