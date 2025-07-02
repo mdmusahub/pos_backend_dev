@@ -114,6 +114,7 @@ return new DiscountResponse(discount);
            discount.setVariant(variantRepository.findById(request.getVariantId())
                    .orElseThrow(()->new ResourceNotFoundException("invalid id")));
        }
+
        discountRepository.save(discount);
     }
 }

@@ -2,7 +2,9 @@ package com.sm.backend.serviceImpl;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.Customer;
+import com.sm.backend.model.Order;
 import com.sm.backend.repository.CustomerRepository;
+import com.sm.backend.repository.OrderRepository;
 import com.sm.backend.request.CustomerRequest;
 import com.sm.backend.response.CustomerResponse;
 import com.sm.backend.service.CustomerService;
@@ -13,10 +15,13 @@ import java.util.List;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository,
+                               OrderRepository orderRepository) {
         this.customerRepository = customerRepository;
+        this.orderRepository = orderRepository;
     }
 
 
@@ -24,12 +29,14 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponse getById(Long id) {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("invalid customerId"));
         return new CustomerResponse(customer);
+
     }
 
     @Override
     public List<CustomerResponse> getAll() {
         List<Customer> customers = customerRepository.findAll();
         return customers.stream().map(CustomerResponse::new).toList();
+
     }
 
     @Override
@@ -38,6 +45,9 @@ public class CustomerServiceImpl implements CustomerService {
         if (request.getPhoneNumber() != null) {
             customer.setPhoneNumber(request.getPhoneNumber());
         }
+      Order order= orderRepository.findById(id).orElseThrow(()->
+              new ResourceNotFoundException("Id not Found"));
+        order.setUserPhoneNumber(customer.getPhoneNumber());
         customerRepository.save(customer);
     }
 
