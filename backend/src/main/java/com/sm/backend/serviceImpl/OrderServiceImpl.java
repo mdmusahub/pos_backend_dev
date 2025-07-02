@@ -209,6 +209,7 @@ public class OrderServiceImpl implements OrderService {
             //here we collected all the old order items.
             List<OrderItem> oldOrderItems = order.getOrderItems();
 
+
             order.setTotalAmount(0d);
             order.setDiscount(0d);
             //here we fetched all the requests for new orderItems.
