@@ -45,9 +45,6 @@ public class CustomerServiceImpl implements CustomerService {
         if (request.getPhoneNumber() != null) {
             customer.setPhoneNumber(request.getPhoneNumber());
         }
-      Order order= orderRepository.findById(id).orElseThrow(()->
-              new ResourceNotFoundException("Id not Found"));
-        order.setUserPhoneNumber(customer.getPhoneNumber());
         customerRepository.save(customer);
     }
 
