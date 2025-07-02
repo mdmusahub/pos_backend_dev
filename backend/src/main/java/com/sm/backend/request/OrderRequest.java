@@ -18,7 +18,7 @@ import java.util.List;
 public class OrderRequest {
     private String userPhoneNumber;
     private OrderStatus status;
-    private Long discountId;
+//    private Long discountId;
 //    private Double discount;
 //    private  Double tax;
     private PaymentMode paymentMode;
