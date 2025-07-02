@@ -2,9 +2,12 @@ package com.sm.backend.serviceImpl;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.repository.OrderItemRepository;
+import com.sm.backend.response.OrderItemResponse;
 import com.sm.backend.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
@@ -16,13 +19,13 @@ public class OrderItemServiceImpl implements OrderItemService {
 
 
     @Override
-    public Object findAll() {
-        return repository.findAll();
+    public List<OrderItemResponse> getAll() {
+        return repository.findAll().stream().map(OrderItemResponse::new).toList();
     }
 
     @Override
-    public Object findById(Long orderItemId) {
-        return repository.findById(orderItemId).orElseThrow(()->new
-                ResourceNotFoundException("not found"));
+    public OrderItemResponse getById(Long orderItemId) {
+        return new OrderItemResponse( repository.findById(orderItemId).orElseThrow(()->new
+                ResourceNotFoundException("Invalid order item ID")));
     }
 }

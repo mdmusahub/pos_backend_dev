@@ -23,8 +23,8 @@ public class OrderRequest {
     private PaymentMode paymentMode;
     private String onlineAmount;
     private String cashAmount;
-    private LocalDateTime orderDate;
-    private LocalDateTime updatedAt;
+//    private LocalDateTime orderDate;
+//    private LocalDateTime updatedAt;
    private List<OrderItemRequest>orderItemRequests;
 }
 
