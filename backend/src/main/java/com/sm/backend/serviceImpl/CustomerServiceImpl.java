@@ -45,6 +45,13 @@ public class CustomerServiceImpl implements CustomerService {
         if (request.getPhoneNumber() != null) {
             customer.setPhoneNumber(request.getPhoneNumber());
         }
+        List<Order> orders = orderRepository.findAllOrdersByCustomer(customer);
+        if(orders.isEmpty() == false){
+            for(Order order : orders){
+                order.setUserPhoneNumber(request.getPhoneNumber());
+                orderRepository.save(order);
+            }
+        }
         customerRepository.save(customer);
     }
 
