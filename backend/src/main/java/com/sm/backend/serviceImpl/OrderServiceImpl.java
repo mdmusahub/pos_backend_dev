@@ -195,6 +195,13 @@ public class OrderServiceImpl implements OrderService {
             Customer customer = order.getCustomer();
             customer.setPhoneNumber(request.getUserPhoneNumber());
             customerRepository.save(customer);
+            List<Order> orders = orderRepository.findAllOrdersByCustomer(customer);
+            if(orders.isEmpty() == false){
+                for(Order order1 : orders){
+                    order1.setUserPhoneNumber(request.getUserPhoneNumber());
+                }
+                orderRepository.saveAll(orders);
+            }
 
         }
         if (request.getCashAmount() != null) {
