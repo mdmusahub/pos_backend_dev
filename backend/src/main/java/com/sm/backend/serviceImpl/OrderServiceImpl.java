@@ -11,6 +11,7 @@ import com.sm.backend.service.OrderService;
 import com.sm.backend.util.WaiverMode;
 import com.sm.backend.utility.OrderStatus;
 import com.sm.backend.utility.PaymentMode;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -186,6 +187,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void updateOrder(Long id, OrderRequest request) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("order id does not exist."));
@@ -196,7 +198,7 @@ public class OrderServiceImpl implements OrderService {
             customer.setPhoneNumber(request.getUserPhoneNumber());
             customerRepository.save(customer);
             List<Order> orders = orderRepository.findAllOrdersByCustomer(customer);
-            if(orders.isEmpty() == false){
+            if(!orders.isEmpty()){
                 for(Order order1 : orders){
                     order1.setUserPhoneNumber(request.getUserPhoneNumber());
                 }
