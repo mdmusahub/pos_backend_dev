@@ -192,6 +192,17 @@ public class OrderServiceImpl implements OrderService {
         order.setUpdatedAt(LocalDateTime.now());
         if (request.getUserPhoneNumber() != null) {
             order.setUserPhoneNumber(request.getUserPhoneNumber());
+            Customer customer = order.getCustomer();
+            customer.setPhoneNumber(request.getUserPhoneNumber());
+            customerRepository.save(customer);
+            List<Order> orders = orderRepository.findAllOrdersByCustomer(customer);
+            if(orders.isEmpty() == false){
+                for(Order order1 : orders){
+                    order1.setUserPhoneNumber(request.getUserPhoneNumber());
+                }
+                orderRepository.saveAll(orders);
+            }
+
         }
         if (request.getCashAmount() != null) {
             order.setCashAmount(request.getCashAmount());
@@ -208,6 +219,8 @@ public class OrderServiceImpl implements OrderService {
         if (request.getOrderItemRequests() != null) {
             //here we collected all the old order items.
             List<OrderItem> oldOrderItems = order.getOrderItems();
+
+
 
             order.setTotalAmount(0d);
             order.setDiscount(0d);
