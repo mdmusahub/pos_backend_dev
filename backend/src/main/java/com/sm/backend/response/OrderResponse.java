@@ -26,7 +26,7 @@ public class OrderResponse {
     private String cashAmount;
     private LocalDateTime orderDate;
     private LocalDateTime updatedAt;
-    private List<OrderItem> orderItems;
+    private List<OrderItemResponse> orderItems;
 
     public OrderResponse(Order order) {
         this.orderID = order.getOrderID();
@@ -40,7 +40,7 @@ public class OrderResponse {
         this.cashAmount = order.getCashAmount();
         this.orderDate = order.getOrderDate();
         this.updatedAt = order.getUpdatedAt();
-        this.orderItems = order.getOrderItems();
+        this.orderItems = order.getOrderItems().stream().map(OrderItemResponse::new).toList();
         this.customer = new CustomerResponse(order.getCustomer());
     }
 

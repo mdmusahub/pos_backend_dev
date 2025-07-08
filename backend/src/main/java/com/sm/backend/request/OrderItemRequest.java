@@ -11,6 +11,5 @@ public class OrderItemRequest {
 //    private Long orderId;
     private Long variantId;
     private Long quantity;
-    private Double unitPrice;
 //    private Double totalPrice;
 }

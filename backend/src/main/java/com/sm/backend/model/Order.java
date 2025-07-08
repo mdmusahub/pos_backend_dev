@@ -37,4 +37,5 @@ private String cashAmount;
 @CreationTimestamp
 private LocalDateTime orderDate;
 private LocalDateTime updatedAt;
+
 }
