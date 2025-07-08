@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderRequest {
     private String userPhoneNumber;
+    private String email;
     private OrderStatus status;
 //    private Long discountId;
 //    private Double discount;

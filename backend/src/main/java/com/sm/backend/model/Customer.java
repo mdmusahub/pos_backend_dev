@@ -18,4 +18,5 @@ public class Customer {
     private String phoneNumber;
     @CreationTimestamp
     private LocalDateTime createdAt;
+    private String email;
 }
