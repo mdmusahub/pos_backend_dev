@@ -7,10 +7,12 @@ import com.sm.backend.repository.*;
 import com.sm.backend.request.OrderItemRequest;
 import com.sm.backend.request.OrderRequest;
 import com.sm.backend.response.OrderResponse;
+import com.sm.backend.service.EmailService;
 import com.sm.backend.service.OrderService;
 import com.sm.backend.util.WaiverMode;
 import com.sm.backend.utility.OrderStatus;
 import com.sm.backend.utility.PaymentMode;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,15 +30,17 @@ public class OrderServiceImpl implements OrderService {
     private final ProductVariantRepository productVariantRepository;
     private final CustomerRepository customerRepository;
     private final DiscountRepository discountRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public OrderServiceImpl(ProductInventoryRepository inventoryRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository, ProductVariantRepository productVariantRepository, CustomerRepository customerRepository, DiscountRepository discountRepository) {
+    public OrderServiceImpl(ProductInventoryRepository inventoryRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository, ProductVariantRepository productVariantRepository, CustomerRepository customerRepository, DiscountRepository discountRepository, EmailService emailService) {
         this.inventoryRepository = inventoryRepository;
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.productVariantRepository = productVariantRepository;
         this.customerRepository = customerRepository;
         this.discountRepository = discountRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -50,6 +54,7 @@ public class OrderServiceImpl implements OrderService {
         } else {
             Customer customer = new Customer();
             customer.setPhoneNumber(request.getUserPhoneNumber());
+            customer.setEmail(request.getEmail());
             customerRepository.save(customer);
             order.setCustomer(customer);
         }
@@ -57,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
         if (request.getStatus() == OrderStatus.PENDING) {
             order.setStatus(OrderStatus.PENDING);
         }
+
         if (request.getStatus() == OrderStatus.COMPLETED) {
             order.setStatus(OrderStatus.COMPLETED);
         }
@@ -87,14 +93,14 @@ public class OrderServiceImpl implements OrderService {
 
             item.setProductVariant(variant);
             item.setProduct(variant.getProduct());
-            item.setUnitPrice(x.getUnitPrice());
+            item.setUnitPrice(variant.getPrice());
             //if order quantity is greater than inventory quantity then this will throw an exception.
             if (inventoryRepository.findProductInventoryByProductVariant(variant).getQuantity() >= x.getQuantity()) {
                 item.setQuantity(x.getQuantity());
             } else {
                 throw new ResourceNotFoundException("out of stock.");
             }
-            item.setTotalPrice(x.getUnitPrice() * x.getQuantity());
+            item.setTotalPrice(variant.getPrice() * x.getQuantity());
             //here we are setting product level discount.
             Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
             if (discount.isPresent()) {
@@ -151,7 +157,11 @@ public class OrderServiceImpl implements OrderService {
             ProductInventory inventory = inventoryRepository.findProductInventoryByProductVariant(variant);
             inventory.setQuantity(inventory.getQuantity() - item.getQuantity());
             inventoryRepository.save(inventory);
-        }
+//         sending email to the customer
+            if (request.getEmail()!=null) {
+                emailService.sendMail(request.getEmail(), "toseef's mart", "you order of "+order.getTotalAmount()+"₹ is completed successfully."+" thanks for shopping with toseef's mart");
+            }
+            }
     }
 
     @Override
@@ -186,6 +196,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void updateOrder(Long id, OrderRequest request) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("order id does not exist."));
@@ -196,7 +207,7 @@ public class OrderServiceImpl implements OrderService {
             customer.setPhoneNumber(request.getUserPhoneNumber());
             customerRepository.save(customer);
             List<Order> orders = orderRepository.findAllOrdersByCustomer(customer);
-            if(orders.isEmpty() == false){
+            if(!orders.isEmpty()){
                 for(Order order1 : orders){
                     order1.setUserPhoneNumber(request.getUserPhoneNumber());
                 }
@@ -215,6 +226,9 @@ public class OrderServiceImpl implements OrderService {
         }
         if (request.getStatus() != null) {
             order.setStatus(request.getStatus());
+        }
+        if (request.getEmail()!=null){
+
         }
         if (request.getOrderItemRequests() != null) {
             //here we collected all the old order items.
@@ -242,10 +256,10 @@ public class OrderServiceImpl implements OrderService {
                 } else {
                     throw new ResourceNotFoundException("item is out of stock.");
                 }
-                orderItem.setUnitPrice(a.getUnitPrice());
+                orderItem.setUnitPrice(variant.getPrice());
 
                 //This is the total of orderItem based on its quantity.
-                orderItem.setTotalPrice(a.getUnitPrice() * a.getQuantity());
+                orderItem.setTotalPrice(variant.getPrice() * a.getQuantity());
 
                 Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
                 if (discount.isPresent()){
