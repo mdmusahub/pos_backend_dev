@@ -14,13 +14,15 @@ public class ProductVariantResponse {
     private Double price;
     private Long productId;
     private String productName;
+    private Boolean refundable;
     public ProductVariantResponse(ProductVariant productVariant) {
-        this.productVariantId = productVariant.getProductVariantId();
+        this.productVariantId = productVariant.getId();
         this.variantName = productVariant.getVariantName();
         this.variantValue = productVariant.getVariantValue();
         this.price = productVariant.getPrice();
-        this.productId = productVariant.getProduct().getProductId();
+        this.productId = productVariant.getProduct().getId();
         this.productName = productVariant.getProduct().getProductName();
+        this.refundable = productVariant.getRefundable();
     }
 
 }

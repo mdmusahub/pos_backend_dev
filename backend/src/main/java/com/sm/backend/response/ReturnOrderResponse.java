@@ -1,6 +1,5 @@
 package com.sm.backend.response;
 
-import com.sm.backend.model.Order;
 import com.sm.backend.model.ReturnOrder;
 import com.sm.backend.util.ReturnReason;
 import com.sm.backend.util.ReturnStatus;
@@ -21,13 +20,11 @@ public class ReturnOrderResponse {
     private LocalDateTime returnDate;
 
 
-    public ReturnOrderResponse(ReturnOrder returnOrder) {
-        this.id = returnOrder.getId();
-        this.orderId = new OrderResponse(returnOrder.getOrderId());
-        this.returnQuantity = returnOrder.getReturnQuantity();
-        this.returnReason = returnOrder.getReturnReason();
-        this.returnStatus = returnOrder.getReturnStatus();
-        this.refundAmount = returnOrder.getRefundAmount();
-        this.returnDate = returnOrder.getReturnDate();
+    public ReturnOrderResponse(ReturnOrder order) {
+        this.id = order.getId();
+        this.orderId = new OrderResponse(order.getOrder());
+        this.returnQuantity = order.getReturnQuantity();
+        this.refundAmount = order.getRefundAmount();
+        this.returnDate = order.getReturnDate();
     }
 }

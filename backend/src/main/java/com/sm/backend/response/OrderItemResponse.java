@@ -22,10 +22,10 @@ public class OrderItemResponse {
     private Double totalPrice;
 
     public OrderItemResponse(OrderItem item) {
-        this.orderItemId = item.getOrderItemId();
-        this.productId = item.getProduct().getProductId();
+        this.orderItemId = item.getId();
+        this.productId = item.getProduct().getId();
         this.productName = item.getProduct().getProductName();
-        this.variantId = item.getProductVariant().getProductVariantId();
+        this.variantId = item.getProductVariant().getId();
         this.variantName = item.getProductVariant().getVariantName();
         this.variantValue = item.getProductVariant().getVariantValue();
         this.quantity = item.getQuantity();

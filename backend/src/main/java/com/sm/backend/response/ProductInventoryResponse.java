@@ -22,13 +22,13 @@ public class ProductInventoryResponse {
     private String variantName;
     private String variantValue;
     public ProductInventoryResponse(ProductInventory inventory) {
-        this.inventoryId = inventory.getInventoryId();
+        this.inventoryId = inventory.getId();
         this.quantity = inventory.getQuantity();
         this.location = inventory.getLocation();
         this.lastUpdated = inventory.getLastUpdated();
-        this.productId = inventory.getProduct().getProductId();
+        this.productId = inventory.getProduct().getId();
         this.productName = inventory.getProduct().getProductName();
-        this.variantId = inventory.getProductVariant().getProductVariantId();
+        this.variantId = inventory.getProductVariant().getId();
         this.variantName = inventory.getProductVariant().getVariantName();
         this.variantValue = inventory.getProductVariant().getVariantValue();
     }

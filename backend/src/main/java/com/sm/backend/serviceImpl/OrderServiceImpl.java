@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
             }
             item.setTotalPrice(variant.getPrice() * x.getQuantity());
             //here we are setting product level discount.
-            Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
+            Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getId());
             if (discount.isPresent()) {
                 if (discount.get().getWaiverMode() == WaiverMode.PERCENT) {
                     double couponDiscount = item.getTotalPrice() * discount.get().getDiscountValue() / 100;
@@ -187,7 +187,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.delete(order);
         for (OrderItem item : orderItems) {
             orderItemRepository.delete(orderItemRepository.findById
-                    (item.getOrderItemId()).orElseThrow(() -> new ResourceNotFoundException("invalid order item ID")));
+                    (item.getId()).orElseThrow(() -> new ResourceNotFoundException("invalid order item ID")));
         }
 //        List<Long> list = orderItems.stream().map((x) -> x.getOrderItemId()).toList();
 //        List<OrderItem> deletedItems = list.stream().map((x) -> orderItemRepository.findById(x)
@@ -261,7 +261,7 @@ public class OrderServiceImpl implements OrderService {
                 //This is the total of orderItem based on its quantity.
                 orderItem.setTotalPrice(variant.getPrice() * a.getQuantity());
 
-                Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
+                Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getId());
                 if (discount.isPresent()){
                     if(discount.get().getWaiverMode() == WaiverMode.FIXED){
                         double flatDiscount = discount.get().getDiscountValue() * orderItem.getQuantity();

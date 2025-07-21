@@ -1,10 +1,11 @@
 package com.sm.backend.model;
 
 
+import com.sm.backend.util.ReturnReason;
+import com.sm.backend.util.ReturnStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
 
 @Entity
 @Table(name = "return_order_item")
@@ -15,16 +16,19 @@ public class ReturnOrderItem{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    private Order orderId;
+    private Order order;
     @OneToOne(fetch = FetchType.EAGER)
     private OrderItem orderItem;
     @ManyToOne
-    private Product productId;
-    @OneToMany
-    private ProductVariant productVariantId;
+    private Product product;
+    @ManyToOne
+    private ProductVariant productVariant;
+    @Enumerated (EnumType.STRING)
+    private ReturnStatus returnStatus;
+    @Enumerated (EnumType.STRING)
+    private ReturnReason returnReason;
     private Long returnQuantity;
     private Double unitPrice;
     private Double refundAmount;
-    private Customer requestedBy;
 
 }

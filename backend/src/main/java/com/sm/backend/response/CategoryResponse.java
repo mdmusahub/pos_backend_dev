@@ -14,7 +14,7 @@ public class CategoryResponse {
     private Category parentId;
 
     public CategoryResponse(Category category) {
-        this.categoryId = category.getCategoryId();
+        this.categoryId = category.getId();
         this.name = category.getName();
         this.description = category.getDescription();
    this.parentId = category.getParentId();

@@ -25,7 +25,7 @@ public class DiscountResponse {
 //    private Long minimumQuantity;
 
     public DiscountResponse(Discount discount) {
-        this.discountId = discount.getDiscountId();
+        this.discountId = discount.getId();
         this.discountName = discount.getDiscountName();
 //        this.discountType = discount.getDiscountType();
         this.discountValue = discount.getDiscountValue();

@@ -1,12 +1,10 @@
 package com.sm.backend.model;
 
-import com.sm.backend.util.ReturnReason;
-import com.sm.backend.util.ReturnStatus;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "return_order")
@@ -16,13 +14,12 @@ public class ReturnOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne
-    private Order orderId;
+    private Order order;
     private Long returnQuantity;
-    @Enumerated (EnumType.STRING)
-    private ReturnReason returnReason;
-    @Enumerated (EnumType.STRING)
-    private ReturnStatus returnStatus;
     private Double refundAmount;
+    @CreationTimestamp
     private LocalDateTime returnDate;
+    @ManyToOne
+    private Customer requestBy;
 
 }
