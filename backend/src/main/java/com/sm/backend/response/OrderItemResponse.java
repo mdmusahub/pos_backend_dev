@@ -12,22 +12,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderItemResponse {
     private Long orderItemId;
-    private Long productId;
-    private String productName;
-    private Long variantId;
-    private String variantName;
-    private String variantValue;
+    private Product product;
+    private ProductVariant productVariant;
     private Long quantity;
     private Double unitPrice;
     private Double totalPrice;
 
     public OrderItemResponse(OrderItem item) {
         this.orderItemId = item.getOrderItemId();
-        this.productId = item.getProduct().getProductId();
-        this.productName = item.getProduct().getProductName();
-        this.variantId = item.getProductVariant().getProductVariantId();
-        this.variantName = item.getProductVariant().getVariantName();
-        this.variantValue = item.getProductVariant().getVariantValue();
+        this.product = item.getProduct();
+        this.productVariant = item.getProductVariant();
         this.quantity = item.getQuantity();
         this.unitPrice = item.getUnitPrice();
         this.totalPrice = item.getTotalPrice();

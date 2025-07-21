@@ -12,4 +12,5 @@ public class ProductVariantRequest {
     private String variantValue;
     private Double price;
     private ProductInventoryRequest inventoryRequest;
+    private Boolean refundable;
 }

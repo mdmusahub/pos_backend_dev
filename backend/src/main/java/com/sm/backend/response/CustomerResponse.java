@@ -13,7 +13,7 @@ public class CustomerResponse {
     private LocalDateTime createdAt;
     private String email;
     public CustomerResponse(Customer customer) {
-        this.customerId = customer.getCustomerId();
+        this.customerId = customer.getId();
         this.phoneNumber = customer.getPhoneNumber();
         this.createdAt = customer.getCreatedAt();
         this.email = customer.getEmail();

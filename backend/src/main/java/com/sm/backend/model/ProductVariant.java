@@ -8,11 +8,12 @@ import lombok.Data;
 public class ProductVariant {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long productVariantId;
+private Long id;
 @ManyToOne
 @JoinColumn(name = "prodcut_id")
 private Product product;
 private String variantName;
 private String variantValue;
 private Double price;
+private Boolean refundable;
 }

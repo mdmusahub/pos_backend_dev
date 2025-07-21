@@ -11,7 +11,7 @@ import java.util.List;
 public class ProductInventory {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long inventoryId;
+private Long id;
 private Long quantity;
 private String location;
 private LocalDateTime lastUpdated;

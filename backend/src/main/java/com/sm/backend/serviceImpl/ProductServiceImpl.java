@@ -72,7 +72,8 @@ public class ProductServiceImpl implements ProductService {
                    variant.setVariantName(request1.getVariantName());
                    variant.setVariantValue(request1.getVariantValue());
                    variant.setPrice(request1.getPrice());
-                   variant.setProduct(repository.findById(product.getProductId()).orElseThrow(() -> new ResourceNotFoundException("invalid product ID")));
+                   variant.setProduct(repository.findById(product.getId()).orElseThrow(() -> new ResourceNotFoundException("invalid product ID")));
+                   variant.setRefundable(request1.getRefundable());
                    variantRepository.save(variant);
 //            creating inventories
                    ProductInventory inventory = new ProductInventory();
@@ -126,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Long productId) {
         Product product = repository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("invalid Product ID"));
-        List<ProductVariant> variants = variantRepository.getAllVariantsByProductId(product.getProductId());
+        List<ProductVariant> variants = variantRepository.getAllVariantsByProductId(product.getId());
 //        deleting inventories
        if (variants.isEmpty()){
            repository.delete(product);

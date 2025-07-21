@@ -19,7 +19,7 @@ import java.util.List;
 public class Order {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long orderID;
+private Long id;
 @ManyToOne
 private Customer customer;
 @OneToMany(fetch = FetchType.EAGER)
