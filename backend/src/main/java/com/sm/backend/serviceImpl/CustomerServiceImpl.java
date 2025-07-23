@@ -45,6 +45,9 @@ public class CustomerServiceImpl implements CustomerService {
         if (request.getPhoneNumber() != null) {
             customer.setPhoneNumber(request.getPhoneNumber());
         }
+        if (request.getEmail() != null) {
+            customer.setEmail(request.getEmail());
+        }
         List<Order> orders = orderRepository.findAllOrdersByCustomer(customer);
         if(orders.isEmpty() == false){
             for(Order order : orders){

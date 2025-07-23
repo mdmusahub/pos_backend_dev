@@ -8,6 +8,9 @@ import java.util.List;
 public interface ReturnService {
 
     void createReturnOrder (ReturnOrderRequest request);
+
     List<ReturnOrderResponse> findAll();
-//    ReturnOrderResponse findById (Long id);
+
+    ReturnOrderResponse getById(Long returnOrderId);
+
 }

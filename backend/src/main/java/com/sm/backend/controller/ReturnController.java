@@ -14,6 +14,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class ReturnController {
     private final ReturnService returnServiceImpl;
+
     @Autowired
     public ReturnController(ReturnService returnServiceImpl) {
         this.returnServiceImpl = returnServiceImpl;
@@ -23,9 +24,19 @@ public class ReturnController {
     public void createReturnOrder (@RequestBody ReturnOrderRequest request){
         returnServiceImpl.createReturnOrder(request);
     }
+
+
+
+    @GetMapping("/getById/{returnOrderId}")
+    public ReturnOrderResponse getById(@PathVariable Long returnOrderId){
+       return returnServiceImpl.getById(returnOrderId);
+    }
+
     @GetMapping("/getAll")
     public List<ReturnOrderResponse> findAll (){
         return returnServiceImpl.findAll();
     }
+
+
 
 }

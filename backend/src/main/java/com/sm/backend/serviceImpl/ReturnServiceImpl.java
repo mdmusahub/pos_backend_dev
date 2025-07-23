@@ -106,12 +106,27 @@ public class ReturnServiceImpl implements ReturnService {
             }
     }
 
+
+
+    
+    @Override
+    public ReturnOrderResponse getById(Long id) {
+        ReturnOrder returnOrder = returnOrderRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("ReturnOrder id not found"));
+        List<ReturnOrderItem> returnOrderItems = returnOrderItemRepository.findAllReturnOrderItemsByOrder(returnOrder.getOrder());
+        return new ReturnOrderResponse(returnOrder,returnOrderItems);
+    }
+
+
+
+
     @Override
     public List<ReturnOrderResponse> findAll() {
-        List<ReturnOrder> orders = returnOrderRepository.findAll();
-//        List<ReturnOrderItem> orderItems = returnOrderItemRepository.findAll();
-//        orders,orderItems.stream().map(ReturnOrderResponse,ReturnOrderItemResponse);
-        return orders.stream().map(ReturnOrderResponse::new).toList();
+
+        List<ReturnOrder> returnOrders = returnOrderRepository.findAll();
+        return returnOrders.stream().map(returnOrder -> {
+            List<ReturnOrderItem> returnOrderItems = returnOrderItemRepository.findAllReturnOrderItemsByOrder(returnOrder.getOrder());
+            return new ReturnOrderResponse(returnOrder,returnOrderItems);
+        }).toList();
     }
 
 

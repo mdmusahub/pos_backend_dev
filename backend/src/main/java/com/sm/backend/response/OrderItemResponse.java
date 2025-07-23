@@ -19,7 +19,7 @@ public class OrderItemResponse {
     private Double totalPrice;
 
     public OrderItemResponse(OrderItem item) {
-        this.orderItemId = item.getOrderItemId();
+        this.orderItemId = item.getId();
         this.product = item.getProduct();
         this.productVariant = item.getProductVariant();
         this.quantity = item.getQuantity();

@@ -51,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
         } else {
             Customer customer = new Customer();
             customer.setPhoneNumber(request.getUserPhoneNumber());
+            customer.setEmail(request.getEmail());
             customerRepository.save(customer);
             order.setCustomer(customer);
         }
@@ -88,16 +89,16 @@ public class OrderServiceImpl implements OrderService {
 
             item.setProductVariant(variant);
             item.setProduct(variant.getProduct());
-            item.setUnitPrice(x.getUnitPrice());
+            item.setUnitPrice(variant.getPrice());
             //if order quantity is greater than inventory quantity then this will throw an exception.
             if (inventoryRepository.findProductInventoryByProductVariant(variant).getQuantity() >= x.getQuantity()) {
                 item.setQuantity(x.getQuantity());
             } else {
                 throw new ResourceNotFoundException("out of stock.");
             }
-            item.setTotalPrice(x.getUnitPrice() * x.getQuantity());
+            item.setTotalPrice(variant.getPrice() * x.getQuantity());
             //here we are setting product level discount.
-            Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
+            Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getId());
             if (discount.isPresent()) {
                 if (discount.get().getWaiverMode() == WaiverMode.PERCENT) {
                     double couponDiscount = item.getTotalPrice() * discount.get().getDiscountValue() / 100;
@@ -178,7 +179,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.delete(order);
         for (OrderItem item : orderItems) {
             orderItemRepository.delete(orderItemRepository.findById
-                    (item.getOrderItemId()).orElseThrow(() -> new ResourceNotFoundException("invalid order item ID")));
+                    (item.getId()).orElseThrow(() -> new ResourceNotFoundException("invalid order item ID")));
         }
 //        List<Long> list = orderItems.stream().map((x) -> x.getOrderItemId()).toList();
 //        List<OrderItem> deletedItems = list.stream().map((x) -> orderItemRepository.findById(x)
@@ -196,6 +197,7 @@ public class OrderServiceImpl implements OrderService {
             order.setUserPhoneNumber(request.getUserPhoneNumber());
             Customer customer = order.getCustomer();
             customer.setPhoneNumber(request.getUserPhoneNumber());
+            customer.setEmail(request.getEmail());
             customerRepository.save(customer);
             List<Order> orders = orderRepository.findAllOrdersByCustomer(customer);
             if(!orders.isEmpty()){
@@ -244,12 +246,12 @@ public class OrderServiceImpl implements OrderService {
                 } else {
                     throw new ResourceNotFoundException("item is out of stock.");
                 }
-                orderItem.setUnitPrice(a.getUnitPrice());
+                orderItem.setUnitPrice(variant.getPrice());
 
                 //This is the total of orderItem based on its quantity.
-                orderItem.setTotalPrice(a.getUnitPrice() * a.getQuantity());
+                orderItem.setTotalPrice(variant.getPrice()* a.getQuantity());
 
-                Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getProductVariantId());
+                Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getId());
                 if (discount.isPresent()){
                     if(discount.get().getWaiverMode() == WaiverMode.FIXED){
                         double flatDiscount = discount.get().getDiscountValue() * orderItem.getQuantity();

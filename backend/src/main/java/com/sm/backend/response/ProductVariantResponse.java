@@ -14,7 +14,7 @@ public class ProductVariantResponse {
     private String variantValue;
     private Double price;
     public ProductVariantResponse(ProductVariant productVariant) {
-        this.productVariantId = productVariant.getProductVariantId();
+        this.productVariantId = productVariant.getId();
         this.product = productVariant.getProduct()  ;
         this.variantName = productVariant.getVariantName();
         this.variantValue = productVariant.getVariantValue();
