@@ -16,15 +16,21 @@ public class ProductInventoryResponse {
     private Long quantity;
     private String location;
     private LocalDateTime lastUpdated;
-    private Product product;
-    private ProductVariant productVariant ;
+    private Long productId;
+    private String productName;
+    private Long variantId ;
+    private String variantName;
+    private String variantValue;
     public ProductInventoryResponse(ProductInventory inventory) {
         this.inventoryId = inventory.getInventoryId();
         this.quantity = inventory.getQuantity();
         this.location = inventory.getLocation();
         this.lastUpdated = inventory.getLastUpdated();
-        this.product = inventory.getProduct();
-        this.productVariant = inventory.getProductVariant();
+        this.productId = inventory.getProduct().getProductId();
+        this.productName = inventory.getProduct().getProductName();
+        this.variantId = inventory.getProductVariant().getProductVariantId();
+        this.variantName = inventory.getProductVariant().getVariantName();
+        this.variantValue = inventory.getProductVariant().getVariantValue();
     }
 
 

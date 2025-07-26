@@ -9,7 +9,7 @@ import java.util.List;
 public interface ProductVariantService {
     void createVariant(ProductVariantRequest request);
 
-    List<ProductVariantResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir);
+    List<ProductVariantResponse> getAll();
 
     ProductVariantResponse getById(Long variantId);
 

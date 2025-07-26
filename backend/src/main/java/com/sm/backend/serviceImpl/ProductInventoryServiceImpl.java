@@ -46,16 +46,8 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     }
 
     @Override
-    public List<ProductInventoryResponse> getAll(Integer pageNumber, Integer pageSize, String sortby, String sortDir) {
-        Sort sort = null;
-
-        if (sortDir.equalsIgnoreCase("asc")) {
-            sort = Sort.by(sortby).ascending();
-        } else {
-            sort = Sort.by(sortby).descending();
-        }
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<ProductInventory> all = inventoryRepository.findAll(pageable);
+    public List<ProductInventoryResponse> getAll() {
+        List<ProductInventory> all = inventoryRepository.findAll();
         return all.stream().map(ProductInventoryResponse::new).toList();
     }
 
