@@ -25,8 +25,6 @@ public class ReturnController {
         returnServiceImpl.createReturnOrder(request);
     }
 
-
-
     @GetMapping("/getById/{returnOrderId}")
     public ReturnOrderResponse getById(@PathVariable Long returnOrderId){
        return returnServiceImpl.getById(returnOrderId);
@@ -35,6 +33,10 @@ public class ReturnController {
     @GetMapping("/getAll")
     public List<ReturnOrderResponse> findAll (){
         return returnServiceImpl.findAll();
+    }
+    @DeleteMapping("/delete/{id}")
+    public void deleteById (@PathVariable Long id){
+        returnServiceImpl.deleteById(id);
     }
 
 

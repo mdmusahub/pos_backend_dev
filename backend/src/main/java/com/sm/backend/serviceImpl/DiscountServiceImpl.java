@@ -84,7 +84,7 @@ return new DiscountResponse(discount);
                 x.setIsActive(false);
             }
             discountRepository.save(x);
-            return x;
+             return x;
         }).toList();
 //    discountRepository.saveAll(discounts);
         System.out.println("Scheduler is running");

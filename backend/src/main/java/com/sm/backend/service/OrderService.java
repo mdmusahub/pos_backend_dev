@@ -2,11 +2,12 @@ package com.sm.backend.service;
 
 import com.sm.backend.request.OrderRequest;
 import com.sm.backend.response.OrderResponse;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface OrderService {
-    void createOrder(OrderRequest request);
+    ResponseEntity<?> createOrder(OrderRequest request) throws Exception;
 
     List<OrderResponse> getAll();
 

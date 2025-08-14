@@ -12,12 +12,14 @@ public class ProductVariantResponse {
     private Product product;
     private String variantName;
     private String variantValue;
+    private Boolean refundable;
     private Double price;
     public ProductVariantResponse(ProductVariant productVariant) {
         this.productVariantId = productVariant.getId();
         this.product = productVariant.getProduct()  ;
         this.variantName = productVariant.getVariantName();
         this.variantValue = productVariant.getVariantValue();
+        this.refundable = productVariant.getRefundable();
         this.price = productVariant.getPrice();
     }
 

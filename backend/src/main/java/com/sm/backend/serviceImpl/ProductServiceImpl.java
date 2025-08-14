@@ -123,7 +123,7 @@ public class ProductServiceImpl implements ProductService {
         return repository.save(product);
     }
 
-    @Transactional
+//    @Transactional
     @Override
     public void delete(Long productId) {
         Product product = repository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("invalid Product ID"));
@@ -135,7 +135,7 @@ public class ProductServiceImpl implements ProductService {
            else {
            for (ProductVariant variant : variants) {
                if (orderItemRepository.findOrderItemByProductVariant(variant).isPresent()) {
-                   throw new ProductCanNotBeDeletedException("this product and its variants cannot be deleted since one of its variant is present in an order item");
+                   throw new ProductCanNotBeDeletedException("this product and its variants cannot be deleted since its variant " +variant.getProduct() +" is present in an order item");
                } else {
                    inventoryRepository.delete(inventoryRepository.findProductInventoryByProductVariant(variant));
 

@@ -3,7 +3,6 @@ package com.sm.backend.controller;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.OrderRequest;
 import com.sm.backend.response.OrderResponse;
-import com.sm.backend.responseHandler.ResponseHandler;
 import com.sm.backend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,9 +22,9 @@ private final OrderService service;
     }
 
     @PostMapping("/create")
-    public void createOrder(@RequestBody OrderRequest request){
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequest request) throws Exception {
         System.out.println(request.getOrderItemRequests() + "this is payload");
-         service.createOrder(request);
+        return service.createOrder(request);
 
     }
 @GetMapping("/getAll")

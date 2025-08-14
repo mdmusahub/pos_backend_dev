@@ -5,6 +5,7 @@ import com.sm.backend.model.*;
 import com.sm.backend.repository.*;
 import com.sm.backend.request.ReturnOrderRequest;
 import com.sm.backend.request.ReturnQuantityRequest;
+import com.sm.backend.response.ReturnOrderItemResponse;
 import com.sm.backend.response.ReturnOrderResponse;
 import com.sm.backend.service.ReturnService;
 import com.sm.backend.util.ReturnReason;
@@ -116,7 +117,15 @@ public class ReturnServiceImpl implements ReturnService {
         return new ReturnOrderResponse(returnOrder,returnOrderItems);
     }
 
-
+    @Override
+    public void deleteById(Long id) {
+        ReturnOrder returnOrder = returnOrderRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException("Id not found"));
+        Order order = returnOrder.getOrder();
+        List<ReturnOrderItem> returnOrderItem = returnOrderItemRepository.findAllReturnOrderItemsByOrder(order);
+        returnOrderItemRepository.deleteAll(returnOrderItem);
+        returnOrderRepository.delete(returnOrder);
+    }
 
 
     @Override
@@ -128,6 +137,7 @@ public class ReturnServiceImpl implements ReturnService {
             return new ReturnOrderResponse(returnOrder,returnOrderItems);
         }).toList();
     }
+
 
 
 }

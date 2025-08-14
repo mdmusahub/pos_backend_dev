@@ -13,4 +13,5 @@ public interface ReturnService {
 
     ReturnOrderResponse getById(Long returnOrderId);
 
+    void deleteById (Long id);
 }

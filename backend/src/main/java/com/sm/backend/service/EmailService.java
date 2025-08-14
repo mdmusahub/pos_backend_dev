@@ -23,6 +23,7 @@ public class EmailService {
         mail.setText(body);
         javaMailSender.send(mail);
     } catch (Exception e) {
+        System.out.println(e.getMessage());
         throw new ResourceNotFoundException("an exception while sending mail");
     }
 }

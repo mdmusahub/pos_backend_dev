@@ -1,9 +1,6 @@
 package com.sm.backend.response;
 
-import com.sm.backend.model.Order;
-import com.sm.backend.model.OrderItem;
-import com.sm.backend.model.Product;
-import com.sm.backend.model.ProductVariant;
+import com.sm.backend.model.*;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,16 +9,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderItemResponse {
     private Long orderItemId;
-    private Product product;
-    private ProductVariant productVariant;
+    private Long productId;
+    private String productName;
+    private Long variantId;
+    private String variantName;
+    private String variantValue;
     private Long quantity;
     private Double unitPrice;
     private Double totalPrice;
 
     public OrderItemResponse(OrderItem item) {
         this.orderItemId = item.getId();
-        this.product = item.getProduct();
-        this.productVariant = item.getProductVariant();
+        this.productId = item.getProduct().getId();
+        this.productName = item.getProduct().getProductName();
+        this.variantId = item.getProductVariant().getId();
+        this.variantName = item.getProductVariant().getVariantName();
+        this.variantValue = item.getProductVariant().getVariantValue();
         this.quantity = item.getQuantity();
         this.unitPrice = item.getUnitPrice();
         this.totalPrice = item.getTotalPrice();

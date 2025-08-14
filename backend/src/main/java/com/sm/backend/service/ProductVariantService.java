@@ -6,7 +6,7 @@ import com.sm.backend.response.ProductVariantResponse;
 
 import java.util.List;
 
-public interface ProductVariantService {
+public interface   ProductVariantService {
     void createVariant(ProductVariantRequest request);
 
     List<ProductVariantResponse> getAll();
