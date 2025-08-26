@@ -21,6 +21,7 @@ public class ReturnOrderItemResponse {
     private String productName;
     private String variantName;
     private String variantValue;
+    private Boolean refundable;
     private Double unitPrice;
     private Long returnQuantity;
     private Double refundAmount;
@@ -37,6 +38,7 @@ public class ReturnOrderItemResponse {
         this.productName = returnOrderItem.getProduct().getProductName();
         this.variantName = returnOrderItem.getProductVariant().getVariantName();
         this.variantValue = returnOrderItem.getProductVariant().getVariantValue();
+        this.refundable = returnOrderItem.getProductVariant().getRefundable();
         this.unitPrice = returnOrderItem.getUnitPrice();
         this.returnQuantity = returnOrderItem.getReturnQuantity();
         this.refundAmount = returnOrderItem.getRefundAmount();

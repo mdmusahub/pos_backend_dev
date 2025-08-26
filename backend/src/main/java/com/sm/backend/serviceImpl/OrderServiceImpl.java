@@ -257,11 +257,24 @@ public class OrderServiceImpl implements OrderService {
 //        }
         List<String> collect = list.stream().map(x -> x.toString()).collect(Collectors.toList());
 
-        emailService.sendMail(request.getEmail(),"Blinkit "," Thanks for Shopping with Blinkit \n"+
-                " \n Date = "+order.getOrderDate()+" \n Phone Number = "+request.getUserPhoneNumber()+
-                " \n \n Item = "+collect +" \n \n Payment Mode = "+request.getPaymentMode()+
-                " \n Discount = "+order.getDiscount()+ " \n Tax = "+order.getTax()+
-                " \n Total Amount = "+order.getTotalAmount());
+        emailService.sendMail(request.getEmail(),"Blinket ",
+                "Thank you so much for shopping with us!  \n" +
+                "We’re excited to let you know that your order has been received successfully.  \n" +
+                "\n" +
+                "Our team is preparing everything with care to make sure you get the best experience with our products.  \n" +
+                "\n" +
+                "If you have any questions or need any assistance regarding your order, feel free to reach out to us anytime.  \n" +
+                "We’re always happy to help.  \n" +
+                "\n" +
+                "Once again, thank you for choosing us.  \n" +
+                "We look forward to serving you again in the future!  \n" +
+                "\n" +
+                "Warm Regards,  \n" +
+                "Blinket"+
+                " \n Date :  "+order.getOrderDate()+" \n Phone Number :  "+request.getUserPhoneNumber()+
+                " \n \n Item :  "+collect +" \n \n Payment Mode :  "+request.getPaymentMode()+
+                " \n Discount :  "+order.getDiscount()+ " \n Tax :  "+order.getTax()+
+                " \n Total Amount :  "+order.getTotalAmount());
 
 
 

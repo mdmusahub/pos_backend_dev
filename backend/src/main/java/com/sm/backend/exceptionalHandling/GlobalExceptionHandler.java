@@ -29,5 +29,14 @@ public class GlobalExceptionHandler {
 @ExceptionHandler(value = DiscountAlreadyExistException.class)
 public ErrorResponse handleDiscountAlreadyExistException(DiscountAlreadyExistException e,HttpServletRequest request){
     return new ErrorResponse(LocalDateTime.now(),HttpStatus.FORBIDDEN.value(),HttpStatus.FORBIDDEN.getReasonPhrase(), e.getMessage(), request.getRequestURI());
-}}
+}
+@ExceptionHandler(value = UserAlreadyExistsException.class)
+    public ErrorResponse handleUserAlreadyExistsException(UserAlreadyExistsException u,HttpServletRequest request){
+    return new ErrorResponse(LocalDateTime.now(),HttpStatus.FORBIDDEN.value(),HttpStatus.FORBIDDEN.getReasonPhrase(), u.getMessage(), request.getRequestURI());
+}
+@ExceptionHandler(value = EmailNotFoundException.class)
+    public ErrorResponse handleEmailNotFoundException(EmailNotFoundException e,HttpServletRequest request){
+    return new ErrorResponse(LocalDateTime.now(),HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase(), e.getMessage(), request.getRequestURI());
+}
+}
 
