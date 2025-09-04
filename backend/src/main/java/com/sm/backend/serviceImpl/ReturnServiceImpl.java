@@ -7,14 +7,21 @@ import com.sm.backend.request.ReturnOrderRequest;
 import com.sm.backend.request.ReturnQuantityRequest;
 import com.sm.backend.response.ReturnOrderItemResponse;
 import com.sm.backend.response.ReturnOrderResponse;
+import com.sm.backend.service.EmailService;
 import com.sm.backend.service.ReturnService;
 import com.sm.backend.util.ReturnReason;
 import com.sm.backend.util.ReturnStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReturnServiceImpl implements ReturnService {
@@ -25,6 +32,7 @@ public class ReturnServiceImpl implements ReturnService {
     private final OrderItemRepository orderItemRepository;
     private final ProductInventoryRepository productInventoryRepository;
     private final ProductVariantRepository productVariantRepository;
+    private final EmailService emailService;
 
     @Autowired
     public ReturnServiceImpl(ReturnOrderItemRepository returnOrderItemRepository,
@@ -32,13 +40,15 @@ public class ReturnServiceImpl implements ReturnService {
                              OrderRepository orderRepository1,
                              OrderItemRepository orderItemRepository,
                              ProductInventoryRepository productInventoryRepository,
-                             ProductVariantRepository productVariantRepository) {
+                             ProductVariantRepository productVariantRepository,
+                             EmailService emailService) {
         this.returnOrderItemRepository = returnOrderItemRepository;
         this.returnOrderRepository = returnOrderRepository;
         this.orderRepository = orderRepository1;
         this.orderItemRepository = orderItemRepository;
         this.productInventoryRepository = productInventoryRepository;
         this.productVariantRepository = productVariantRepository;
+        this.emailService = emailService;
     }
 
 
@@ -105,6 +115,41 @@ public class ReturnServiceImpl implements ReturnService {
             if(!items.isEmpty()){
                 returnOrderRepository.save(returnOrder);
             }
+        LocalDateTime orderDate = order.getOrderDate();
+        ZoneId zoneId = ZoneId.of("Asia/Kolkata");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.now(zoneId);
+        String format = dateTime.format(dateTimeFormatter);
+        Long id = order.getId();
+        List<String> names = items.stream().map(x -> {
+            return x.getProduct().getProductName()+" "+
+                x.getProductVariant().getVariantName()+" "+x.getProductVariant().getVariantValue()+
+                "\n Price : "+x.getProductVariant().getPrice()+"\n";}).toList();
+        String email = order.getCustomer().getEmail();
+            emailService.sendMail(email, "Blinkit",
+                    "Request for Return of Order – "+id+"\n" +
+                            "\n" +
+                            "Dear Blenkit Customer Support,\n" +
+                            "\n" +
+                            "I hope this message finds you well.\n" +
+                            "\n" +
+                            "I would like to request a return for a product I purchased from your store. Here are the details:\n" +
+                            "\n" +
+                            "Order Number: "+id+"\n" +
+                            "\n" +
+                            "Product Name: "+names+"\n" +
+                            "\n" +
+                            "Date : "+format+"\n" +
+                            "\n" +
+                            "Reason for Return: [Brief Reason – e.g., wrong item received, defective product, etc.]\n" +
+                            "\n" +
+                            "The product is unused and in its original packaging. Kindly guide me through the return process and let me know the next steps. I would appreciate it if you could also confirm the refund timeline.\n" +
+                            "\n" +
+                            "Looking forward to your prompt response.\n" +
+                            "\n" +
+                            "Thank you,\n" +
+                            email);
+
     }
 
 

@@ -17,6 +17,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/product")
 @CrossOrigin(origins = "*")
+//    ,allowedHeaders = "*",
+//    methods = {RequestMethod.GET,
+//            RequestMethod.POST,
+//            RequestMethod.PUT,
+//            RequestMethod.DELETE,
+//            RequestMethod.OPTIONS})
 public class ProductController {
     private final ProductService service;
 
@@ -31,7 +37,6 @@ public class ProductController {
     }
 
     @GetMapping("/getById/{productId}")
-
     public ResponseEntity<ProductResponse> getById(@PathVariable Long productId) {
         try {
             return new ResponseEntity<>(service.getById(productId),HttpStatus.OK);

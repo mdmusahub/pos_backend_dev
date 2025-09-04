@@ -1,14 +1,15 @@
 package com.sm.backend.configration;
 
+import com.sm.backend.repository.OtpRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -19,9 +20,11 @@ import java.util.Map;
 @Component
 @Slf4j
 public class JwtUtil {
-
     @Value("${secret.key}")
     private String SECRECT_KEY;
+
+
+
 
     private SecretKey getSigningKey() {
         log.debug("Generating signing key from secret.");
@@ -100,4 +103,5 @@ public class JwtUtil {
         }
 
     }
+
 }

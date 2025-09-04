@@ -101,6 +101,7 @@ public class UserController {
         return ResponseEntity.ok(all);
     }
 
+
     @PutMapping("/updateEmail/{email}")
     public String updateByEmail (@PathVariable String email,@RequestBody User user){
         userService.updateByPassword(email,user);

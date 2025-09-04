@@ -2,7 +2,6 @@ package com.sm.backend.controller;
 
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
-import com.sm.backend.model.Customer;
 import com.sm.backend.request.CustomerRequest;
 import com.sm.backend.response.CustomerResponse;
 import com.sm.backend.service.CustomerService;

@@ -4,19 +4,18 @@ import com.sm.backend.exceptionalHandling.EmailNotFoundException;
 import com.sm.backend.exceptionalHandling.UserAlreadyExistsException;
 import com.sm.backend.model.User;
 import com.sm.backend.repository.UserRepository;
-import com.sm.backend.request.UserRequest;
 import com.sm.backend.service.EmailService;
 import com.sm.backend.service.UserService;
+import jakarta.mail.Authenticator;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -67,6 +66,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void addToBlacklist(String token ) {
+        blacklist.add(token);
+    }
+    public Boolean isBlacklisted (String token){
+        return blacklist.contains(token);
+    }
+
+
+    @Override
     public void updateByPassword(String email,User request) {
         Optional<User> emailOptional = userRepository.findByEmail(email);
         if(emailOptional.isPresent()){
@@ -93,12 +101,5 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public void addToBlacklist(String token ) {
-        blacklist.add(token);
-    }
-    public Boolean isBlacklisted (String token){
-        return blacklist.contains(token);
-    }
 
 }
