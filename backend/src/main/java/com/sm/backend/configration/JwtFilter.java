@@ -54,13 +54,6 @@ public class JwtFilter extends OncePerRequestFilter {
             UserDetails userDetails = userDetailService.loadUserByUsername(userName);
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     userDetails,null,userDetails.getAuthorities());
-            String name = token.getName();
-            ZonedDateTime logoutTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
-            String formattedTime = logoutTime.format(DateTimeFormatter.ofPattern("dd mm yy, hh:mm a z"));
-            emailService.sendMail(name, "Logout Confirmation","You have successfully logged out on " + formattedTime + ".\n" +
-                "If this wasn't you, please contact support immediately.\n\n" +
-                "Stay safe,\n" +
-                "Team Blinket");
             return;
         }
         if(userName != null){

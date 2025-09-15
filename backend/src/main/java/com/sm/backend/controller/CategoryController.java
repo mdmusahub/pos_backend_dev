@@ -23,6 +23,7 @@ public class CategoryController {
         this.service = service;
     }
 
+//    @PostMapping(value = "/create",consumes = "multipart/form-data")
     @PostMapping("/create")
 public void createCategory(@RequestBody CategoryRequest request){
     service.createCategory(request);

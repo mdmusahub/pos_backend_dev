@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TaxRequest {
-
     private TaxCategory category;
     private Long productVariantPrice;
 }

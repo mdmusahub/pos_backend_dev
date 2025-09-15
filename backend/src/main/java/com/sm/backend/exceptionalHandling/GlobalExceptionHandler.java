@@ -38,5 +38,9 @@ public ErrorResponse handleDiscountAlreadyExistException(DiscountAlreadyExistExc
     public ErrorResponse handleEmailNotFoundException(EmailNotFoundException e,HttpServletRequest request){
     return new ErrorResponse(LocalDateTime.now(),HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase(), e.getMessage(), request.getRequestURI());
 }
+@ExceptionHandler(value = GrandParentExistsException.class)
+    public ErrorResponse handleGrandParentExistsException(GrandParentExistsException e,HttpServletRequest request){
+    return new ErrorResponse(LocalDateTime.now(),HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage(), request.getRequestURI());
+}
 }
 

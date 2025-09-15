@@ -19,12 +19,9 @@ import java.util.List;
 
 @Configuration
 public class SpringSecurity {
-    private final CustomUserDetailService userDetailService;
     private final JwtFilter jwtFilter;
     @Autowired
-    public SpringSecurity(CustomUserDetailService userDetailService,
-                          JwtFilter jwtFilter) {
-        this.userDetailService = userDetailService;
+    public SpringSecurity(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
     }
 
@@ -43,16 +40,14 @@ public class SpringSecurity {
     public SecurityFilterChain filterChain (HttpSecurity http) throws  Exception{
 
         http
-//                .cors().and()
                 .csrf(csrf-> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth->
                         auth
                                 .requestMatchers("/user/signup","/user/login","/user/updateEmail/{email}",
                                 "/otp/sendOtp/{email}","/otp/checkOtp/{email}").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                             .requestMatchers("/*").hasRole("ADMIN")
+                             .requestMatchers("/**").hasRole("ADMIN")
                                 .anyRequest().authenticated());
 //                .httpBasic(Customizer.withDefaults());
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

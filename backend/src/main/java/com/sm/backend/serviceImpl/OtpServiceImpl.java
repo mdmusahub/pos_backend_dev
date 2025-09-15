@@ -45,9 +45,11 @@ public class OtpServiceImpl implements OtpService {
                 emailService.sendMail(email, "Your OTP Code", "Your OTP is " + sendOtp + "\n" +
                         "Valid for 5 minutes");
                 System.out.println("OTP Email Sent Successfully!");
+                System.out.println(sendOtp);
             }
         }
     }
+
     // Scheduled run every 1 min
     @Scheduled(fixedRate = 60000)
     public String deleteOtp() {
@@ -63,7 +65,7 @@ public class OtpServiceImpl implements OtpService {
         return "scheduler is running";
     }
     public String checkOtp (String email, String sendOtp){
-        Optional <Otp> byEmail =otpRepository.findByEmail(email);
+        Optional <Otp> byEmail = otpRepository.findByEmail(email);
         if (byEmail.isPresent()){
             String otp = byEmail.get().getOtp();
             if(otp.equals(sendOtp)){

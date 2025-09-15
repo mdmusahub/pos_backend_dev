@@ -100,8 +100,6 @@ public class UserController {
         ResponseEntity<?> all = userService.findAll();
         return ResponseEntity.ok(all);
     }
-
-
     @PutMapping("/updateEmail/{email}")
     public String updateByEmail (@PathVariable String email,@RequestBody User user){
         userService.updateByPassword(email,user);
@@ -114,5 +112,12 @@ public class UserController {
         }
         userService.addToBlacklist(token);
         return ResponseEntity.ok("Logout Successfully");
+    }
+    @PutMapping("/getName")
+    public String getByName (@RequestHeader ("Authorization") String token, @RequestBody String name){
+        if(token.startsWith("Bearer")){
+            token = token.substring(7);
+        }
+        return userService.getByName(token,name);
     }
 }

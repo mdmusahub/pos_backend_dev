@@ -113,6 +113,7 @@ public class OrderServiceImpl implements OrderService {
             item.setProduct(variant.getProduct());
             item.setUnitPrice(variant.getPrice());
 
+
             // Category base GST
             Tax tax = new Tax();
             tax.setProductVariantPrice(item.getUnitPrice());
@@ -168,11 +169,13 @@ public class OrderServiceImpl implements OrderService {
                 throw new ResourceNotFoundException("out of stock.");
             }
             item.setTotalPrice(variant.getPrice() * x.getQuantity());
+
             //here we are setting product level discount.
             Optional<Discount> discount = discountRepository.findDiscountByVariantId(variant.getId());
             if (discount.isPresent()) {
                 if (discount.get().getWaiverMode() == WaiverMode.PERCENT) {
                     double couponDiscount = item.getTotalPrice() * discount.get().getDiscountValue() / 100;
+//                    double couponDiscount = item.getTotalPrice() * discount.get().getDiscountValue();
                     item.setTotalPrice(item.getTotalPrice() - couponDiscount);
                     order.setDiscount(order.getDiscount() + couponDiscount);
                 }
@@ -187,6 +190,11 @@ public class OrderServiceImpl implements OrderService {
             list.add(item);
         }
         order.setOrderItems(list);
+
+        //        setting tax
+        order.setTax(gstSumPrice);
+//        applying tax to the total amount
+        order.setTotalAmount(order.getTotalAmount() + order.getTax());
 
 //        setting 5% discount if total amount is >= 1000 && < 2000
         if (order.getTotalAmount() >= 1000d && order.getTotalAmount() < 2000d) {
@@ -210,10 +218,10 @@ public class OrderServiceImpl implements OrderService {
         }
 
 
-        //        setting tax
-        order.setTax(gstSumPrice);
-//        applying tax to the total amount
-        order.setTotalAmount(order.getTotalAmount() + order.getTax());
+//        //        setting tax
+//        order.setTax(gstSumPrice);
+////        applying tax to the total amount
+//        order.setTotalAmount(order.getTotalAmount() + order.getTax());
 
         orderRepository.save(order);
 //        managing inventory

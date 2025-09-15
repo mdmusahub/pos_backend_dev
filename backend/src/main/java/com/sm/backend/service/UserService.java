@@ -12,6 +12,6 @@ public interface UserService {
     void updateByPassword (String email,User user);
     void addToBlacklist (String token);
     Boolean isBlacklisted (String token);
-//    void sendOtpEmail(String email,String sendOtp);
+    String getByName (String token,String name);
 
 }

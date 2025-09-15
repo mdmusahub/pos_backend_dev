@@ -2,9 +2,11 @@ package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.TaxRequest;
+import com.sm.backend.response.GstDiscount;
 import com.sm.backend.response.TaxResponse;
 import com.sm.backend.service.TaxService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +37,10 @@ public class TaxController {
         }catch (ResourceNotFoundException e){
            throw new ResourceNotFoundException("Error "+e.getMessage());
        }
+   }
+   @GetMapping("/create/{id}")
+    public ResponseEntity<GstDiscount> taxCreate (@PathVariable Long id){
+        return taxService.createTax(id);
    }
 //   @PutMapping("/updateById/{id}")
 //    public Object updateById (@PathVariable Long id, @RequestBody TaxRequest request){

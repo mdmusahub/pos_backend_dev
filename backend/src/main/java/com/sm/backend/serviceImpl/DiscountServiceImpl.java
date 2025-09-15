@@ -37,14 +37,10 @@ public class DiscountServiceImpl implements DiscountService {
         else {
         Discount discount = new Discount();
         discount.setDiscountName(request.getDiscountName());
-//        if(request.getDiscountType()==DiscountType.ORDER_LEVEL){
-//            discount.setDiscountType(DiscountType.ORDER_LEVEL);
-//        }
-//        if(request.getDiscountType()==DiscountType.PRODUCT_LEVEL){
-//            discount.setDiscountType(DiscountType.PRODUCT_LEVEL);
-//        }
+//        discount.setVariant(variantRepository);
         if(request.getWaiverMode()==WaiverMode.FIXED){
             discount.setWaiverMode(WaiverMode.FIXED);
+
         }
         if(request.getWaiverMode()== WaiverMode.PERCENT){
             discount.setWaiverMode(WaiverMode.PERCENT);
@@ -54,8 +50,6 @@ public class DiscountServiceImpl implements DiscountService {
         discount.setDiscountValue(request.getDiscountValue());
         discount.setEndDateTime(request.getEndDateTime());
        discount.setIsActive(true);
-//       discount.setMinimumPrice(request.getMinimumPrice());
-//       discount.setMinimumQuantity(request.getMinimumQuantity());
         discountRepository.save(discount);
     }
     }
@@ -77,13 +71,17 @@ return new DiscountResponse(discount);
     public void changeActiveStatusBasedOnStartEndDate(){
         List<Discount>discounts=discountRepository.findAll();
         discounts.stream().map((x)->{
-            if (LocalDateTime.now().isBefore(x.getEndDateTime())&&LocalDateTime.now().isAfter(x.getStartDateTime())){
-                x.setIsActive(true);
-            }
+//            if (LocalDateTime.now().isBefore(x.getEndDateTime())&&LocalDateTime.now().isAfter(x.getStartDateTime())){
+//                x.setIsActive(true);
+//                discountRepository.save(x);
+//
+//            }
             if(LocalDateTime.now().isAfter(x.getEndDateTime())){
-                x.setIsActive(false);
+//                x.setIsActive(false);
+////                discountRepository.save(x);
+                discountRepository.delete(x);
             }
-            discountRepository.save(x);
+//            discountRepository.save(x);
              return x;
         }).toList();
 //    discountRepository.saveAll(discounts);
