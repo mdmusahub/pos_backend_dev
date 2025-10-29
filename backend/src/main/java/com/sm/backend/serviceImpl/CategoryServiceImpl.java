@@ -3,17 +3,13 @@ package com.sm.backend.serviceImpl;
 import com.sm.backend.exceptionalHandling.CategoryAlreadyExistsException;
 import com.sm.backend.exceptionalHandling.GrandParentExistsException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
+import com.sm.backend.mappers.CategoryMapperImpl;
 import com.sm.backend.model.Category;
 import com.sm.backend.repository.CategoryRepository;
-import com.sm.backend.repository.ProductRepository;
 import com.sm.backend.request.CategoryRequest;
 import com.sm.backend.response.CategoryResponse;
 import com.sm.backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,10 +20,13 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
 
 private final CategoryRepository repository;
+private final CategoryMapperImpl categoryMapper;
 @Autowired
-    public CategoryServiceImpl(CategoryRepository repository){
-        this.repository = repository;
-    }
+    public CategoryServiceImpl(CategoryRepository repository,
+                               CategoryMapperImpl categoryMapper){
+    this.repository = repository;
+    this.categoryMapper = categoryMapper;
+}
 
     @Override
     public void createCategory(CategoryRequest request) {
@@ -37,9 +36,12 @@ private final CategoryRepository repository;
         }
 
          else {
+//                Category category = this.modelMapper.map(request,Category.class);
+                categoryMapper.convert(request);
                 Category category = new Category();
                 category.setName(request.getName());
                 category.setDescription(request.getDescription());
+
                 if (request.getParentId() != null) {
                     Category category1 = repository.findById(request.getParentId()).orElseThrow(()
                             -> new ResourceNotFoundException("invalid category ID"));
@@ -59,6 +61,8 @@ private final CategoryRepository repository;
     public CategoryResponse getById(Long categoryId) {
         Category category = repository.findById(categoryId).orElseThrow(()
                 -> new ResourceNotFoundException("invalid category Id" ));
+//        CategoryResponse.builder()
+//                .categoryId(category.getId())
         return new CategoryResponse(category);
 }
 
@@ -72,7 +76,7 @@ private final CategoryRepository repository;
     @Override
     public Object updateCategory(Long categoryId, CategoryRequest request) {
         Category category = repository.findById(categoryId).orElseThrow(()
-                ->new ResourceNotFoundException("invalid Category ID"));
+                -> new ResourceNotFoundException("invalid Category ID"));
         if (request.getDescription()!=null){
             category.setDescription(request.getDescription());
         }
@@ -91,14 +95,33 @@ private final CategoryRepository repository;
     @Override
     public List<CategoryResponse> getAll() { 
         List<Category> all = repository.findAll();
+//        return all.stream().map(CategoryResponse::new).toList();
+
+        return categoryMapper.categoryResponse(all);
+
+
+
 //        List<CategoryResponse> responses = new ArrayList<>();
 //        for (Category category : all){
 //            CategoryResponse categoryResponse = new CategoryResponse(category);
 //            responses.add(categoryResponse);
 //        }
 //        return responses;
-        return all.stream().map(CategoryResponse::new).toList();
+
+
+//        List<CategoryResponse> categoryResponse = new ArrayList<>();
+//        for(Category list : all) {
+//            CategoryResponse build = CategoryResponse.builder()
+//                    .categoryId(list.getId())
+//                    .name(list.getName())
+//                    .description(list.getDescription())
+//                    .parentId(list.getParentId())
+//                    .build();
+//            categoryResponse.add(build);
+//        }
+//        return categoryResponse;
     }
+
 
 
 

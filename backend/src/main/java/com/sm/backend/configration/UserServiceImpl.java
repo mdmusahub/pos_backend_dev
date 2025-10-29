@@ -2,21 +2,20 @@ package com.sm.backend.configration;
 
 import com.sm.backend.exceptionalHandling.EmailNotFoundException;
 import com.sm.backend.exceptionalHandling.UserAlreadyExistsException;
+import com.sm.backend.model.Jwt;
 import com.sm.backend.model.User;
+import com.sm.backend.repository.JwtRepository;
 import com.sm.backend.repository.UserRepository;
-import com.sm.backend.request.UserRequest;
 import com.sm.backend.service.EmailService;
 import com.sm.backend.service.UserService;
-import jakarta.mail.Authenticator;
-import jakarta.mail.PasswordAuthentication;
-import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +29,7 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
     private final Set<String> blacklist = new HashSet<>();
     private final JwtUtil jwtUtil;
+    private final JwtRepository jwtRepository;
 
 
     public PasswordEncoder passwordEncoder() {
@@ -60,6 +60,20 @@ public class UserServiceImpl implements UserService {
                     "Blinket");
         }
     }
+    // Scheduled run every 1 min
+    @Scheduled(fixedRate = 60000)
+    public String jwtTokenDelete (){
+        List<Jwt> all = jwtRepository.findAll();
+        for(Jwt list : all){
+            LocalTime time = list.getGeneratedAt().toLocalTime().plusHours(7);
+//            LocalTime time = list.getGeneratedAt().toLocalTime().plusMinutes(1);
+            if(LocalTime.now().isAfter(time)){
+                jwtRepository.delete(list);
+
+            }
+        }
+        return "scheduler is running";
+    }
 
     @Override
     public ResponseEntity<?> findAll() {
@@ -71,6 +85,9 @@ public class UserServiceImpl implements UserService {
     public void addToBlacklist(String token) {
         String email = jwtUtil.extractUserName(token);
         blacklist.add(token);
+        Jwt jwt = new Jwt();
+        jwt.setJwtToken(token);
+        jwtRepository.save(jwt);
         ZonedDateTime logoutTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
         String formattedTime = logoutTime.format(DateTimeFormatter.ofPattern("dd mm yy, hh:mm a z"));
         emailService.sendMail(email, "Logout Confirmation","You have successfully logged out on " + formattedTime + ".\n" +
@@ -79,9 +96,9 @@ public class UserServiceImpl implements UserService {
                 "Team Blinket");
     }
 
-    public Boolean isBlacklisted(String token) {
-        return blacklist.contains(token);
-    }
+//    public Boolean isBlacklisted(String token) {
+//        return blacklist.contains(token);
+//    }
 
 
     @Override

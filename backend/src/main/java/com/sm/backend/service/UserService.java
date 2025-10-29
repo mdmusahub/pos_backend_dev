@@ -11,7 +11,7 @@ public interface UserService {
     ResponseEntity<?> findAll ();
     void updateByPassword (String email,User user);
     void addToBlacklist (String token);
-    Boolean isBlacklisted (String token);
+//    Boolean isBlacklisted (String token);
     String getByName (String token,String name);
 
 }

@@ -61,7 +61,7 @@ public class UserController {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
-            UserDetails userDetails = userDetailService.loadUserByUsername(request.getEmail());
+            userDetailService.loadUserByUsername(request.getEmail());
             String token = jwtUtil.generateToken(request.getEmail());
             log.info("Jwt "+ token);
 //            String email = request.getEmail();
