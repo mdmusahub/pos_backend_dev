@@ -1,6 +1,5 @@
 package com.sm.backend.serviceImpl;
 
-import com.sm.backend.exceptionalHandling.DiscountAlreadyExistException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.model.*;
 import com.sm.backend.repository.*;
