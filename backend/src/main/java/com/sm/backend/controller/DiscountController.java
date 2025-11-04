@@ -1,7 +1,6 @@
 package com.sm.backend.controller;
 
 import com.sm.backend.exceptionalHandling.DiscountAlreadyExistException;
-import com.sm.backend.exceptionalHandling.ProductAlreadyExistsException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import com.sm.backend.request.DiscountRequest;
 import com.sm.backend.response.DiscountResponse;

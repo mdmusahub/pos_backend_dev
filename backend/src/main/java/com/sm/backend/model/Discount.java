@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long discountId;
+    private Long id;
     private String discountName;
 //    private DiscountType discountType;
 //    @ManyToOne

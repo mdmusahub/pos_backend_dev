@@ -19,7 +19,7 @@ import java.util.List;
 public class Order {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long orderID;
+private Long id;
 @ManyToOne
 private Customer customer;
 @OneToMany(fetch = FetchType.EAGER)
@@ -38,4 +38,22 @@ private String cashAmount;
 private LocalDateTime orderDate;
 private LocalDateTime updatedAt;
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", customer=" + customer +
+                ", orderItems=" + orderItems +
+                ", userPhoneNumber='" + userPhoneNumber + '\'' +
+                ", status=" + status +
+                ", discount=" + discount +
+                ", tax=" + tax +
+                ", totalAmount=" + totalAmount +
+                ", paymentMode=" + paymentMode +
+                ", onlineAmount='" + onlineAmount + '\'' +
+                ", cashAmount='" + cashAmount + '\'' +
+                ", orderDate=" + orderDate +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

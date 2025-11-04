@@ -20,7 +20,7 @@ public class ProductResponse {
     private LocalDateTime updatedAt;
 
      public ProductResponse(Product product) {
-         this.productId = product.getProductId();
+         this.productId = product.getId();
          this.productName = product.getProductName();
          this.sku = product.getSku();
          this.description = product.getDescription();

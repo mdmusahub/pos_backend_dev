@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long customerId;
+    private Long id;
     private String phoneNumber;
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -27,7 +27,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerResponse getById(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("invalid customerId"));
+        Customer customer = customerRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("invalid customerId"));
         return new CustomerResponse(customer);
 
     }
@@ -36,14 +37,17 @@ public class CustomerServiceImpl implements CustomerService {
     public List<CustomerResponse> getAll() {
         List<Customer> customers = customerRepository.findAll();
         return customers.stream().map(CustomerResponse::new).toList();
-
     }
 
     @Override
     public void update(CustomerRequest request, Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("invalid id"));
+        Customer customer = customerRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("invalid id"));
         if (request.getPhoneNumber() != null) {
             customer.setPhoneNumber(request.getPhoneNumber());
+        }
+        if (request.getEmail() != null) {
+            customer.setEmail(request.getEmail());
         }
         List<Order> orders = orderRepository.findAllOrdersByCustomer(customer);
         if(orders.isEmpty() == false){
