@@ -20,8 +20,9 @@ import java.util.Map;
 @Component
 @Slf4j
 public class JwtUtil {
-    @Value("${secret.key}")
+    @Value("${jwt.secret}")
     private String SECRECT_KEY;
+
 
 
 
