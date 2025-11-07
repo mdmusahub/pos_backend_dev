@@ -4,7 +4,7 @@ services:
     image: mysql:8.0
     container_name: my-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_ROOT_PASSWORD: root1234
       MYSQL_DATABASE: pos_blinkit
       MYSQL_USER: root
       MYSQL_PASSWORD: root123
