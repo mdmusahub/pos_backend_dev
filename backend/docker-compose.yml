@@ -3,6 +3,13 @@ services:
   db:
     image: mysql:8.0
     container_name: my-mysql
+    services:
+      - type: web
+        name: my-spring-app
+        env: docker
+        branch: main
+        dockerfilePath: ./dockerfile  # <-- yahan sahi path likho
+        plan: free
     environment:
       MYSQL_ROOT_PASSWORD: root1234
       MYSQL_DATABASE: pos_blinkit
