@@ -8,7 +8,7 @@ services:
         name: my-spring-app
         env: docker
         branch: main
-        dockerfilePath: ./dockerfile  # <-- yahan sahi path likho
+        dockerfilePath: ./Dockerfile  # <-- yahan sahi path likho
         plan: free
     environment:
       MYSQL_ROOT_PASSWORD: root1234
