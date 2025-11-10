@@ -23,7 +23,7 @@ public class ProductVariantInventoryResponse {
 
 
     public ProductVariantInventoryResponse(Product product, List<VariantInventoryResponse> variantInventoryResponses) {
-        this.productId = product.getProductId();
+        this.productId = product.getId();
         this.productName = product.getProductName();
         this.sku = product.getSku();
         this.description = product.getDescription();

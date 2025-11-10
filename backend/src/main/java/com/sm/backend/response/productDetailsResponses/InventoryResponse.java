@@ -14,7 +14,7 @@ public class InventoryResponse {
     private String location;
     private LocalDateTime lastUpdated;
     public InventoryResponse(ProductInventory inventory) {
-        this.inventoryId = inventory.getInventoryId();
+        this.inventoryId = inventory.getId();
         this.quantity = inventory.getQuantity();
         this.location = inventory.getLocation();
         this.lastUpdated = inventory.getLastUpdated();

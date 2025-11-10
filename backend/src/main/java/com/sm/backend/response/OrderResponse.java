@@ -29,7 +29,7 @@ public class OrderResponse {
     private List<OrderItemResponse> orderItems;
 
     public OrderResponse(Order order) {
-        this.orderID = order.getOrderID();
+        this.orderID = order.getId();
         this.userPhoneNumber = order.getUserPhoneNumber();
         this.status = order.getStatus();
         this.discount = order.getDiscount();

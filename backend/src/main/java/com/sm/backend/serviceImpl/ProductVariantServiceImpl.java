@@ -43,6 +43,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         variant.setVariantName(request.getVariantName());
         variant.setVariantValue(request.getVariantValue());
         variant.setPrice(request.getPrice());
+        variant.setRefundable(request.getRefundable());
         repository.save(variant);
 //        creating inventory with variant
 
@@ -86,6 +87,9 @@ if (request.getVariantValue()!=null){
 }
 if (request.getPrice()!=null){
     variant.setPrice(request.getPrice());
+}
+if(request.getRefundable() != null){
+    variant.setRefundable(request.getRefundable());
 }
 return repository.save(variant);
 }
