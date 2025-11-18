@@ -43,10 +43,17 @@ public class UserServiceImpl implements UserService {
         if (userOptional.isPresent()) {
             throw new UserAlreadyExistsException("Already Exists " + user.getEmail());
         } else {
+//            Scanner inp = new Scanner(System.in);
+//            String email,password;
+//            email = inp.nextLine();
+//            password = inp.nextLine();
+//            user1.setEmail(email);
+//            user1.setPassword(passwordEncoder().encode(password));
             user1.setEmail(user.getEmail());
-            user1.setName(user.getName());
             user1.setPassword(passwordEncoder().encode(user.getPassword()));
-            user1.setRole(user.getRole().toUpperCase().replace("ROLE_", ""));
+            user1.setName(user.getName());
+//            user1.setRole(user.getRole().toUpperCase().replace("ROLE_", ""));
+            user1.setRole("ADMIN");
             userRepository.save(user1);
             emailService.sendMail(user.getEmail(), "Blinket", "Hello " + user.getName() + " \n" +
                     "\n" +

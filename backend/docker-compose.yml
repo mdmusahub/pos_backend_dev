@@ -8,13 +8,11 @@ services:
         name: my-spring-app
         env: docker
         branch: main
-        dockerfilePath: backend/Dockerfile  # <-- yahan sahi path likho
+        dockerfilePath: backend/spring-app/Dockerfile  # <-- yahan sahi path likho
         plan: free
     environment:
-      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_ROOT_PASSWORD: root123
       MYSQL_DATABASE: pos_blinkit
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root123
     ports:
       - "3307:3306"
     volumes:
