@@ -38,24 +38,17 @@ public class SpringSecurity {
     }
 
     @Bean
-    public SecurityFilterChain filterChain (HttpSecurity http) throws  Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-//                .csrf(csrf-> csrf.disable())
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth->
-                        auth
-                                .requestMatchers("/user/signup","/user/login","/user/updateEmail/{email}",
-                                "/otp/sendOtp/{email}","/otp/checkOtp/{email}","/user/getAll").permitAll()
-                                .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                             .requestMatchers("/**").hasRole("ADMIN")
-                                .anyRequest().authenticated());
-//                .httpBasic(Customizer.withDefaults());
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()
+                );
+
         return http.build();
     }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource (){
         CorsConfiguration configuration = new CorsConfiguration();

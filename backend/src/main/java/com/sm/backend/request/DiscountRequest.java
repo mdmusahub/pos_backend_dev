@@ -2,6 +2,7 @@ package com.sm.backend.request;
 
 import com.sm.backend.model.Product;
 import com.sm.backend.util.DiscountType;
+import com.sm.backend.util.RequestType;
 import com.sm.backend.util.WaiverMode;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
@@ -16,6 +17,8 @@ public class DiscountRequest {
     private WaiverMode waiverMode;
     private Double discountValue;
     private LocalDateTime endDateTime;
+    private Long discountId;
+    private RequestType requestType;
 //    private Double minimumPrice;
 //    private Long minimumQuantity;
 }

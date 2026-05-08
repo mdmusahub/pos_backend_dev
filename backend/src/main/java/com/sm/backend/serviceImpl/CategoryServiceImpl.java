@@ -3,7 +3,7 @@ package com.sm.backend.serviceImpl;
 import com.sm.backend.exceptionalHandling.CategoryAlreadyExistsException;
 import com.sm.backend.exceptionalHandling.GrandParentExistsException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
-import com.sm.backend.mappers.CategoryMapperImpl;
+import com.sm.backend.mapperImpl.CategoryMapperImpl;
 import com.sm.backend.model.Category;
 import com.sm.backend.repository.CategoryRepository;
 import com.sm.backend.request.CategoryRequest;
@@ -12,7 +12,6 @@ import com.sm.backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,10 +1,13 @@
 package com.sm.backend.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sm.backend.model.Customer;
 import com.sm.backend.model.Order;
 import com.sm.backend.model.OrderItem;
 import com.sm.backend.utility.OrderStatus;
 import com.sm.backend.utility.PaymentMode;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +16,9 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder
+@AllArgsConstructor
 public class OrderResponse {
     private Long orderID;
     private CustomerResponse customer;
@@ -27,6 +33,8 @@ public class OrderResponse {
     private LocalDateTime orderDate;
     private LocalDateTime updatedAt;
     private List<OrderItemResponse> orderItems;
+    private String message;
+    private List<OrderResponse> orders;
 
     public OrderResponse(Order order) {
         this.orderID = order.getId();

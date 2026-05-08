@@ -6,6 +6,7 @@ import com.sm.backend.model.Jwt;
 import com.sm.backend.model.User;
 import com.sm.backend.repository.JwtRepository;
 import com.sm.backend.repository.UserRepository;
+import com.sm.backend.request.UserRequest;
 import com.sm.backend.service.EmailService;
 import com.sm.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +38,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void signUp(User user) {
+    public void signUp(UserRequest request) {
         User user1 = new User();
-        Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
         if (userOptional.isPresent()) {
-            throw new UserAlreadyExistsException("Already Exists " + user.getEmail());
+            throw new UserAlreadyExistsException("Already Exists " + request.getEmail());
         } else {
 //            Scanner inp = new Scanner(System.in);
 //            String email,password;
@@ -49,22 +50,16 @@ public class UserServiceImpl implements UserService {
 //            password = inp.nextLine();
 //            user1.setEmail(email);
 //            user1.setPassword(passwordEncoder().encode(password));
-            user1.setEmail(user.getEmail());
-            user1.setPassword(passwordEncoder().encode(user.getPassword()));
-            user1.setName(user.getName());
+            user1.setEmail(request.getEmail());
+            user1.setPassword(passwordEncoder().encode(request.getPassword()));
+            user1.setName(request.getName());
 //            user1.setRole(user.getRole().toUpperCase().replace("ROLE_", ""));
             user1.setRole("ADMIN");
             userRepository.save(user1);
-            emailService.sendMail(user.getEmail(), "Blinket", "Hello " + user.getName() + " \n" +
-                    "\n" +
-                    "We're thrilled to have you on board! Your skills and experience will be a valuable addition to our team, and we’re excited to see the great things we’ll accomplish together.\n" +
-                    "\n" +
-                    "Please take a moment to complete your employee profile and sign any necessary onboarding documents [insert link or instructions, if applicable]. If you have any questions, feel free to reach out—we're here to support you every step of the way.\n" +
-                    "\n" +
-                    "Welcome aboard!\n" +
-                    "\n" +
-                    "Best regards,\n" +
-                    "Blinket");
+            emailService.sendMail(request.getEmail(), "Registration Confirmation", "Hello " + request.getName() + ",\n\n" +
+                    "Thank you for registering! Your account has been successfully created.\n" +
+                    "If you did not register for this account, please contact support immediately.\n\n" +
+                    "Welcome aboard");
         }
     }
     // Scheduled run every 1 min
@@ -122,11 +117,9 @@ public class UserServiceImpl implements UserService {
 
                 String name = user.getName(); // User ka naam
                 // Send email
-                emailService.sendMail(user.getEmail(), "Password Updated Successfully", "Hello " + name + ",\n\n" +
-                        "Your password has been successfully updated.\n" +
-                        "If you did not request this change, please contact support immediately.\n\n" +
-                        "Stay secure,\n" +
-                        "Team Blinket");
+                emailService.sendMail(user.getEmail(), "Password Updated " +
+                        "Successfully", "Hello " + name + ",\n\n" +
+                        "Your password has been successfully updated.");
 
                 userRepository.save(user);
             } else {

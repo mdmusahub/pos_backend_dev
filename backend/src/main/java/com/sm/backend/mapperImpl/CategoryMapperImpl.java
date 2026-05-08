@@ -1,4 +1,4 @@
-package com.sm.backend.mappers;
+package com.sm.backend.mapperImpl;
 import com.sm.backend.exceptionalHandling.GrandParentExistsException;
 import com.sm.backend.exceptionalHandling.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

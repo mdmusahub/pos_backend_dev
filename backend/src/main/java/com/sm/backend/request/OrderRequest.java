@@ -3,6 +3,7 @@ package com.sm.backend.request;
 import com.sm.backend.model.OrderItem;
 import com.sm.backend.model.Product;
 import com.sm.backend.model.ProductVariant;
+import com.sm.backend.util.RequestType;
 import com.sm.backend.utility.OrderStatus;
 import com.sm.backend.utility.PaymentMode;
 import jakarta.persistence.ManyToOne;
@@ -28,5 +29,7 @@ public class OrderRequest {
 //    private LocalDateTime orderDate;
 //    private LocalDateTime updatedAt;
    private List<OrderItemRequest>orderItemRequests;
+   private Long orderId;
+   private RequestType requestType;
 }
 

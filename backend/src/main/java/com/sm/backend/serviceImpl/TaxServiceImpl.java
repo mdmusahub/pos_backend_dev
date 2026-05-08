@@ -61,15 +61,17 @@ public class TaxServiceImpl implements TaxService {
         Optional<ProductVariant> productVariant = variantRepository.findById(id);
         ProductVariant variant = productVariant.get();
 //        tax.setProductVariantPrice(item.getUnitPrice());
+        Tax tax = new Tax();
+
         Double gstAmount = 0d;
         String gstPercentage = "0%";
         Double discountAmount = 0d;
         String discountPercentage = "0%";
 
-//        tax.setGstPercent("0%");
-//        tax.setTaxQuantity(0L);
-//        tax.setTaxPrice(0d);
-//        tax.setTotalPrice(0d);
+        tax.setGstPercent("0%");
+        tax.setTaxQuantity(0L);
+        tax.setTaxPrice(0d);
+        tax.setTotalPrice(0d);
 
 //        Category category = item.getProductVariant().getProduct().getCategory().getParentId();
         Category category = variant.getProduct().getCategory().getParentId();

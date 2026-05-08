@@ -122,7 +122,8 @@ public class OrderServiceImpl implements OrderService {
             tax.setTaxPrice(0d);
             tax.setTotalPrice(0d);
 
-            Category category = item.getProductVariant().getProduct().getCategory().getParentId();
+            Category category =
+                    item.getProductVariant().getProduct().getCategory();
 
             if (category.getName().toUpperCase().equals(TaxCategory.ELECTRONICS.toString())) {
                 tax.setCategory(TaxCategory.ELECTRONICS);
